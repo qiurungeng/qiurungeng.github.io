@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>工厂模式 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" -Java -设计模式 ">
+  <meta name="description" content="工厂模式 | 梅罢葛的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="（1）标题Markdown 语法： public static void main(String[] args){     System.out.println(&quot;try&quot;); } 一级标题二级标题三级标题四级标题五级标题六级标题123456Typora 快捷键： Ctrl+1：一级标题 Ctrl+2：二级标题 Ctrl+3：三级标题 Ctrl+4：四级标题 Ctrl+5：五级">
+<meta property="og:type" content="article">
+<meta property="og:title" content="尝试发布文章">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/index.html">
+<meta property="og:site_name" content="梅罢葛的博客">
+<meta property="og:description" content="（1）标题Markdown 语法： public static void main(String[] args){     System.out.println(&quot;try&quot;); } 一级标题二级标题三级标题四级标题五级标题六级标题123456Typora 快捷键： Ctrl+1：一级标题 Ctrl+2：二级标题 Ctrl+3：三级标题 Ctrl+4：四级标题 Ctrl+5：五级">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328011811967.png">
+<meta property="article:published_time" content="2020-03-27T17:16:39.000Z">
+<meta property="article:modified_time" content="2020-03-28T03:17:29.102Z">
+<meta property="article:author" content="梅罢葛">
+<meta property="article:tag" content="测试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328011811967.png">
+
+
+<link rel="icon" href="/img/weini.jpg">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.webp" />
+</a>
+<div class="author">
+    <span>梅罢葛</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/qiurungeng" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <a title="email" href="mailto:708801794@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(5)</small></div></li>
+    
+        
+            
+            <li><div data-rel="数据库">数据库<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="后端">后端<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="-设计模式">-设计模式<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="5">
+
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color3">测试</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">MySQL</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">SpringBoot</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">分布式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">后端</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">-Java -设计模式</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class=""
+           href="/2020/03/27/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-27 22:09:17">2020/03/27</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
+           data-tag="测试"
+           data-author="" >
+            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="数据库 "
+           href="/2020/03/28/mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0/"
+           data-tag="MySQL"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记：MySQL">谷粒商城项目学习笔记：MySQL</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="后端 "
+           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
+           data-tag="SpringBoot,分布式,后端,java"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="-设计模式 "
+           href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"
+           data-tag="-Java -设计模式"
+           data-author="" >
+            <span class="post-title" title="工厂模式">工厂模式</span>
+            <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">工厂模式</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="-设计模式">-设计模式</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color2">-Java -设计模式</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-03-28 22:01:41'>2020-03-28 14:21</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#简单工厂："><span class="toc-text">简单工厂：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#优点"><span class="toc-text">优点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#缺点"><span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#工厂模式："><span class="toc-text">工厂模式：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#创建者："><span class="toc-text">创建者：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#产品："><span class="toc-text">产品：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#工厂好处："><span class="toc-text">工厂好处：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#依赖倒置原则（Dependency-Inversion-Principle）："><span class="toc-text">依赖倒置原则（Dependency Inversion Principle）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#抽象工厂："><span class="toc-text">抽象工厂：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比较抽象工厂模式和工厂模式"><span class="toc-text">比较抽象工厂模式和工厂模式</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>问题回顾：</p>
+<pre><code class="java">ArrayList&lt;String&gt; list=new ArrayList&lt;&gt;();</code></pre>
+<p>代码绑定者具体实现类，会让代码脆弱且缺乏弹性。我们可以使用接口使它更有弹性：</p>
+<pre><code class="java">List&lt;String&gt; list = new ArrayList&lt;&gt;();
+Duck duck = new MallardDuck();</code></pre>
+<p>但有一些要实例化的具体类，究竟实例化为哪一个类，需要由运行时的条件决定。一旦有变化或扩展，就必须重新打开上面那段代码检查修改，这将令维护更新变得困难。</p>
+<p>在这个例子中，new一个对象没有错，真正有问题的是“改变”没被隔离出来，影响了new的使用。</p>
+<blockquote>
+<p>设计原则：类应当对扩展开放，对修改关闭。</p>
+</blockquote>
+<p>针对接口编程可以隔离掉系统以后将发生的一大堆改变。我们需要一种方法找出会变化的部分，把它们从不变的部分隔离出来。</p>
+<p>再看一个例子：</p>
+<pre><code class="java">Pizza orderPizza(String type){
+    Pizza pizza;
+
+    /*************创建对象部分************/
+    if(type.equals(&quot;a&quot;))pizza=new APizza();
+    else if(type.equals(&quot;b&quot;))pizza=new BPizza();
+    else{/*...*/}
+    /***********************************/
+
+    pizza.prepare();
+    pizza.bake();
+    pizza.cut();
+    pizza.box();
+    return pizza;
+}</code></pre>
+<p>如果披萨的种类不断增加，那么这段代码就必须一改再改。进而我们知道，如果在代码中new某个对象（实例化某个对象），将使orderPizza()出问题，无法让orderPizza()对修改关闭。所以我们得做一些封装。</p>
+<p>将创建Pizza对象转移到orderPizza()之外，给专职创建披萨的新对象，即工厂。</p>
+<p><strong>工厂（Factory）</strong>处理创建对象的细节</p>
+<h4 id="简单工厂："><a href="#简单工厂：" class="headerlink" title="简单工厂："></a>简单工厂：</h4><pre><code class="java">public class SimplePizzaFactory{
+    public Pizza createPizza(String type){
+        Pizza pizza=null;
+        if(type.equals(&quot;a&quot;))pizza=new APizza();
+        else if(type.equals(&quot;b&quot;))pizza=new BPizza();
+        else{/*...*/}
+        return pizza;
+    }
+}</code></pre>
+<p>利用静态方法定义一个简单工厂：<strong>静态工厂：</strong></p>
+<pre><code class="java">public class SimplePizzaFactory{
+    public static Pizza createPizza(String type){
+        Pizza pizza=null;
+        if(type.equals(&quot;a&quot;))pizza=new APizza();
+        else if(type.equals(&quot;b&quot;))pizza=new BPizza();
+        else{/*...*/}
+        return pizza;
+    }
+}</code></pre>
+<h5 id="优点"><a href="#优点" class="headerlink" title="优点"></a><strong>优点</strong></h5><p>​    帮助封装。客户端可以更好的面向接口编程。<br>​    解耦。客户端不需要知道实现类。</p>
+<h5 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a><strong>缺点</strong></h5><p>​    需要理解参数的意义，增加复杂度。<br>​    静态工厂不方便扩展子类。</p>
+<p>简单工厂其实不是一种设计模式，更像是一种编程习惯</p>
+<p>升级原有代码，用工厂去创建披萨：</p>
+<pre><code class="java">public class PizzaStore{
+    SimplePizzaFactory factory;
+
+    //构造注入
+    public PizzaStore(SimplePizzaFactory factory){
+        thi.factory=factory;
+    }
+
+    Pizza orderPizza(String type){
+        Pizza pizza=factory.createPizza(type);
+        pizza.prepare();
+        pizza.bake();
+        pizza.cut();
+        pizza.box();
+        return pizza;
+    }
+}</code></pre>
+<h4 id="工厂模式："><a href="#工厂模式：" class="headerlink" title="工厂模式："></a>工厂模式：</h4><p>让子类决定该创建的对象是什么，来达到将对象创建的过程封装的目的。工厂模式的组成元素：创建者类和产品类</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328165134999.png" alt=""></p>
+<h5 id="创建者："><a href="#创建者：" class="headerlink" title="创建者："></a>创建者：</h5><pre><code class="java">/*创建者类*/
+public abstract class PizzaStore{
+    Pizza orderPizza(String type){
+        Pizza pizza = createPizza(type);    //创建对象的业务
+        pizza.prepare();
+        pizza.bake();
+        pizza.cut();
+        pizza.box();
+        return pizza;
+    }
+
+    protected abstract Pizza createPizza(String type);    //让子类决定该创建的对象是什么
+}</code></pre>
+<pre><code class="java">//创建者类：纽约披萨店
+public class NYPizzaStore extends PizzaStore{
+    //子类决定该创建的对象是什么
+    Pizza createPizza(String item){
+        if(item.equals(&quot;cheese&quot;)){
+            return new NYStyleCheesePizza();
+        }else if(item.equals(&quot;clam&quot;)){
+            return new NYStyleClamPizza();
+        }else if(...){
+            ...
+        }return null;
+    }
+}
+
+//创建者类：洛杉矶披萨店
+public class LAPizzaStore extends PizzaStore{
+    //子类决定该创建的对象是什么
+    Pizza createPizza(String item){
+        if(item.equals(&quot;cheese&quot;)){
+            return new LAStyleCheesePizza();
+        }else if(item.equals(&quot;clam&quot;)){
+            return new LAStyleClamPizza();
+        }else if(...){
+            ...
+        }return null;
+    }
+}
+
+....</code></pre>
+<h5 id="产品："><a href="#产品：" class="headerlink" title="产品："></a>产品：</h5><pre><code class="java">public abstract class Pizza{
+    String name;
+    String dough;
+    String sauce;
+
+    void prepare(){
+        System.out.println(&quot;preparing...&quot;);
+    }
+    void bake(){
+        System.out.println(&quot;baking...&quot;);
+    }
+    void cut(){
+        System.out.println(&quot;cutting...&quot;);
+    }
+    void box(){
+        System.out.println(&quot;boxing...&quot;);
+    }
+
+    public String getName() {
+        return name;
+    }
+}
+...
+public class LAStyleCheesePizza extends Pizza{
+    LAStyleCheesePizza(){
+        name=&quot;NEW YORK STYLE CHEESE PIZZA&quot;;
+        dough=&quot;dough&quot;;
+        sauce=&quot;sauce&quot;;
+        toppings.add(&quot;LA Cheese&quot;);
+    }
+
+    @Override
+    void cut() {
+        System.out.println(&quot;cutting in LA Style...&quot;);
+    }
+}
+...
+public class NYStyleCheesePizza extends Pizza {
+    NYStyleCheesePizza(){
+        name=&quot;NEW YORK STYLE CHEESE PIZZA&quot;;
+        dough=&quot;dough&quot;;
+        sauce=&quot;sauce&quot;;
+        toppings.add(&quot;Cheese&quot;);
+    }
+}</code></pre>
+<p>Test：</p>
+<pre><code class="java">public class Test {
+    public static void main(String[] args) {
+        PizzaStore nyStore=new NYPizzaStore();
+        PizzaStore laStore=new LAPizzaStore();
+        System.out.println(&quot;吃一个&quot;+nyStore.orderPizza(&quot;cheese&quot;).getName());
+        System.out.println();
+        System.out.println(&quot;吃一个&quot;+laStore.orderPizza(&quot;cheese&quot;).getName());
+    }
+}</code></pre>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328165557352.png" alt=""></p>
+<p><strong>工厂方法</strong>：</p>
+<ul>
+<li>是抽象的，具体的实现封装在子类中。</li>
+<li>将返回一个产品类</li>
+<li>将业务和实际创建具体产品的代码分隔开来。</li>
+</ul>
+<h5 id="工厂好处："><a href="#工厂好处：" class="headerlink" title="工厂好处："></a>工厂好处：</h5><ul>
+<li>将创建对象的代码集中在一个对象或方法中，可以避免代码中的重复，并更方便以后的维护。也意味着客户在实例化对象时，只会依赖于接口而不是具体类。帮助我们针对接口编程。</li>
+</ul>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328205525707.png" alt=""></p>
+<h4 id="依赖倒置原则（Dependency-Inversion-Principle）："><a href="#依赖倒置原则（Dependency-Inversion-Principle）：" class="headerlink" title="依赖倒置原则（Dependency Inversion Principle）："></a>依赖倒置原则（Dependency Inversion Principle）：</h4><blockquote>
+<p>设计原则：要依赖抽象，不要依赖具体类</p>
+</blockquote>
+<p>不能让高层组件依赖底层组件，不管是高层底层组件，都应当依赖于抽象</p>
+<p>PizzaStore是高层组件，披萨实现是底层组件。</p>
+<blockquote>
+<p>避免违反依赖导致原则的指导方针：</p>
+<ul>
+<li><strong>变量不可以持有具体类的引用</strong><br>如果使用new，就会持有具体类的引用，你可以改用<strong>工厂方法</strong>来避免这么做</li>
+<li><strong>不要让类派生自具体类</strong><br>如果派生自具体类，就会依赖具体类。请<strong>派生自一个抽象</strong>（接口或抽象类）</li>
+<li><strong>不要覆盖基类中已实现的方法</strong><br>如果覆盖基类已实现的方法，那么这个基类就不适合作为被继承的抽象。基类中已实现的方法要由子类共享。</li>
+</ul>
+</blockquote>
+<h4 id="抽象工厂："><a href="#抽象工厂：" class="headerlink" title="抽象工厂："></a>抽象工厂：</h4><p><strong>抽象工厂模式</strong>提供一个接口，用于创建相关或依赖对象的<strong>家族</strong>，而不需要明确指定具体类</p>
+<p>通过抽象工厂所提供的接口，可以创建产品的家族，利用这个接口书写代码，我们的代码将从实际工厂解耦，以便在不同的上下文实现各式各样的工厂，制造不同的商品。</p>
+<p>我们引入了抽象工厂来创建 “披萨原料”家族 。</p>
+<p>披萨店：</p>
+<pre><code class="java">public abstract class PizzaStore {
+    protected abstract Pizza createPizza(String item);
+
+    public Pizza orderPizza(String type) {
+        Pizza pizza = createPizza(type);
+        System.out.println(&quot;--- Making a &quot; + pizza.getName() + &quot; ---&quot;);
+        pizza.prepare();
+        pizza.bake();
+        pizza.cut();
+        pizza.box();
+        return pizza;
+    }
+}
+
+/*************纽约披萨店***************/
+public class NYPizzaStore extends PizzaStore {
+    protected Pizza createPizza(String item) {
+        Pizza pizza = null;
+        // 原料工厂
+        PizzaIngredientFactory ingredientFactory = new NYPizzaIngredientFactory();
+        if (item.equals(&quot;cheese&quot;)) {
+            // 注入抽象原料工厂
+            pizza = new CheesePizza(ingredientFactory);
+            pizza.setName(&quot;New York Style Cheese Pizza&quot;);
+        } else if (item.equals(&quot;veggie&quot;)) {
+            pizza = new VeggiePizza(ingredientFactory);
+            pizza.setName(&quot;New York Style Veggie Pizza&quot;);
+        } else if (item.equals(&quot;clam&quot;)) {
+            pizza = new ClamPizza(ingredientFactory);
+            pizza.setName(&quot;New York Style Clam Pizza&quot;);
+        } else if (item.equals(&quot;pepperoni&quot;)) {
+            pizza = new PepperoniPizza(ingredientFactory);
+            pizza.setName(&quot;New York Style Pepperoni Pizza&quot;);
+        }
+        return pizza;
+    }
+}
+
+/*************芝加哥披萨店***************/
+public class ChicagoPizzaStore extends PizzaStore {
+    @Override
+    protected Pizza createPizza(String item) {
+        Pizza pizza = null;
+        PizzaIngredientFactory ingredientFactory = new ChicagoPizzaIngredientFactory();
+        switch (item){
+            case &quot;cheese&quot;:
+                pizza = new CheesePizza(ingredientFactory);
+                pizza.setName(&quot;Chicago Style Cheese Pizza&quot;);
+                break;
+            case &quot;veggie&quot;:
+                pizza = new VeggiePizza(ingredientFactory);
+                pizza.setName(&quot;Chicago Style Veggie Pizza&quot;);
+                break;
+            case &quot;clam&quot;:
+                pizza = new ClamPizza(ingredientFactory);
+                pizza.setName(&quot;Chicago Style Clam Pizza&quot;);
+                break;
+            case &quot;pepperoni&quot;:
+                pizza = new PepperoniPizza(ingredientFactory);
+                pizza.setName(&quot;Chicago Style Pepperoni Pizza&quot;);
+                break;
+        }
+        return pizza;
+    }
+}</code></pre>
+<p>披萨：</p>
+<pre><code class="java">public abstract class Pizza {
+    String name;
+    String dough;
+    String sauce;
+    ArrayList toppings=new ArrayList();
+    void prepare(){
+        System.out.println(&quot;preparing &quot;+name);
+    }
+    void bake(){
+        System.out.println(&quot;baking...&quot;);
+    }
+    void cut(){
+        System.out.println(&quot;cutting...&quot;);
+    }
+    void box(){
+        System.out.println(&quot;boxing...&quot;);
+    }
+    public String getName() {
+        return name;
+    }
+}
+
+/*******************************************************/
+public class CheesePizza extends Pizza {
+    PizzaIngredientFactory ingredientFactory;
+    //披萨构造函数注入抽象原料工厂，运行时动态地注入对应地区原料工厂，造出对应地区口味披萨
+    public CheesePizza(PizzaIngredientFactory ingredientFactory) {
+        this.ingredientFactory = ingredientFactory;
+    }
+    void prepare() {
+        System.out.println(&quot;Preparing &quot; + name);
+        dough = ingredientFactory.createDough();
+        sauce = ingredientFactory.createSauce();
+        cheese = ingredientFactory.createCheese();
+    }
+}
+
+/*******************************************************/
+public class ClamPizza extends Pizza {
+    PizzaIngredientFactory ingredientFactory;
+    public ClamPizza(PizzaIngredientFactory ingredientFactory) {
+        this.ingredientFactory = ingredientFactory;
+    }
+    void prepare() {
+        System.out.println(&quot;Preparing &quot; + name);
+        dough = ingredientFactory.createDough();
+        sauce = ingredientFactory.createSauce();
+        cheese = ingredientFactory.createCheese();
+        clam = ingredientFactory.createClam();
+    }
+}
+
+......</code></pre>
+<p>原料工厂：</p>
+<pre><code class="java">public interface PizzaIngredientFactory {
+    Dough createDough();
+    Sauce createSauce();
+    Cheese createCheese();
+    Veggies[] createVeggies();
+    Pepperoni createPepperoni();
+    Clams createClam();
+}
+
+/*********************纽约原料工厂***********************/
+public class NYPizzaIngredientFactory implements PizzaIngredientFactory {
+    public Dough createDough() {
+        return new ThinCrustDough();
+    }
+    public Sauce createSauce() {
+        return new MarinaraSauce();
+    }
+    public Cheese createCheese() {
+        return new ReggianoCheese();
+    }
+    public Veggies[] createVeggies() {
+        Veggies veggies[] = {new Garlic(), new Onion(), new Mushroom(), new RedPepper()};
+        return veggies;
+    }
+    public Pepperoni createPepperoni() {
+        return new SlicedPepperoni();
+    }
+    public Clams createClam() {
+        return new FreshClams();
+    }
+}
+
+/*********************芝加哥原料工厂***********************/
+public class ChicagoPizzaIngredientFactory implements PizzaIngredientFactory {
+    @Override
+    public Dough createDough() {
+        return new ThickCrustDough();
+    }
+    @Override
+    public Sauce createSauce() {
+        return new PlumTomatoSauce();
+    }
+    @Override
+    public Cheese createCheese() {
+        return new MozzarellaCheese();
+    }
+    @Override
+    public Veggies[] createVeggies() {
+        Veggies[] veggies = {
+                new BlackOlives(),
+                new Spinach(),
+                new Eggplant()
+        };
+        return veggies;
+    }
+    @Override
+    public Pepperoni createPepperoni() {
+        return new SlicedPepperoni();
+    }
+    @Override
+    public Clams createClam() {
+        return new FrozenClams();
+    }
+}
+
+......</code></pre>
+<p><strong>一图胜千言</strong>：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328211526914.png" alt="image-20200328211526914"></p>
+<p><strong>抽象工厂的任务是定义一个负责创建一组产品的接口</strong>。<strong>这个接口内的每一个方法都负责创建一个具体产品</strong>，同时我们利用实现抽象工厂的子类来提供这些方法的具体做法。</p>
+<p>在抽象工厂中利用工厂方法实现生产方法是相当自然的。</p>
+<h4 id="比较抽象工厂模式和工厂模式"><a href="#比较抽象工厂模式和工厂模式" class="headerlink" title="比较抽象工厂模式和工厂模式"></a>比较抽象工厂模式和工厂模式</h4><table>
+<thead>
+<tr>
+<th>工厂方法</th>
+<th>抽象工厂</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>负责创建对象，采用<strong>继承</strong>方式：利用工厂方法创建对象时需要扩展一个类，并覆盖它的工厂方法，即通过子类来创建对象。</td>
+<td>负责创建对象，采用<strong>组合</strong>方式：提供一个用来创建产品家族的抽象类型，这个类型的子类定义了产生产品的方法。要想使用抽象工厂，必须先实例化它，然后将实例传入针对抽象类型所写的代码中。</td>
+</tr>
+<tr>
+<td>抽象创建者（creator）中的方法  经常会用到子类所创建的具体类型</td>
+<td>实现抽象类型的具体工厂  经常使用工厂方法来创建他们的产品</td>
+</tr>
+<tr>
+<td>将客户代码从需要实例化的具体类中解耦。如果目前不知道将来需要实例化哪些类时，也可以用工厂模式。</td>
+<td>创建产品家族，或想让制造的相关产品集合起来时，可以使用抽象工厂模式</td>
+</tr>
+</tbody></table>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>工厂模式</p>
+    
+    <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-03-28, 14:21:29</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-28, 22:01:41</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="工厂模式">https://qiurungeng.github.io/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</a>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2020 梅罢葛</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#测试','#MySQL','#SpringBoot','#分布式','#后端','#java','#-Java -设计模式',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: ;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 552px;
+    }
+    .nav.fullscreen {
+        margin-left: -552px;
+    }
+    .nav-left {
+        width: 130px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.3;
+        background: url("https://i.loli.net/2019/07/22/5d3521411f3f169375.png");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
