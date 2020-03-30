@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_组件注册5_FactoryBean | 梅罢葛的博客</title>
+  <title>Spring注解学习_生命周期2_BeanPostProcessor | 梅罢葛的博客</title>
   <meta name="keywords" content=" java , spring , spring注解 ">
-  <meta name="description" content="Spring注解学习_组件注册5_FactoryBean | 梅罢葛的博客">
+  <meta name="description" content="Spring注解学习_生命周期2_BeanPostProcessor | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="“MyBatis能被整合进Spring就是因为实现了FactoryBean接口，用的是SqlSessionFactoryBean”  到目前为止，我们所学习的给IOC容器中注册组件的方法有：  包扫描（@ComponentScan(“package_path”)）+ 组件标注注解（@Controller, @Service, @Repository, @Component）：导入我们自定义的组件">
 <meta property="og:type" content="article">
@@ -349,9 +349,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-组件注册-FactoryBean" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Spring注解学习-生命周期2-BeanPostProcessor" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_组件注册5_FactoryBean</h1>
+        <h1 class="article-title">Spring注解学习_生命周期2_BeanPostProcessor</h1>
     
     <div class="article-meta">
         
@@ -377,12 +377,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-03-29 18:37:29'>2020-03-29 17:17</time>
+        创建时间:<time class="date" title='更新时间: 2020-03-30 17:37:53'>2020-03-30 01:51</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:477</span>
+        <span>字数:1.1k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -401,7 +401,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#实现BeanPostProcessor"><span class="toc-text">实现BeanPostProcessor</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#BeanPostProcessor原理"><span class="toc-text">BeanPostProcessor原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring底层对BeanPostProcessor的使用："><span class="toc-text">Spring底层对BeanPostProcessor的使用：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ApplicationContextAwareProcessor"><span class="toc-text">ApplicationContextAwareProcessor</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#InitDestroyAnnotationBeanPostProcessor"><span class="toc-text">InitDestroyAnnotationBeanPostProcessor</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -417,84 +417,146 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <blockquote>
-<p>“MyBatis能被整合进Spring就是因为实现了FactoryBean接口，用的是SqlSessionFactoryBean”</p>
-</blockquote>
-<p>到目前为止，我们所学习的给IOC容器中注册组件的方法有：</p>
+        <p><strong>BeanPostProcessor接口：</strong>在bean初始化前后进行一些处理工作</p>
+<p>这个接口需要实现两个方法：</p>
 <ul>
-<li>包扫描（@ComponentScan(“package_path”)）+ 组件标注注解（@Controller, @Service, @Repository, @Component）：导入我们自定义的组件</li>
-<li>@Bean：可用于导入第三方包里面的组件</li>
-<li>@Import：快速给容器导入一个组件<ul>
-<li>@Import(要导入到容器中的组件.class)，容器中就会自动注册这个组件id默认为全类名</li>
-<li>ImportSelector，自定义实现ImportSelector的selectImports方法，返回String[]数组对象，内携带要导入容器的类的全类名</li>
-<li>ImportBeanDefinitionRegistrar：手动注册bean到容器中</li>
+<li>postProcessBeforeInitialization( )：在创建好的Bean实例任何初始化之前调用</li>
+<li>postProcessAfterInitialization( )：在创建好的Bean实例任何初始化之后调用</li>
 </ul>
-</li>
-<li>使用Spring提供的FactoryBean（工厂Bean）<ul>
-<li><strong>默认获取到的是工厂Bean调用getObject() 创建的对象</strong></li>
-<li><strong>要获取工厂Bean本身，我们getBean(“id”)时需要给id前面加一个”&amp;”</strong></li>
-</ul>
-</li>
-</ul>
-<p>先创建一个ColorFactoryBean，实现FactoryBean接口：</p>
-<pre><code class="java">//创建一个Spring定义的FactoryBean
-public class ColorFactoryBean implements FactoryBean&lt;Color&gt; {
-    /**
-     * 返回一个color对象，它将被添加到Spring容器中
-     * @return 一个color对象
-     * @throws Exception
-     */
+<h2 id="实现BeanPostProcessor"><a href="#实现BeanPostProcessor" class="headerlink" title="实现BeanPostProcessor"></a>实现BeanPostProcessor</h2><p>我们自行实现一个后置处理器：</p>
+<pre><code class="java">public class MyBeanPostProcessor implements BeanPostProcessor {
+    //在bean初始化之前调用
     @Override
-    public Color getObject() throws Exception {
-        System.out.println(&quot;color factory bean ... getObject()...&quot;);
-        return new Color();
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println(&quot;postProcessBeforeInitialization...&quot;+beanName);
+        return bean;
     }
-
+    //在bean初始化之后调用
     @Override
-    public Class&lt;?&gt; getObjectType() {
-        return Color.class;
-    }
-
-    /**
-     * 是否为单实例
-     * @return true：在容器中只会保存一份；false：每次获取都会创建一个新的
-     */
-    @Override
-    public boolean isSingleton() {
-        return true;
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println(&quot;postProcessAfterInitialization...&quot;+beanName);
+        return bean;
     }
 }</code></pre>
-<p>在配置类中注册该BeanFactory:</p>
+<p>还是用上一篇文章的配置类和测试类：</p>
 <pre><code class="java">@Configuration
-@Import(...)
-public class MainConfig2 {
-    ...
+@Import(MyBeanPostProcessor.class)
+public class MainConfig3 {
+    @Bean(initMethod = &quot;init&quot;,destroyMethod = &quot;destroy&quot;)
+    public Car car(){
+        return new Car();
+    }
     @Bean
-    public ColorFactoryBean colorFactoryBean(){
-        return new ColorFactoryBean();
+    public Cat cat(){
+        return new Cat();
+    }
+    @Bean
+    public Dog dog(){
+        return new Dog();
+    }
+}</code></pre>
+<p>测试，发现对于所有注册的bean都生效了：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330015845003.png" alt=""></p>
+<h2 id="BeanPostProcessor原理"><a href="#BeanPostProcessor原理" class="headerlink" title="BeanPostProcessor原理"></a>BeanPostProcessor原理</h2><p>手动debug发现，Bean的自动装配，在AbstractAutowireCapableBeanFactory类中，经过了如下方法调用：</p>
+<pre><code class="java">protected Object createBean(String beanName, RootBeanDefinition mbd, @Nullable Object[] args) throws BeanCreationException {
+    ...
+    try {
+        Object beanInstance = doCreateBean(beanName, mbdToUse, args);
+        if (logger.isTraceEnabled()) {
+            logger.trace(&quot;Finished creating instance of bean &#39;&quot; + beanName + &quot;&#39;&quot;);
+        }
+        return beanInstance;
+    }
+    ...
+}
+...
+protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, final @Nullable Object[] args) throws BeanCreationException {
+    ...
+    try {
+        //给bean进行属性复制
+        populateBean(beanName, mbd, instanceWrapper);
+        //进行初始化
+        exposedObject = initializeBean(beanName, exposedObject, mbd);
+    }
+    ...
+}
+...
+</code></pre>
+<p>(有个值得注意的点：创建bean时，先调用populateBean给bean属性赋值，再initializeBean调用初始化方法。)</p>
+<p>我们看看代码注释中对populateBean(beanName, mbd, instanceWrapper)的定义：</p>
+<blockquote>
+<p>Populate the bean instance in the given BeanWrapper with the property values from the bean definition.（用<strong>bean定义中的属性值填充给定BeanWrapper中的bean实例</strong>。）</p>
+</blockquote>
+<p>再看看对InitializeBean(final String beanName, final Object bean, @Nullable RootBeanDefinition mbd)的定义：</p>
+<blockquote>
+<p>Initialize the given bean instance, applying factory callbacks as well as init methods and bean post processors. <p>Called from {@link #createBean} for traditionally defined beans, and from {@link #initializeBean} for existing bean instances.（初始化给定的bean实例，应用工厂回调以及init方法和bean后处理器。<p>从{@link #createBean}为传统定义的bean调用，从{@link #initializeBean}为现有的bean实例调用。）</p>
+</blockquote>
+<p>然后直接看InitializeBean源码：</p>
+<p>调用initializeBean方法：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330152338316.png" alt=""></p>
+<p>进入applyBeanPostProcessorsBeforeInitialization方法：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330151725839.png" alt=""></p>
+<p>而后置处理器则为我们之前自行实现并注册的MyBeanPostProcessor,里面重写的方法将被用到。</p>
+<pre><code class="java">//在bean初始化之前调用
+@Override
+public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    System.out.println(&quot;postProcessBeforeInitialization...&quot;+beanName);
+    return bean;
+}</code></pre>
+<p>故不难得知initializeBean处理流程大致为：</p>
+<p>initializeBean{</p>
+<p>​    :one: applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName)</p>
+<p>​    :two: invokeInitMethods(beanName, wrappedBean, mbd);</p>
+<p>​    :three: applyBeanPostProcessorsAfterInitialization(wrappedBean, beanName);</p>
+<p>}</p>
+<ul>
+<li><p>applyBeanPostProcessorsBeforeInitialization会遍历容器中所有的BeanPostProcessor，逐个执行后置处理器中实现的 postProcessBeforeInitialization() 方法，一旦返回null，跳出循环，不会再执行后面的postProcessBeforeInitialization() 方法。</p>
+</li>
+<li><p>然后再执行初始化方法：invokeInitMethods(beanName, wrappedBean, mbd);</p>
+</li>
+<li><p>最后执行applyBeanPostProcessorsAfterInitialization 方法，其过程与:one:大体相同。</p>
+</li>
+</ul>
+<h2 id="Spring底层对BeanPostProcessor的使用："><a href="#Spring底层对BeanPostProcessor的使用：" class="headerlink" title="Spring底层对BeanPostProcessor的使用："></a>Spring底层对BeanPostProcessor的使用：</h2><p>bean赋值，注入其他组件，@Autowired，bean声明周期的注解功能，@Async等等，都用到了BeanPostProcessor。可在IDEA中用快捷键Ctrl+Alt+B查看其具体实现类。</p>
+<h3 id="ApplicationContextAwareProcessor"><a href="#ApplicationContextAwareProcessor" class="headerlink" title="ApplicationContextAwareProcessor"></a>ApplicationContextAwareProcessor</h3><p>ApplicationContextAwareProcessor也实现了BeanPostProcessor接口，它的作用是帮我们<strong>向组件（Compenent）中注入IOC容器（ApplicationContext）</strong>依赖。另外，要想通过这种方式在组件中注入IOC容器，我们需先让组件实现ApplicationContextAware接口。这里分析一下原理：</p>
+<p>直接看ApplicationContextAwareProcessor的源码：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330163923886.png" alt="image-20200330163923886"></p>
+<p>首先它自己就通过构造注入得到了IOC容器依赖：</p>
+<pre><code class="java">/**
+ * Create a new ApplicationContextAwareProcessor for the given context.
+ */
+public ApplicationContextAwareProcessor(ConfigurableApplicationContext applicationContext) {
+    this.applicationContext = applicationContext;
+    this.embeddedValueResolver = new 
+        EmbeddedValueResolver(applicationContext.getBeanFactory());
+}</code></pre>
+<p>然后由于实现了BeanPostProcessor接口，在初始化前会调用postProcessBeforeInitialization方法：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330164847960.png" alt="image-20200330164847960"></p>
+<p>查看 InvokeAwareInterfaces() 方法的源码：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330165300341.png" alt="image-20200330165300341"></p>
+<h3 id="InitDestroyAnnotationBeanPostProcessor"><a href="#InitDestroyAnnotationBeanPostProcessor" class="headerlink" title="InitDestroyAnnotationBeanPostProcessor"></a>InitDestroyAnnotationBeanPostProcessor</h3><p>类似的，InitDestroyAnnotationBeanPostProcessor类也通过实现BeanPostProcessor接口来完成对bean的所有标注的初始化和销毁方法调用。对于标注了@PostConstruct，@PreDestroy等注解的bean：</p>
+<pre><code class="java">public class Dog{
+    //对象创建并赋值之后调用
+    @PostConstruct
+    public void init(){
+        System.out.println(&quot;dog @PostConstruct...&quot;);
     }
 
-}</code></pre>
-<p>测试类获取该BeanFactory：</p>
-<pre><code class="java">@Test
-public void testImport(){
-    String[] names = context.getBeanDefinitionNames();
-    for (String name : names) {
-        System.out.println(name);
+    //容器销毁对象之前调用
+    @PreDestroy
+    public void destroy(){
+        System.out.println(&quot;dog @PreDestroy...&quot;);
     }
-    Object colorFactoryBean1 = context.getBean(&quot;colorFactoryBean&quot;);
-    Object colorFactoryBean2 = context.getBean(&quot;colorFactoryBean&quot;);
-    System.out.println(&quot;colorFactoryBean1的类型：&quot;+colorFactoryBean1.getClass());
-    System.out.println(&quot;colorFactoryBean2的类型：&quot;+colorFactoryBean2.getClass());
-    System.out.println(&quot;两次获取到的bean是否相同：&quot;+(colorFactoryBean1==colorFactoryBean2));
-
-    Object bean = context.getBean(&quot;&amp;colorFactoryBean&quot;);
-    System.out.println(&quot;bean类型：&quot;+bean.getClass());
 }</code></pre>
-<p>结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329182808284.png" alt="image-20200329182808284"></p>
-<p>翻开BeanFactory源码，Spring的工厂Bean一般都会在id加上前缀”&amp;”，以区别于产品Bean：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329183017262.png" alt="image-20200329183017262"></p>
+<p>先看这个类如何实现postProcessBeforeInitialization（初始化前处理）：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330172243446.png" alt="image-20200330172243446"></p>
+<p>调用findLifecycleMetadata(bean.getClass()) 找到生命周期元数据（其中包括我们标注@PostConstruct和@PreDestroy的初始化、销毁方法）找到之后调用invokeInitMethod执行初始化方法↓</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330172537270.png" alt="image-20200330172537270"></p>
+<p>对于@PreDestroy标注的销毁方法调用，也是类似的处理思路</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330172854236.png" alt="image-20200330172854236"></p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200330172935442.png" alt="image-20200330172935442"></p>
+<hr>
+<p>我们经常用到的<strong>@Autowired</strong>，它的处理类<strong>AutowiredAnnotationBeanPostProcessor</strong>也是实现了BeanPostProcessor，以后写@Autowired时再深入分析。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -508,12 +570,12 @@ public void testImport(){
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_组件注册5_FactoryBean</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">477</span></p>
+    <p><span class="copy-title">文章标题:</span>Spring注解学习_生命周期2_BeanPostProcessor</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.1k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-03-29, 17:17:41</p>
-    <p><span class="copy-title">最后更新:</span>2020-03-29, 18:37:29</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-FactoryBean/" title="Spring注解学习_组件注册5_FactoryBean">https://qiurungeng.github.io/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-FactoryBean/</a>
+    <p><span class="copy-title">发布时间:</span>2020-03-30, 01:51:10</p>
+    <p><span class="copy-title">最后更新:</span>2020-03-30, 17:37:53</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/" title="Spring注解学习_生命周期2_BeanPostProcessor">https://qiurungeng.github.io/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/</a>
 </div>
 
 
