@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_组件注册4_@Import | 梅罢葛的博客</title>
+  <title>Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary | 梅罢葛的博客</title>
   <meta name="keywords" content=" java , spring , spring注解 ">
-  <meta name="description" content="Spring注解学习_组件注册4_@Import | 梅罢葛的博客">
+  <meta name="description" content="Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="@Value可以用@Value给Bean的属性赋值，这个注解对应于原来xml中标签里的value字段： &lt;bean id&#x3D;&quot;person&quot; class&#x3D;&quot;com.study.bean.Person&quot;&gt;     &lt;property name&#x3D;&quot;age&quot; value&#x3D;&quot;18&quot;&#x2F;&gt;     &lt;p">
 <meta property="og:type" content="article">
@@ -390,9 +390,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-组件注册-Import" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Spring注解学习-自动装配1-Autowired-Qualifier-Primary" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_组件注册4_@Import</h1>
+        <h1 class="article-title">Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary</h1>
     
     <div class="article-meta">
         
@@ -418,12 +418,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-03-29 18:37:21'>2020-03-29 15:33</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-03 15:51:08'>2020-04-03 00:06</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:513</span>
+        <span>字数:796</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -442,7 +442,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-XXX-class"><span class="toc-text">@Import(XXX.class)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-ImportSelector-class"><span class="toc-text">@Import(ImportSelector.class)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-ImportBeanDefinitionRegistrar-class"><span class="toc-text">@Import(ImportBeanDefinitionRegistrar.class)</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Autowired自动注入"><span class="toc-text">@Autowired自动注入</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#方法、构造器上标注-Autowired实现自动装配"><span class="toc-text">方法、构造器上标注@Autowired实现自动装配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Bean标注的方法创建对象时，方法参数的值从容器中获取"><span class="toc-text">@Bean标注的方法创建对象时，方法参数的值从容器中获取</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Qualifier"><span class="toc-text">@Qualifier</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Primary"><span class="toc-text">@Primary</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -458,100 +458,172 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>到目前为止，我们所学习的给IOC容器中注册组件的方法有：</p>
-<ul>
-<li>包扫描（@ComponentScan(“package_path”)）+ 组件标注注解（@Controller, @Service, @Repository, @Component）：导入我们自定义的组件</li>
-<li>@Bean：可用于导入第三方包里面的组件</li>
-<li>@Import：快速给容器导入一个组件<ul>
-<li>@Import(要导入到容器中的组件.class)，容器中就会自动注册这个组件id默认为全类名</li>
-<li>ImportSelector，自定义实现ImportSelector的selectImports方法，返回String[]数组对象，内携带要导入容器的类的全类名</li>
-<li>ImportBeanDefinitionRegistrar：手动注册bean到容器中</li>
+        <p>自动装配：Spring利用依赖注入，完成对IOC容器中各个组件的依赖关系赋值；</p>
+<h2 id="Autowired自动注入"><a href="#Autowired自动注入" class="headerlink" title="@Autowired自动注入"></a>@Autowired自动注入</h2><ul>
+<li>:one: 默认<strong>优先按照类型去容器中找对应的组件</strong>，找到就为标注的属性赋值</li>
+<li>:two: 如果<strong>找到了多个相同类型的组件，再将属性的名称作为组件的id去容器中查找</strong></li>
+<li>注意：<ul>
+<li>默认情况下，一定要在容器中有该组件的情况下才能自动装配,否则就会报错</li>
+<li>如果我们容器中没有对应组件时不进行装配，应写：<strong>@Autowired( required=false )</strong></li>
 </ul>
 </li>
 </ul>
-<h4 id="Import-XXX-class"><a href="#Import-XXX-class" class="headerlink" title="@Import(XXX.class)"></a>@Import(XXX.class)</h4><p>随便建一个类</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329154732986.png" alt="image-20200329154732986"></p>
-<p>快速导入@Import</p>
-<pre><code class="java">@Configuration
-@Import(Color.class)
-public class MainConfig2 {
-    ...
-}</code></pre>
-<p>测试：</p>
-<pre><code class="java">ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
-@Test
-public void testImport(){
-    String[] names = context.getBeanDefinitionNames();
-    for (String name : names) {
-        System.out.println(name);
+<p>验证：</p>
+<p>BookDao:</p>
+<pre><code class="java">@Repository
+public class BookDao {
+    private String label=&quot;1&quot;;
+    public String getLabel() {
+        return label;
     }
-}</code></pre>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329154521386.png" alt="image-20200329154521386"></p>
-<h4 id="Import-ImportSelector-class"><a href="#Import-ImportSelector-class" class="headerlink" title="@Import(ImportSelector.class)"></a>@Import(ImportSelector.class)</h4><p>此法在SpringBoot源码中用得较多</p>
-<p>实现ImportSelector接口</p>
-<pre><code class="java">public class MyImportSelector implements ImportSelector {
-    /**
-     * 自定义返回需要的组件
-     * @param annotationMetadata 当前@Import注解所标注类的所有注解信息
-     * @return 返回值就是要导入到容器中组件的全类目，不能返回null
-     */
+    public void setLabel(String label) {
+        this.label = label;
+    }
     @Override
-    public String[] selectImports(AnnotationMetadata annotationMetadata) {
-        return new String[]{&quot;com.study.bean.Blue&quot;,&quot;com.study.bean.Green&quot;, &quot;com.study.bean.Yellow&quot;};
+    public String toString() {
+        return &quot;BookDao{&quot; +
+                &quot;label=&#39;&quot; + label + &#39;\&#39;&#39; +
+                &#39;}&#39;;
     }
 }</code></pre>
-<p>导入我们自定义的ImportSelector</p>
-<pre><code class="java">@Configuration
-@Import({
-    Color.class,
-    MyImportSelector.class
-})
-public class MainConfig2 {
-    ...
+<p>BookService:</p>
+<pre><code class="java">@Service
+public class BookService {
+    @Autowired
+    private BookDao bookDao;    //自动装配
+
+    @Override
+    public String toString() {
+        return &quot;BookService{&quot; +
+                &quot;bookDao=&quot; + bookDao +
+                &#39;}&#39;;
+    }
 }</code></pre>
-<p>测试：</p>
-<pre><code class="java">ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
-@Test
-public void testImport(){
-    String[] names = context.getBeanDefinitionNames();
-    for (String name : names) {
-        System.out.println(name);
+<p>配置类：除了ComponentScan将扫描到BookDao（Bean name默认为首字母小写：bookDao）外，我们另外注入名为bookDao2的Bean，看最终Autowired究竟会装配哪一个</p>
+<pre><code class="java">@Configuration
+@ComponentScan({&quot;com.study.service&quot;,&quot;com.study.controller&quot;,&quot;com.study.dao&quot;})
+public class MainConfigOfAutowired {
+    //除了ComponentScan将扫描到BookDao外，我们另外注入名为bookDao2的Bean，看最终Autowired究竟会装配哪一个
+    @Bean(&quot;bookDao2&quot;)
+    public BookDao bookDao(){
+        BookDao bookDao=new BookDao();
+        bookDao.setLabel(&quot;2&quot;);
+        return bookDao;
+    }
+}</code></pre>
+<p>测试</p>
+<pre><code class="java">public class IOCTest_Autowired {
+    @Test
+    public void test1(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfigOfAutowired.class);
+        BookService bookService = context.getBean(BookService.class);
+        System.out.println(bookService);
+    }
+}</code></pre>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403012633248.png" alt="image-20200403012633248"></p>
+<p>那我们吧@Autowired标注的BookDao属性名改一改，改成bookDao2看看:</p>
+<p>BookService：</p>
+<pre><code class="java">@Service
+public class BookService {
+    @Autowired
+    private BookDao bookDao2;
+    @Override
+    public String toString() {
+        return &quot;BookService{&quot; +
+                &quot;bookDao=&quot; + bookDao2 +
+                &#39;}&#39;;
     }
 }</code></pre>
 <p>结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329164650715.png" alt="image-20200329164650715"></p>
-<h4 id="Import-ImportBeanDefinitionRegistrar-class"><a href="#Import-ImportBeanDefinitionRegistrar-class" class="headerlink" title="@Import(ImportBeanDefinitionRegistrar.class)"></a>@Import(ImportBeanDefinitionRegistrar.class)</h4><p>可以通过运行时Bean注册信息判断并选择导入组件，此法较为少用</p>
-<p>实现ImportBeanDefinitionRegistrar接口：</p>
-<pre><code class="java">public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
-    /**
-     * 把所有需要添加到容器中的bean，调用BeanDefinitionRegistrar.registerBeanDefinition方法手动注册进来
-     * @param importingClassMetadata 当前类的注解信息
-     * @param registry  BeanDefinition注册类
-     */
-    @Override
-    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        boolean green = registry.containsBeanDefinition(&quot;com.study.bean.Green&quot;);
-        boolean blue = registry.containsBeanDefinition(&quot;com.study.bean.Blue&quot;);
-        //如果容器中已有green和blue
-        if (green&amp;&amp;blue){
-            //指定bean注册信息和名称，注册新的bean
-            RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(Rainbow.class);
-            registry.registerBeanDefinition(&quot;rainBow&quot;,rootBeanDefinition);
-        }
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403013128275.png" alt="image-20200403013128275"></p>
+<p>得证：​结论:two: 成立</p>
+<h3 id="方法、构造器上标注-Autowired实现自动装配"><a href="#方法、构造器上标注-Autowired实现自动装配" class="headerlink" title="方法、构造器上标注@Autowired实现自动装配"></a>方法、构造器上标注@Autowired实现自动装配</h3><p>除了在类属性上标注实现自动装配外，@Autowired 还可以标注在方法、构造器上方及它们的参数中，以从容器获取参数组件的值。</p>
+<ul>
+<li><p>标在方法位置</p>
+<pre><code class="java">public class Color {
+    private Car car;
+
+    public Car getCar() {
+        return car;
+    }
+
+    @Autowired
+    public void setCar(Car car) {
+        this.car = car;
     }
 }</code></pre>
-<p>导入我们自定义的ImportBeanDefinitionRegistrar</p>
-<pre><code class="java">@Configuration
-@Import({
-        Color.class,
-        MyImportSelector.class,
-        MyImportBeanDefinitionRegistrar.class
-})
-public class MainConfig2 {
-    ...
+</li>
+</ul>
+<ul>
+<li><p>标在构造器上。如果当前类只有一个有参构造器，@Autowired可以省略，参数位置对应的组件还是能被自动装配。</p>
+<pre><code class="java">@Component
+@Data
+public class Boss {
+    private Car car;
+
+    @Autowired        //Car将从容器中获取，此注解也可以省略
+    public Boss(Car car){
+        this.car=car;
+        System.out.println(&quot;Boss有参构造器&quot;);
+    }
 }</code></pre>
-<p>结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329171235595.png" alt="image-20200329171235595"></p>
+</li>
+</ul>
+<ul>
+<li>标注在方法参数位置</li>
+</ul>
+<h3 id="Bean标注的方法创建对象时，方法参数的值从容器中获取"><a href="#Bean标注的方法创建对象时，方法参数的值从容器中获取" class="headerlink" title="@Bean标注的方法创建对象时，方法参数的值从容器中获取"></a>@Bean标注的方法创建对象时，方法参数的值从容器中获取</h3><pre><code class="java">@Configuration
+@Import(Car.class)
+MainConfigOfAutowired{
+
+    @Bean
+    public Color color(Car car){
+        Color color=new Color();
+        color.setCar(car);        //此Car实例将从容器中获取
+        return new Color();
+    }
+}</code></pre>
+<h2 id="Qualifier"><a href="#Qualifier" class="headerlink" title="@Qualifier"></a>@Qualifier</h2><ul>
+<li>@Qualifier明确指定需要装配的Bean的ID</li>
+</ul>
+<p>验证：</p>
+<p>BookService：</p>
+<pre><code class="java">@Service
+public class BookService {
+    @Qualifier(&quot;bookDao&quot;)
+    @Autowired
+    private BookDao bookDao2;
+    @Override
+    public String toString() {
+        return &quot;BookService{&quot; +
+                &quot;bookDao=&quot; + bookDao2 +
+                &#39;}&#39;;
+    }
+}</code></pre>
+<p>同刚才测试用例，测试得结果：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403014312057.png" alt="image-20200403014312057"></p>
+<p>BookService：</p>
+<pre><code class="java">@Service
+public class BookService {
+    @Qualifier(&quot;bookDao2&quot;)
+    @Autowired
+    private BookDao bookDao2;
+    @Override
+    public String toString() {
+        return &quot;BookService{&quot; +
+                &quot;bookDao=&quot; + bookDao2 +
+                &#39;}&#39;;
+    }
+}</code></pre>
+<p>同刚才测试用例，测试得结果：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403014359736.png" alt="image-20200403014359736"></p>
+<h2 id="Primary"><a href="#Primary" class="headerlink" title="@Primary"></a>@Primary</h2><ul>
+<li><p>标注有@Primary的Bean将成为Spring进行自动装配时的默认首选Bean</p>
+</li>
+<li><p>标注有@Primary的Bean类不能同时标注@Qualifier</p>
+</li>
+</ul>
+<p>基本用不到，实际命名时不应模糊不清。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -565,12 +637,12 @@ public class MainConfig2 {
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_组件注册4_@Import</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">513</span></p>
+    <p><span class="copy-title">文章标题:</span>Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">796</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-03-29, 15:33:06</p>
-    <p><span class="copy-title">最后更新:</span>2020-03-29, 18:37:21</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/" title="Spring注解学习_组件注册4_@Import">https://qiurungeng.github.io/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-03, 00:06:03</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-03, 15:51:08</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D1-Autowired-Qualifier-Primary/" title="Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary">https://qiurungeng.github.io/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D1-Autowired-Qualifier-Primary/</a>
 </div>
 
 

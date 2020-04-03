@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_组件注册4_@Import | 梅罢葛的博客</title>
+  <title>Spring注解学习_自动装配4_@Profile | 梅罢葛的博客</title>
   <meta name="keywords" content=" java , spring , spring注解 ">
-  <meta name="description" content="Spring注解学习_组件注册4_@Import | 梅罢葛的博客">
+  <meta name="description" content="Spring注解学习_自动装配4_@Profile | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="@Value可以用@Value给Bean的属性赋值，这个注解对应于原来xml中标签里的value字段： &lt;bean id&#x3D;&quot;person&quot; class&#x3D;&quot;com.study.bean.Person&quot;&gt;     &lt;property name&#x3D;&quot;age&quot; value&#x3D;&quot;18&quot;&#x2F;&gt;     &lt;p">
 <meta property="og:type" content="article">
@@ -390,9 +390,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-组件注册-Import" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Spring注解学习-自动装配4-Profile" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_组件注册4_@Import</h1>
+        <h1 class="article-title">Spring注解学习_自动装配4_@Profile</h1>
     
     <div class="article-meta">
         
@@ -418,12 +418,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-03-29 18:37:21'>2020-03-29 15:33</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-03 18:43:09'>2020-04-03 16:47</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:513</span>
+        <span>字数:695</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -442,7 +442,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-XXX-class"><span class="toc-text">@Import(XXX.class)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-ImportSelector-class"><span class="toc-text">@Import(ImportSelector.class)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-ImportBeanDefinitionRegistrar-class"><span class="toc-text">@Import(ImportBeanDefinitionRegistrar.class)</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Profile"><span class="toc-text">@Profile</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -458,100 +458,147 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>到目前为止，我们所学习的给IOC容器中注册组件的方法有：</p>
-<ul>
-<li>包扫描（@ComponentScan(“package_path”)）+ 组件标注注解（@Controller, @Service, @Repository, @Component）：导入我们自定义的组件</li>
-<li>@Bean：可用于导入第三方包里面的组件</li>
-<li>@Import：快速给容器导入一个组件<ul>
-<li>@Import(要导入到容器中的组件.class)，容器中就会自动注册这个组件id默认为全类名</li>
-<li>ImportSelector，自定义实现ImportSelector的selectImports方法，返回String[]数组对象，内携带要导入容器的类的全类名</li>
-<li>ImportBeanDefinitionRegistrar：手动注册bean到容器中</li>
-</ul>
-</li>
-</ul>
-<h4 id="Import-XXX-class"><a href="#Import-XXX-class" class="headerlink" title="@Import(XXX.class)"></a>@Import(XXX.class)</h4><p>随便建一个类</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329154732986.png" alt="image-20200329154732986"></p>
-<p>快速导入@Import</p>
+        <p>@Profile：Spring为我们提供的可以根据当前环境，动态激活和切换一系列组件的功能</p>
+<p>比如我们可以根据开发环境、测试环境、生产环境 切换不同的组件。</p>
+<hr>
+<p>本例中我们用@Profile来决定运行时使用的数据源：</p>
+<p>先新建配置类：MainConfigOfProfile.java:</p>
 <pre><code class="java">@Configuration
-@Import(Color.class)
-public class MainConfig2 {
-    ...
-}</code></pre>
-<p>测试：</p>
-<pre><code class="java">ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
-@Test
-public void testImport(){
-    String[] names = context.getBeanDefinitionNames();
-    for (String name : names) {
-        System.out.println(name);
+@PropertySource(&quot;classpath:/dbconfig.properties&quot;)
+public class MainConfigOfProfile {
+    @Value(&quot;${db.user}&quot;)
+    private String user;
+    @Value(&quot;${db.password}&quot;)
+    private String pwd;
+    @Value(&quot;${db.driverClass}&quot;)
+    private String driver;
+
+    @Bean(&quot;testDataSource&quot;)
+    public DataSource dataSourceTest() throws PropertyVetoException {
+        ComboPooledDataSource dataSource = new ComboPooledDataSource();
+        dataSource.setUser(user);
+        dataSource.setPassword(pwd);
+        dataSource.setJdbcUrl(&quot;jdbc:mysql://localhost:3306/labs&quot;);
+        dataSource.setDriverClass(driver);
+        return dataSource;
     }
-}</code></pre>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329154521386.png" alt="image-20200329154521386"></p>
-<h4 id="Import-ImportSelector-class"><a href="#Import-ImportSelector-class" class="headerlink" title="@Import(ImportSelector.class)"></a>@Import(ImportSelector.class)</h4><p>此法在SpringBoot源码中用得较多</p>
-<p>实现ImportSelector接口</p>
-<pre><code class="java">public class MyImportSelector implements ImportSelector {
-    /**
-     * 自定义返回需要的组件
-     * @param annotationMetadata 当前@Import注解所标注类的所有注解信息
-     * @return 返回值就是要导入到容器中组件的全类目，不能返回null
-     */
-    @Override
-    public String[] selectImports(AnnotationMetadata annotationMetadata) {
-        return new String[]{&quot;com.study.bean.Blue&quot;,&quot;com.study.bean.Green&quot;, &quot;com.study.bean.Yellow&quot;};
+    @Bean(&quot;devDataSource&quot;)
+    public DataSource dataSourceDev() throws PropertyVetoException {
+        ComboPooledDataSource dataSource = new ComboPooledDataSource();
+        dataSource.setUser(user);
+        dataSource.setPassword(pwd);
+        dataSource.setJdbcUrl(&quot;jdbc:mysql://localhost:3306/gmall&quot;);
+        dataSource.setDriverClass(driver);
+        return dataSource;
     }
-}</code></pre>
-<p>导入我们自定义的ImportSelector</p>
-<pre><code class="java">@Configuration
-@Import({
-    Color.class,
-    MyImportSelector.class
-})
-public class MainConfig2 {
-    ...
-}</code></pre>
-<p>测试：</p>
-<pre><code class="java">ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
-@Test
-public void testImport(){
-    String[] names = context.getBeanDefinitionNames();
-    for (String name : names) {
-        System.out.println(name);
+    @Bean(&quot;prodDataSource&quot;)
+    public DataSource dataSourceProd() throws PropertyVetoException {
+        ComboPooledDataSource dataSource = new ComboPooledDataSource();
+        dataSource.setUser(user);
+        dataSource.setPassword(pwd);
+        dataSource.setJdbcUrl(&quot;jdbc:mysql://localhost:3306/mybatis&quot;);
+        dataSource.setDriverClass(driver);
+        return dataSource;
     }
+
 }</code></pre>
-<p>结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329164650715.png" alt="image-20200329164650715"></p>
-<h4 id="Import-ImportBeanDefinitionRegistrar-class"><a href="#Import-ImportBeanDefinitionRegistrar-class" class="headerlink" title="@Import(ImportBeanDefinitionRegistrar.class)"></a>@Import(ImportBeanDefinitionRegistrar.class)</h4><p>可以通过运行时Bean注册信息判断并选择导入组件，此法较为少用</p>
-<p>实现ImportBeanDefinitionRegistrar接口：</p>
-<pre><code class="java">public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
-    /**
-     * 把所有需要添加到容器中的bean，调用BeanDefinitionRegistrar.registerBeanDefinition方法手动注册进来
-     * @param importingClassMetadata 当前类的注解信息
-     * @param registry  BeanDefinition注册类
-     */
-    @Override
-    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        boolean green = registry.containsBeanDefinition(&quot;com.study.bean.Green&quot;);
-        boolean blue = registry.containsBeanDefinition(&quot;com.study.bean.Blue&quot;);
-        //如果容器中已有green和blue
-        if (green&amp;&amp;blue){
-            //指定bean注册信息和名称，注册新的bean
-            RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(Rainbow.class);
-            registry.registerBeanDefinition(&quot;rainBow&quot;,rootBeanDefinition);
+<p>对应地在resource目录下创建配置文件：dbconfig.properties:</p>
+<pre><code class="properties">db.user=root
+db.password=123456
+db.driverClass=com.mysql.cj.jdbc.Driver</code></pre>
+<p>测试一下：</p>
+<pre><code class="java">public class IOCTest_Profile {
+    @Test
+    public void test1(){
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(MainConfigOfProfile.class);
+        String[] beanNamesForType = context.getBeanNamesForType(DataSource.class);
+        for (String s : beanNamesForType) {
+            System.out.println(s);
         }
     }
 }</code></pre>
-<p>导入我们自定义的ImportBeanDefinitionRegistrar</p>
+<p>所有Bean都被正常加载：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403180546637.png" alt="image-20200403180546637"></p>
+<h2 id="Profile"><a href="#Profile" class="headerlink" title="@Profile"></a>@Profile</h2><p>@Profile: 指定组件在哪个环境的情况下才能被注入到容器中。若不指定，该组件在任何环境下都能被注入到容器。</p>
+<ul>
+<li><p>加了环境标识的bean，只有当这个环境被激活时才能注册到容器中。默认为@Profile(“default”)</p>
+</li>
+<li><p>如何激活对应环境：</p>
+<ul>
+<li><p>使用命令行动态参数：在虚拟机参数位置加载 -Dspring.profiles.active=test</p>
+</li>
+<li><p>使用代码方式设置需要激活的环境：</p>
+<pre><code class="java">//要指定环境，容器需要使用无参构造
+AnnotationConfigApplicationContext context = 
+    new AnnotationConfigApplicationContext();
+//激活环境
+context.getEnvironment().setActiveProfiles(&quot;dev&quot;,&quot;test&quot;);
+//注册配置类
+context.register(MainConfigOfProfile.class);
+//启动刷新容器
+context.refresh();</code></pre>
+</li>
+</ul>
+</li>
+<li><p>@Profile也可以标注在配置类上，当指定的环境激活时，该配置类里的所有配置才能生效</p>
+</li>
+<li><p>没有标注@Profile的Bean，在任何环境下都是加载的。</p>
+</li>
+</ul>
+<p>为各个数据源标注环境：</p>
 <pre><code class="java">@Configuration
-@Import({
-        Color.class,
-        MyImportSelector.class,
-        MyImportBeanDefinitionRegistrar.class
-})
-public class MainConfig2 {
+@PropertySource(&quot;classpath:/dbconfig.properties&quot;)
+public class MainConfigOfProfile {
     ...
+
+    @Profile(&quot;test&quot;)
+    @Bean(&quot;testDataSource&quot;)
+    public DataSource dataSourceTest() throws PropertyVetoException {
+        ...
+    }
+
+    @Profile(&quot;dev&quot;)
+    @Bean(&quot;devDataSource&quot;)
+    public DataSource dataSourceDev() throws PropertyVetoException {
+        ...
+    }
+
+    @Profile(&quot;prod&quot;)
+    @Bean(&quot;prodDataSource&quot;)
+    public DataSource dataSourceProd() throws PropertyVetoException {
+        ...
+    }
+
+}
+</code></pre>
+<p>不开启对应环境时无法加载指定的Bean：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403180905501.png" alt="image-20200403180905501"></p>
+<p>:one: 使用命令行参数激活test环境：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403181156961.png" alt="image-20200403181156961"></p>
+<p>此时的测试结果：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403181221878.png" alt="image-20200403181221878"></p>
+<p>:two: 在代码中指定激活环境：</p>
+<pre><code class="java">public class IOCTest_Profile {
+    @Test
+    public void test1(){
+        //要指定环境，容器需要使用无参构造
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
+        //激活环境
+        context.getEnvironment().setActiveProfiles(&quot;dev&quot;,&quot;test&quot;);
+        //注册配置类
+        context.register(MainConfigOfProfile.class);
+        //启动刷新容器
+        context.refresh();
+
+        String[] beanNamesForType = context.getBeanNamesForType(DataSource.class);
+        for (String s : beanNamesForType) {
+            System.out.println(s);
+        }
+        context.close();
+    }
 }</code></pre>
-<p>结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329171235595.png" alt="image-20200329171235595"></p>
+<p>运行测试，结果为：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403182120200.png" alt="image-20200403182120200"></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -565,12 +612,12 @@ public class MainConfig2 {
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_组件注册4_@Import</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">513</span></p>
+    <p><span class="copy-title">文章标题:</span>Spring注解学习_自动装配4_@Profile</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">695</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-03-29, 15:33:06</p>
-    <p><span class="copy-title">最后更新:</span>2020-03-29, 18:37:21</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/" title="Spring注解学习_组件注册4_@Import">https://qiurungeng.github.io/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-03, 16:47:50</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-03, 18:43:09</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D4-Profile/" title="Spring注解学习_自动装配4_@Profile">https://qiurungeng.github.io/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D4-Profile/</a>
 </div>
 
 

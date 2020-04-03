@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_组件注册4_@Import | 梅罢葛的博客</title>
+  <title>Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理 | 梅罢葛的博客</title>
   <meta name="keywords" content=" java , spring , spring注解 ">
-  <meta name="description" content="Spring注解学习_组件注册4_@Import | 梅罢葛的博客">
+  <meta name="description" content="Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="@Value可以用@Value给Bean的属性赋值，这个注解对应于原来xml中标签里的value字段： &lt;bean id&#x3D;&quot;person&quot; class&#x3D;&quot;com.study.bean.Person&quot;&gt;     &lt;property name&#x3D;&quot;age&quot; value&#x3D;&quot;18&quot;&#x2F;&gt;     &lt;p">
 <meta property="og:type" content="article">
@@ -390,9 +390,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-组件注册-Import" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Spring注解学习-自动装配3-Aware注入Spring底层组件-原理" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_组件注册4_@Import</h1>
+        <h1 class="article-title">Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理</h1>
     
     <div class="article-meta">
         
@@ -418,12 +418,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-03-29 18:37:21'>2020-03-29 15:33</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-03 16:37:03'>2020-04-03 15:53</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:513</span>
+        <span>字数:391</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -442,7 +442,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-XXX-class"><span class="toc-text">@Import(XXX.class)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-ImportSelector-class"><span class="toc-text">@Import(ImportSelector.class)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Import-ImportBeanDefinitionRegistrar-class"><span class="toc-text">@Import(ImportBeanDefinitionRegistrar.class)</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#通过实现xxxAware接口，可以把Spring底层的一些组件注入到我们自定义的Bean中。"><span class="toc-text">通过实现xxxAware接口，可以把Spring底层的一些组件注入到我们自定义的Bean中。</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原理：Spring使用xxxAwareProcessor即后置处理器来调用xxxAware接口实现的功能"><span class="toc-text">原理：Spring使用xxxAwareProcessor即后置处理器来调用xxxAware接口实现的功能</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -458,100 +458,42 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>到目前为止，我们所学习的给IOC容器中注册组件的方法有：</p>
-<ul>
-<li>包扫描（@ComponentScan(“package_path”)）+ 组件标注注解（@Controller, @Service, @Repository, @Component）：导入我们自定义的组件</li>
-<li>@Bean：可用于导入第三方包里面的组件</li>
-<li>@Import：快速给容器导入一个组件<ul>
-<li>@Import(要导入到容器中的组件.class)，容器中就会自动注册这个组件id默认为全类名</li>
-<li>ImportSelector，自定义实现ImportSelector的selectImports方法，返回String[]数组对象，内携带要导入容器的类的全类名</li>
-<li>ImportBeanDefinitionRegistrar：手动注册bean到容器中</li>
-</ul>
-</li>
-</ul>
-<h4 id="Import-XXX-class"><a href="#Import-XXX-class" class="headerlink" title="@Import(XXX.class)"></a>@Import(XXX.class)</h4><p>随便建一个类</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329154732986.png" alt="image-20200329154732986"></p>
-<p>快速导入@Import</p>
-<pre><code class="java">@Configuration
-@Import(Color.class)
-public class MainConfig2 {
-    ...
-}</code></pre>
-<p>测试：</p>
-<pre><code class="java">ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
-@Test
-public void testImport(){
-    String[] names = context.getBeanDefinitionNames();
-    for (String name : names) {
-        System.out.println(name);
-    }
-}</code></pre>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329154521386.png" alt="image-20200329154521386"></p>
-<h4 id="Import-ImportSelector-class"><a href="#Import-ImportSelector-class" class="headerlink" title="@Import(ImportSelector.class)"></a>@Import(ImportSelector.class)</h4><p>此法在SpringBoot源码中用得较多</p>
-<p>实现ImportSelector接口</p>
-<pre><code class="java">public class MyImportSelector implements ImportSelector {
-    /**
-     * 自定义返回需要的组件
-     * @param annotationMetadata 当前@Import注解所标注类的所有注解信息
-     * @return 返回值就是要导入到容器中组件的全类目，不能返回null
-     */
+        <p>如果：自定义组件 想要使用 Spring容器底层的一些组件（如 ApplicationContext, BeanFactory, xxx）</p>
+<p>那么：自定义组件 应当实现：xxxAware 接口 （如 ApplicationContextAware等），在创建对象的时候，会调用接口规定的方法注入相关组件</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403160544918.png" alt="image-20200403160544918"></p>
+<p>这些 xxxAware 接口都继承自 Aware 空接口，我们看看它的定义：</p>
+<blockquote>
+<p>A marker superinterface indicating that a bean is eligible to be notified by the Spring container of a particular framework object through a callback-style method. The actual method signature is determined by individual subinterfaces but should typically consist of just one void-returning method that accepts a single argument.</p>
+<p>(一个标记超接口，指示bean有资格通过回调样式的方法获得Spring容器中特定框架对象的通知。实际的方法签名是由各个子接口决定的，但是通常应该只包含一个接受单个参数的空返回方法。)</p>
+</blockquote>
+<h2 id="通过实现xxxAware接口，可以把Spring底层的一些组件注入到我们自定义的Bean中。"><a href="#通过实现xxxAware接口，可以把Spring底层的一些组件注入到我们自定义的Bean中。" class="headerlink" title="通过实现xxxAware接口，可以把Spring底层的一些组件注入到我们自定义的Bean中。"></a>通过实现xxxAware接口，可以把Spring底层的一些组件注入到我们自定义的Bean中。</h2><p>新建Bean类：Red</p>
+<pre><code class="java">@Component
+public class Red implements ApplicationContextAware, BeanNameAware, EmbeddedValueResolverAware {
+    private ApplicationContext applicationContext;
+
     @Override
-    public String[] selectImports(AnnotationMetadata annotationMetadata) {
-        return new String[]{&quot;com.study.bean.Blue&quot;,&quot;com.study.bean.Green&quot;, &quot;com.study.bean.Yellow&quot;};
+    public void setBeanName(String name) {
+        System.out.println(&quot;当前Bean的名字：&quot;+name);
     }
-}</code></pre>
-<p>导入我们自定义的ImportSelector</p>
-<pre><code class="java">@Configuration
-@Import({
-    Color.class,
-    MyImportSelector.class
-})
-public class MainConfig2 {
-    ...
-}</code></pre>
-<p>测试：</p>
-<pre><code class="java">ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig2.class);
-@Test
-public void testImport(){
-    String[] names = context.getBeanDefinitionNames();
-    for (String name : names) {
-        System.out.println(name);
-    }
-}</code></pre>
-<p>结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329164650715.png" alt="image-20200329164650715"></p>
-<h4 id="Import-ImportBeanDefinitionRegistrar-class"><a href="#Import-ImportBeanDefinitionRegistrar-class" class="headerlink" title="@Import(ImportBeanDefinitionRegistrar.class)"></a>@Import(ImportBeanDefinitionRegistrar.class)</h4><p>可以通过运行时Bean注册信息判断并选择导入组件，此法较为少用</p>
-<p>实现ImportBeanDefinitionRegistrar接口：</p>
-<pre><code class="java">public class MyImportBeanDefinitionRegistrar implements ImportBeanDefinitionRegistrar {
-    /**
-     * 把所有需要添加到容器中的bean，调用BeanDefinitionRegistrar.registerBeanDefinition方法手动注册进来
-     * @param importingClassMetadata 当前类的注解信息
-     * @param registry  BeanDefinition注册类
-     */
+
     @Override
-    public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        boolean green = registry.containsBeanDefinition(&quot;com.study.bean.Green&quot;);
-        boolean blue = registry.containsBeanDefinition(&quot;com.study.bean.Blue&quot;);
-        //如果容器中已有green和blue
-        if (green&amp;&amp;blue){
-            //指定bean注册信息和名称，注册新的bean
-            RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(Rainbow.class);
-            registry.registerBeanDefinition(&quot;rainBow&quot;,rootBeanDefinition);
-        }
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        System.out.println(&quot;传入的ioc：&quot;+applicationContext);
+        this.applicationContext=applicationContext;
+    }
+
+    @Override
+    public void setEmbeddedValueResolver(StringValueResolver resolver) {
+        String value = resolver.resolveStringValue(&quot;你好${os.name},我是#{100+11}&quot;);
+        System.out.println(&quot;解析的字符串：&quot;+value);
     }
 }</code></pre>
-<p>导入我们自定义的ImportBeanDefinitionRegistrar</p>
-<pre><code class="java">@Configuration
-@Import({
-        Color.class,
-        MyImportSelector.class,
-        MyImportBeanDefinitionRegistrar.class
-})
-public class MainConfig2 {
-    ...
-}</code></pre>
-<p>结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329171235595.png" alt="image-20200329171235595"></p>
+<p>测试时加载Spring容器过程中打印：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403162720325.png" alt="image-20200403162720325"></p>
+<h2 id="原理：Spring使用xxxAwareProcessor即后置处理器来调用xxxAware接口实现的功能"><a href="#原理：Spring使用xxxAwareProcessor即后置处理器来调用xxxAware接口实现的功能" class="headerlink" title="原理：Spring使用xxxAwareProcessor即后置处理器来调用xxxAware接口实现的功能"></a>原理：Spring使用xxxAwareProcessor即后置处理器来调用xxxAware接口实现的功能</h2><p>Spring提供的每一个xxxAware都有它对应的xxxAwareProcessor</p>
+<p>如：</p>
+<p><img src="C:%5CUsers%5CApollos%5CAppData%5CRoaming%5CTypora%5Ctypora-user-images%5Cimage-20200403163212406.png" alt="image-20200403163212406"></p>
+<p>之前已经分析过，详见：<a href="https://qiurungeng.github.io/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/#ApplicationContextAwareProcessor">Spring底层对BeanPostProcessor的使用</a></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -565,12 +507,12 @@ public class MainConfig2 {
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_组件注册4_@Import</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">513</span></p>
+    <p><span class="copy-title">文章标题:</span>Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">391</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-03-29, 15:33:06</p>
-    <p><span class="copy-title">最后更新:</span>2020-03-29, 18:37:21</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/" title="Spring注解学习_组件注册4_@Import">https://qiurungeng.github.io/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-03, 15:53:40</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-03, 16:37:03</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D3-Aware%E6%B3%A8%E5%85%A5Spring%E5%BA%95%E5%B1%82%E7%BB%84%E4%BB%B6-%E5%8E%9F%E7%90%86/" title="Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理">https://qiurungeng.github.io/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D3-Aware%E6%B3%A8%E5%85%A5Spring%E5%BA%95%E5%B1%82%E7%BB%84%E4%BB%B6-%E5%8E%9F%E7%90%86/</a>
 </div>
 
 
