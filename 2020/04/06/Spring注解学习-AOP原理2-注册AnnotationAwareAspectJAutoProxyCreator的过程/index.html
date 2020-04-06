@@ -6,26 +6,21 @@
   <meta name="keywords" content=" java , spring , spring注解 , AOP ">
   <meta name="description" content="Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="@Profile：Spring为我们提供的可以根据当前环境，动态激活和切换一系列组件的功能 比如我们可以根据开发环境、测试环境、生产环境 切换不同的组件。  本例中我们用@Profile来决定运行时使用的数据源： 先新建配置类：MainConfigOfProfile.java: @Configuration @PropertySource(&quot;classpath:&#x2F;dbconfig.pro">
+<meta name="description" content="¶Spring AOP总结：  @EnableAspectJAutoProxy 开启AOP功能 @EnableAspectJAutoProxy 会给容器中注册一个组件AnnotationAwareAspectJAutoProxyCreator AnnotationAwareAspectJAutoProxyCreator是一个后置处理器 我们由容器创建流程看AnnotationAwareAspect">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring注解学习_自动装配4_@Profile">
-<meta property="og:url" content="https://qiurungeng.github.io/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D4-Profile/index.html">
+<meta property="og:title" content="Spring注解学习_AOP原理5_SpringAOP总结">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/index.html">
 <meta property="og:site_name" content="梅罢葛的博客">
-<meta property="og:description" content="@Profile：Spring为我们提供的可以根据当前环境，动态激活和切换一系列组件的功能 比如我们可以根据开发环境、测试环境、生产环境 切换不同的组件。  本例中我们用@Profile来决定运行时使用的数据源： 先新建配置类：MainConfigOfProfile.java: @Configuration @PropertySource(&quot;classpath:&#x2F;dbconfig.pro">
+<meta property="og:description" content="¶Spring AOP总结：  @EnableAspectJAutoProxy 开启AOP功能 @EnableAspectJAutoProxy 会给容器中注册一个组件AnnotationAwareAspectJAutoProxyCreator AnnotationAwareAspectJAutoProxyCreator是一个后置处理器 我们由容器创建流程看AnnotationAwareAspect">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403180546637.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403180905501.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403181156961.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403181221878.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403182120200.png">
-<meta property="article:published_time" content="2020-04-03T08:47:50.000Z">
-<meta property="article:modified_time" content="2020-04-03T10:43:09.000Z">
+<meta property="article:published_time" content="2020-04-06T14:32:08.000Z">
+<meta property="article:modified_time" content="2020-04-06T14:49:45.760Z">
 <meta property="article:author" content="梅罢葛">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="spring">
 <meta property="article:tag" content="spring注解">
+<meta property="article:tag" content="AOP">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200403180546637.png">
 
 
 <link rel="icon" href="/img/weini.png">
@@ -128,6 +123,14 @@
     
         
             
+            <li><div data-rel="spring">spring<small>(18)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
             <li><div data-rel="数据库">数据库<small>(1)</small></div>
                 
             </li>
@@ -150,14 +153,6 @@
             
         
     
-        
-            
-            <li><div data-rel="spring">spring<small>(18)</small></div>
-                
-            </li>
-            
-        
-    
 </ul>
 <div class="left-bottom">
     <div class="menus">
@@ -169,7 +164,7 @@
     <div><a class="about  site_url"  href="/about">关于</a></div>
 </div>
 <input type="hidden" id="yelog_site_posts_number" value="23">
-<input type="hidden" id="yelog_site_word_count" value="45.5k">
+<input type="hidden" id="yelog_site_word_count" value="45.6k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -203,6 +198,22 @@
     <div class="tags-list">
     
     <li class="article-tag-list-item">
+        <a class="color5">java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">spring</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">spring注解</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">AOP</a>
+    </li>
+    
+    <li class="article-tag-list-item">
         <a class="color3">测试</a>
     </li>
     
@@ -226,106 +237,50 @@
         <a class="color3">后端</a>
     </li>
     
-    <li class="article-tag-list-item">
-        <a class="color5">java</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a class="color2">spring</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a class="color4">spring注解</a>
-    </li>
-    
-    <li class="article-tag-list-item">
-        <a class="color4">AOP</a>
-    </li>
-    
     <div class="clearfix"></div>
 </div>
 
     
     <nav id="title-list-nav">
         
-        <a  class=""
-           href="/2020/03/27/hello-world/"
-           data-tag=""
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%863-AnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E4%BD%9C%E7%94%A8/"
+           data-tag="java,spring,spring注解,AOP"
            data-author="" >
-            <span class="post-title" title="Hello World">Hello World</span>
-            <span class="post-date" title="2020-03-27 22:09:17">2020/03/27</span>
-        </a>
-        
-        <a  class=""
-           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
-           data-tag="测试"
-           data-author="" >
-            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
-            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
-        </a>
-        
-        <a  class="数据库 "
-           href="/2020/03/28/mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0/"
-           data-tag="MySQL"
-           data-author="" >
-            <span class="post-title" title="谷粒商城项目学习笔记：MySQL">谷粒商城项目学习笔记：MySQL</span>
-            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
-        </a>
-        
-        <a  class="设计模式 "
-           href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"
-           data-tag="设计模式,java"
-           data-author="" >
-            <span class="post-title" title="工厂模式">工厂模式</span>
-            <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
-        </a>
-        
-        <a  class="后端 "
-           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
-           data-tag="SpringBoot,分布式,后端,java"
-           data-author="" >
-            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
-            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+            <span class="post-title" title="Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用">Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用</span>
+            <span class="post-date" title="2020-04-06 22:30:57">2020/04/06</span>
         </a>
         
         <a  class="spring "
-           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-ComponentScan/"
-           data-tag="java,spring,spring注解"
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%862-%E6%B3%A8%E5%86%8CAnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E8%BF%87%E7%A8%8B/"
+           data-tag="java,spring,spring注解,AOP"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_组件注册2_@ComponentScan">Spring注解学习_组件注册2_@ComponentScan</span>
-            <span class="post-date" title="2020-03-29 13:22:00">2020/03/29</span>
+            <span class="post-title" title="Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程">Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程</span>
+            <span class="post-date" title="2020-04-06 22:30:25">2020/04/06</span>
         </a>
         
         <a  class="spring "
-           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Condition/"
-           data-tag="java,spring,spring注解"
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%864-AopProxyFactory/"
+           data-tag="java,spring,spring注解,AOP"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_组件注册3_@Condition">Spring注解学习_组件注册3_@Condition</span>
-            <span class="post-date" title="2020-03-29 14:52:02">2020/03/29</span>
+            <span class="post-title" title="Spring注解学习_AOP原理4_AopProxyFactory">Spring注解学习_AOP原理4_AopProxyFactory</span>
+            <span class="post-date" title="2020-04-06 22:31:40">2020/04/06</span>
         </a>
         
         <a  class="spring "
-           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Configuration/"
-           data-tag="java,spring,spring注解"
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/"
+           data-tag="java,spring,spring注解,AOP"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_组件注册1_@Configuration与@Bean">Spring注解学习_组件注册1_@Configuration与@Bean</span>
-            <span class="post-date" title="2020-03-29 12:14:14">2020/03/29</span>
+            <span class="post-title" title="Spring注解学习_AOP原理5_SpringAOP总结">Spring注解学习_AOP原理5_SpringAOP总结</span>
+            <span class="post-date" title="2020-04-06 22:32:08">2020/04/06</span>
         </a>
         
         <a  class="spring "
-           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-FactoryBean/"
+           href="/2020/04/02/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC-Value-PropertySource/"
            data-tag="java,spring,spring注解"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_组件注册5_FactoryBean">Spring注解学习_组件注册5_FactoryBean</span>
-            <span class="post-date" title="2020-03-29 17:17:41">2020/03/29</span>
-        </a>
-        
-        <a  class="spring "
-           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/"
-           data-tag="java,spring,spring注解"
-           data-author="" >
-            <span class="post-title" title="Spring注解学习_组件注册4_@Import">Spring注解学习_组件注册4_@Import</span>
-            <span class="post-date" title="2020-03-29 15:33:06">2020/03/29</span>
+            <span class="post-title" title="Spring注解学习_属性赋值_@Value&amp;@PropertySource">Spring注解学习_属性赋值_@Value&amp;@PropertySource</span>
+            <span class="post-date" title="2020-04-02 22:53:37">2020/04/02</span>
         </a>
         
         <a  class="spring "
@@ -337,19 +292,59 @@
         </a>
         
         <a  class="spring "
-           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/"
-           data-tag="java,spring,spring注解"
+           href="/2020/04/05/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%861-EnableAspectJAutoProxy/"
+           data-tag="java,spring,spring注解,AOP"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_生命周期2_BeanPostProcessor">Spring注解学习_生命周期2_BeanPostProcessor</span>
-            <span class="post-date" title="2020-03-30 01:51:10">2020/03/30</span>
+            <span class="post-title" title="Spring注解学习_AOP原理1_@EnableAspectJAutoProxy">Spring注解学习_AOP原理1_@EnableAspectJAutoProxy</span>
+            <span class="post-date" title="2020-04-05 03:26:30">2020/04/05</span>
         </a>
         
         <a  class="spring "
-           href="/2020/04/02/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC-Value-PropertySource/"
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-ComponentScan/"
            data-tag="java,spring,spring注解"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_属性赋值_@Value&amp;@PropertySource">Spring注解学习_属性赋值_@Value&amp;@PropertySource</span>
-            <span class="post-date" title="2020-04-02 22:53:37">2020/04/02</span>
+            <span class="post-title" title="Spring注解学习_组件注册2_@ComponentScan">Spring注解学习_组件注册2_@ComponentScan</span>
+            <span class="post-date" title="2020-03-29 13:22:00">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Configuration/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册1_@Configuration与@Bean">Spring注解学习_组件注册1_@Configuration与@Bean</span>
+            <span class="post-date" title="2020-03-29 12:14:14">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Condition/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册3_@Condition">Spring注解学习_组件注册3_@Condition</span>
+            <span class="post-date" title="2020-03-29 14:52:02">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-FactoryBean/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册5_FactoryBean">Spring注解学习_组件注册5_FactoryBean</span>
+            <span class="post-date" title="2020-03-29 17:17:41">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP的注解方式实现">Spring注解学习_AOP的注解方式实现</span>
+            <span class="post-date" title="2020-04-03 18:47:08">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册4_@Import">Spring注解学习_组件注册4_@Import</span>
+            <span class="post-date" title="2020-03-29 15:33:06">2020/03/29</span>
         </a>
         
         <a  class="spring "
@@ -384,52 +379,52 @@
             <span class="post-date" title="2020-04-03 16:47:50">2020/04/03</span>
         </a>
         
-        <a  class="spring "
-           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP/"
-           data-tag="java,spring,spring注解,AOP"
+        <a  class=""
+           href="/2020/03/27/hello-world/"
+           data-tag=""
            data-author="" >
-            <span class="post-title" title="Spring注解学习_AOP的注解方式实现">Spring注解学习_AOP的注解方式实现</span>
-            <span class="post-date" title="2020-04-03 18:47:08">2020/04/03</span>
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-27 22:09:17">2020/03/27</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
+           data-tag="测试"
+           data-author="" >
+            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
         </a>
         
         <a  class="spring "
-           href="/2020/04/05/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%861-EnableAspectJAutoProxy/"
-           data-tag="java,spring,spring注解,AOP"
+           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/"
+           data-tag="java,spring,spring注解"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_AOP原理1_@EnableAspectJAutoProxy">Spring注解学习_AOP原理1_@EnableAspectJAutoProxy</span>
-            <span class="post-date" title="2020-04-05 03:26:30">2020/04/05</span>
+            <span class="post-title" title="Spring注解学习_生命周期2_BeanPostProcessor">Spring注解学习_生命周期2_BeanPostProcessor</span>
+            <span class="post-date" title="2020-03-30 01:51:10">2020/03/30</span>
         </a>
         
-        <a  class="spring "
-           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%862-%E6%B3%A8%E5%86%8CAnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E8%BF%87%E7%A8%8B/"
-           data-tag="java,spring,spring注解,AOP"
+        <a  class="数据库 "
+           href="/2020/03/28/mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0/"
+           data-tag="MySQL"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程">Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程</span>
-            <span class="post-date" title="2020-04-06 22:30:25">2020/04/06</span>
+            <span class="post-title" title="谷粒商城项目学习笔记：MySQL">谷粒商城项目学习笔记：MySQL</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
         </a>
         
-        <a  class="spring "
-           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%863-AnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E4%BD%9C%E7%94%A8/"
-           data-tag="java,spring,spring注解,AOP"
+        <a  class="设计模式 "
+           href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"
+           data-tag="java,设计模式"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用">Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用</span>
-            <span class="post-date" title="2020-04-06 22:30:57">2020/04/06</span>
+            <span class="post-title" title="工厂模式">工厂模式</span>
+            <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
         </a>
         
-        <a  class="spring "
-           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%864-AopProxyFactory/"
-           data-tag="java,spring,spring注解,AOP"
+        <a  class="后端 "
+           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
+           data-tag="java,SpringBoot,分布式,后端"
            data-author="" >
-            <span class="post-title" title="Spring注解学习_AOP原理4_AopProxyFactory">Spring注解学习_AOP原理4_AopProxyFactory</span>
-            <span class="post-date" title="2020-04-06 22:31:40">2020/04/06</span>
-        </a>
-        
-        <a  class="spring "
-           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/"
-           data-tag="java,spring,spring注解,AOP"
-           data-author="" >
-            <span class="post-title" title="Spring注解学习_AOP原理4_SpringAOP总结">Spring注解学习_AOP原理4_SpringAOP总结</span>
-            <span class="post-date" title="2020-04-06 22:32:08">2020/04/06</span>
+            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
         </a>
         
     </nav>
@@ -479,7 +474,7 @@
     </div>
     <div class="article-meta">
         
-        <span>字数:753</span>
+        <span>字数:754</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -514,33 +509,48 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="注册后置处理器AnnotationAwareAspectJAutoProxyCreator的过程"><a href="#注册后置处理器AnnotationAwareAspectJAutoProxyCreator的过程" class="headerlink" title="注册后置处理器AnnotationAwareAspectJAutoProxyCreator的过程"></a>注册后置处理器AnnotationAwareAspectJAutoProxyCreator的过程</h2><p>AnnotationAwareAspectJAutoProxyCreator自身也是一个后置处理器，从容器启动到AnnotationAwareAspectJAutoProxyCreator被注册到容器的全过程如下：</p>
+        <h2 id="注册后置处理器AnnotationAwareAspectJAutoProxyCreator的过程"><a class="header-anchor" href="#注册后置处理器AnnotationAwareAspectJAutoProxyCreator的过程">¶</a>注册后置处理器AnnotationAwareAspectJAutoProxyCreator的过程</h2>
+<p>AnnotationAwareAspectJAutoProxyCreator自身也是一个后置处理器，从容器启动到AnnotationAwareAspectJAutoProxyCreator被注册到容器的全过程如下：</p>
 <ol>
-<li><p>代创建ioc容器，通过构造参数形式传入配置类</p>
+<li>
+<p>代创建ioc容器，通过构造参数形式传入配置类</p>
 </li>
-<li><p>注册配置类，调用refresh()方法刷新容器</p>
+<li>
+<p>注册配置类，调用refresh()方法刷新容器</p>
 </li>
-<li><p>refresh()中调用registerBeanPostProcessors( beanFactory ) ：<strong>注册bean后置处理器</strong>来拦截bean的创建，我们看看registerBeanPostProcessors 方法的具体流程：</p>
+<li>
+<p>refresh()中调用registerBeanPostProcessors( beanFactory ) ：<strong>注册bean后置处理器</strong>来拦截bean的创建，我们看看registerBeanPostProcessors 方法的具体流程：</p>
 <ul>
-<li><p>先获取ioc容器中 已定义了的 需要创建的 所有BeanPostProcessor<br><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405223243171.png" alt="image-20200405223243171"></p>
+<li>
+<p>先获取ioc容器中 已定义了的 需要创建的 所有BeanPostProcessor<br>
+<img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405223243171.png" alt="image-20200405223243171"></p>
 </li>
-<li><p>后置处理器信息中就包括了我们之前讲的 “internalAutoProxyCreator”：AnnotationAwareAspectJAutoProxyCreator</p>
+<li>
+<p>后置处理器信息中就包括了我们之前讲的 “internalAutoProxyCreator”：AnnotationAwareAspectJAutoProxyCreator</p>
 </li>
-<li><p>后续还会给容器中加上一些其他的BeanPostProcessor：<br><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405225436094.png" alt="image-20200405225436094"></p>
+<li>
+<p>后续还会给容器中加上一些其他的BeanPostProcessor：<br>
+<img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405225436094.png" alt="image-20200405225436094"></p>
 </li>
-<li><p>之后在根据BeanPostProcessor的优先级，将它们添加到相应优先级的ArrayList当中（其中PriorityOrdered、Ordered都为空接口，优先级：PriorityOrdered&gt;Ordered&gt;普通）</p>
+<li>
+<p>之后在根据BeanPostProcessor的优先级，将它们添加到相应优先级的ArrayList当中（其中PriorityOrdered、Ordered都为空接口，优先级：PriorityOrdered&gt;Ordered&gt;普通）</p>
 <p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405225924696.png" alt="image-20200405225924696"></p>
 </li>
-<li><p>然后就是<strong>注册BeanPostProcessor</strong>：优先注册实现了PriorityOrdered接口的BeanPostProcessor，然后是实现了Ordered接口的，最后是没有实现优先级接口的BeanPostProcessor</p>
+<li>
+<p>然后就是<strong>注册BeanPostProcessor</strong>：优先注册实现了PriorityOrdered接口的BeanPostProcessor，然后是实现了Ordered接口的，最后是没有实现优先级接口的BeanPostProcessor</p>
 </li>
-<li><p>注册BeanPostProcessor，实际就是创建BeanPostProcessor对象，保存在容器中。其中包括本次分析的目标对象：AnnotationAwareAspectJAutoProxyCreator</p>
+<li>
+<p>注册BeanPostProcessor，实际就是创建BeanPostProcessor对象，保存在容器中。其中包括本次分析的目标对象：AnnotationAwareAspectJAutoProxyCreator</p>
 <p>后置处理器本身也是Bean，注册到容器的流程和普通Bean一样：</p>
 <ul>
-<li><p>创建Bean实例</p>
+<li>
+<p>创建Bean实例</p>
 </li>
-<li><p>populateBean( beanName, mbd, instanceWrapper ); 给Bean的各种属性赋值</p>
+<li>
+<p>populateBean( beanName, mbd, instanceWrapper ); 给Bean的各种属性赋值</p>
 </li>
-<li><p>initializeBean 初始化Bean</p>
+<li>
+<p>initializeBean 初始化Bean</p>
 <ul>
 <li>invokeAwareMethod() : 处理Aware接口的方法回调</li>
 <li>applyBeanPostProcessorsBeforeInitialization() : 应用后置处理器的初始化前处理</li>
@@ -548,38 +558,48 @@
 <li>applyBeanPostProcessorsAfterInitialization() : 应用后置处理器的初始化后处理</li>
 </ul>
 </li>
-<li><p>BeanPostProcessor【AnnotationAwareAspectJAutoProxyCreator】创建成功，且由于实现了BeanFactoryAware接口，其setBeanFactory方法被调用，（此方法会调用initBeanFactory，进而创建新的ReflectiveAspectJAdvisorFactory对象。）</p>
+<li>
+<p>BeanPostProcessor【AnnotationAwareAspectJAutoProxyCreator】创建成功，且由于实现了BeanFactoryAware接口，其setBeanFactory方法被调用，（此方法会调用initBeanFactory，进而创建新的ReflectiveAspectJAdvisorFactory对象。）</p>
 <p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405235608372.png" alt="image-20200405235608372"></p>
 </li>
-<li><p>把BeanPostProcessor注册到BeanFactory中：beanFactory.addBeanPostProcessor( postProcessor );</p>
+<li>
+<p>把BeanPostProcessor注册到BeanFactory中：beanFactory.addBeanPostProcessor( postProcessor );</p>
 </li>
 </ul>
 </li>
 </ul>
 <p>以后任何组件在创建Bean实例的时候，AnnotationAwareAspectJAutoProxyCreator 就可以其后置处理器的身份拦截到这些Bean的创建过程。</p>
 </li>
-<li><p>finishBeanFactoryInitialization( beanFactory ) ; 完成BeanFactory的初始化工作，创建剩下的单实例Bean</p>
+<li>
+<p>finishBeanFactoryInitialization( beanFactory ) ; 完成BeanFactory的初始化工作，创建剩下的单实例Bean</p>
 <p>【<strong>AnnotationAwareAspectJAutoProxyCreator</strong>会在所有Bean创建之前进行拦截，它实现了InstantiationAwareBeanPostProcessor接口，会调用postProcessBeforeInstantiation方法】</p>
 <ul>
-<li><p>遍历获取容器中所有的beanDefinition，依次创建对象getBean( beanName )</p>
-<p>getBean() –调用–&gt; doGetBean() –调用–&gt; getSingleton() : 先检查有无已创建单实例，有则直接获取，无则创建。只要创建好的Bean都会被缓存起来</p>
+<li>
+<p>遍历获取容器中所有的beanDefinition，依次创建对象getBean( beanName )</p>
+<p>getBean() --调用–&gt; doGetBean() --调用–&gt; getSingleton() : 先检查有无已创建单实例，有则直接获取，无则创建。只要创建好的Bean都会被缓存起来</p>
 </li>
-<li><p>通过AbstractAutowireCapableBeanFactory类下的：createBean() 创建Bean，流程为：</p>
+<li>
+<p>通过AbstractAutowireCapableBeanFactory类下的：createBean() 创建Bean，流程为：</p>
 <ul>
-<li><p><strong>resolveBeforeInstantiation</strong>(beanName, mbdToUse);</p>
+<li>
+<p><strong>resolveBeforeInstantiation</strong>(beanName, mbdToUse);</p>
 <p><strong>在doCreateBean()之前会给后置处理器们一次机会，希望返回代理对象，若有代理对象则视为成功创建Bean，返回该代理对象。</strong></p>
 <ul>
-<li><p>后置处理器先尝试返回对象<br>bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);</p>
+<li>
+<p>后置处理器先尝试返回对象<br>
+bean = applyBeanPostProcessorsBeforeInstantiation(targetType, beanName);</p>
 <p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406021131709.png" alt="image-20200406021131709"></p>
 <p>拿到所有的后置处理器，如果是InstantiationAwareBeanPostProcessor，就该执行后置处理器的 postProcessBeforeInstantiation(beanClass, beanName) 方法</p>
 <p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406021341685.png" alt="image-20200406021341685"></p>
 <p>而<strong>AnnotationAwareAspectJAutoProxyCreator</strong>正是InstantiationAwareBeanPostProcessor ，故此方法生效。</p>
 </li>
-<li><p>postProcessBeforeInstantiation(beanClass, beanName) </p>
+<li>
+<p>postProcessBeforeInstantiation(beanClass, beanName)</p>
 </li>
 </ul>
 </li>
-<li><p>doCreateBean(beanName, mbdToUse, args)：就是Bean的创建流程——创建Bean实例，赋值，初始化（执行Aware接口方法，后置处理器们的初始化前处理，初始化方法，后置处理器们的初始化后处理）</p>
+<li>
+<p>doCreateBean(beanName, mbdToUse, args)：就是Bean的创建流程——创建Bean实例，赋值，初始化（执行Aware接口方法，后置处理器们的初始化前处理，初始化方法，后置处理器们的初始化后处理）</p>
 </li>
 </ul>
 </li>
@@ -600,7 +620,7 @@
 
 <div class="article_copyright">
     <p><span class="copy-title">文章标题:</span>Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">753</span></p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">754</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
     <p><span class="copy-title">发布时间:</span>2020-04-06, 22:30:25</p>
     <p><span class="copy-title">最后更新:</span>2020-04-06, 22:35:23</p>
@@ -663,7 +683,7 @@
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#测试','#MySQL','#设计模式','#SpringBoot','#分布式','#后端','#java','#spring','#spring注解','#AOP',],
+            'data': ['#java','#spring','#spring注解','#AOP','#测试','#MySQL','#设计模式','#SpringBoot','#分布式','#后端',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');
