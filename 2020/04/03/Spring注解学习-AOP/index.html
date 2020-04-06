@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>梅罢葛的博客</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="梅罢葛的博客">
+  <title>Spring注解学习_AOP的注解方式实现 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" java , spring , spring注解 , AOP ">
+  <meta name="description" content="Spring注解学习_AOP的注解方式实现 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="@Profile：Spring为我们提供的可以根据当前环境，动态激活和切换一系列组件的功能 比如我们可以根据开发环境、测试环境、生产环境 切换不同的组件。  本例中我们用@Profile来决定运行时使用的数据源： 先新建配置类：MainConfigOfProfile.java: @Configuration @PropertySource(&quot;classpath:&#x2F;dbconfig.pro">
 <meta property="og:type" content="article">
@@ -61,7 +61,7 @@
 </div>
 
 <body>
-<aside class="nav mobile">
+<aside class="nav">
     <div class="nav-left">
         <a href="/" class="avatar_target">
     <img class="avatar" src="/img/avatar.webp" />
@@ -442,12 +442,63 @@
         </div>
     </div>
 </aside>
-<div class="post index">
+<div class="post">
     <div class="pjax">
-        <article class="index">
-            <div class="toc-ref">
+        <article id="post-Spring注解学习-AOP" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#My-Blog"><span class="toc-text">My Blog</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#博客平台"><span class="toc-text">博客平台</span></a></li></ol></li></ol>
+        <h1 class="article-title">Spring注解学习_AOP的注解方式实现</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="spring">spring</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color5">java</a>
+            
+            <a class="color2">spring</a>
+            
+            <a class="color4">spring注解</a>
+            
+            <a class="color4">AOP</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-04-05 02:38:36'>2020-04-03 18:47</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:766</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AOP的注解方式实现"><span class="toc-text">AOP的注解方式实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码演示：日志切面编写"><span class="toc-text">代码演示：日志切面编写</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -460,24 +511,116 @@
     }
 </style>
 </div>
-            <h1 id="My-Blog"><a href="#My-Blog" class="headerlink" title="My Blog"></a>My Blog</h1><p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
-<!-- 本站访问人数：<code class="site_uv"></code>人次 ， 访问量：<code class="site_pv"></code>次 -->
-
-<p>学习新知识的三板斧：理解+<strong>Demo</strong>+<strong>总结</strong></p>
-<h2 id="博客平台"><a href="#博客平台" class="headerlink" title="博客平台"></a>博客平台</h2><p>这个博客通过 <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 生成，部署在 <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a>，主题采用: <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank" rel="noopener">3-hexo</a></p>
-<p>主要功能：</p>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="AOP的注解方式实现"><a href="#AOP的注解方式实现" class="headerlink" title="AOP的注解方式实现"></a>AOP的注解方式实现</h2><p>AOP即Aspect oriented programming：</p>
+<p>​    基于动态代理，在程序运行期间动态地将某段代码切入指定位置进行运行的编程方式</p>
+<p>注解方式完成切面编程的具体流程为：</p>
 <ul>
-<li>搜索支持文章标题、标签(#标签)、作者(@作者)</li>
-<li>pad/手机等移动端适配</li>
+<li>导入aop模块：Spring AOP：（spring-aspects）</li>
+<li>定义一个业务逻辑类，在业务逻辑运行时将日志进行打印</li>
+<li>定义一个日志切面类（LogAspects）：切面类里面的方法需要动态感知业务逻辑的运行<ul>
+<li>通知方法：<ul>
+<li>前置通知 @Before：在目标方法运行之前运行</li>
+<li>后置通知 @After：在目标方法运行之后运行，无论方法是否正常结束</li>
+<li>返回通知 @AfterReturning：在目标方法正常返回之后运行</li>
+<li>异常通知 @AfterThrowing：在目标方法出现异常以后运行</li>
+<li>环绕通知 <strong>@Around</strong>：动态代理，手动推进目标方法的运行，可手动地调用并获取返回值（joinPoint.proceed( ) ），可手动地在调用前调用后添加自定义逻辑</li>
 </ul>
+</li>
+</ul>
+</li>
+<li>给切面类的方法标注何时何地运行（通知注解）</li>
+<li>将切面类和业务逻辑类都加入到容器中</li>
+<li>必须告诉Spring哪个类是切面类（给切面类加上注解@Aspect）</li>
+<li>:star: ​给配置类加上 <strong>@EnableAspectJAutoProxy</strong>【开启基于注解的AOP模式】</li>
+</ul>
+<p>切面编程三步走：</p>
+<ol>
+<li><p>将业务逻辑组件和自定义的各个切面类都加入到容器中，注解方式告诉Spring哪个类是切面类（<strong>@Aspect</strong>）</p>
+</li>
+<li><p>在切面类上的每一个通知方法上标注通知注解，告诉Spring何时何地运行</p>
+<p>（切入表达式: “execution(修饰符 返回值 全类名.方法名(参数名))”，</p>
+<p>​    比如：”execution(* *com.study.aop.MathCalculator.*(..))” ）</p>
+</li>
+<li><p>在配置类上开启基于注解的AOP模式（<strong>@EnableAspectJAutoProxy</strong>）</p>
+</li>
+</ol>
+<h2 id="代码演示：日志切面编写"><a href="#代码演示：日志切面编写" class="headerlink" title="代码演示：日志切面编写"></a>代码演示：日志切面编写</h2><p>首先定义一个业务逻辑类：MathCalculator</p>
+<pre><code class="java">public class MathCalculator {
+    public double div(int x,int y){
+        return (double)x/y;
+    }
+}</code></pre>
+<p>然后定义一个日志切面类：LogAspect</p>
+<pre><code class="java">@Aspect
+public class LogAspect {
+    //抽取公共的切入点表达式
+    //1.可供本类引用
+    //2.可供其他的切面引用
+    @Pointcut(&quot;execution(* *com.study.aop.MathCalculator.*(..))&quot;)
+    public void pointCut(){}
 
-        </article>
-        
-        <p>
-            <a  class="dashang" onclick="dashangToggle()">赏</a>
-        </p>
-        
-        
+    //普通的日志操作
+//    @Before(&quot;pointCut()&quot;)
+//    public void logStart(){
+//        System.out.println(&quot;1111除法运算开始...参数列表为：{}&quot;);
+//    }
+
+    //加上参数JoinPoint获取运行时方法
+    @Before(&quot;pointCut()&quot;)
+    public void logStart(JoinPoint joinPoint){
+        System.out.println(joinPoint.getSignature().getName()+&quot;(除法运算)开始...参数列表为：{&quot;+ Arrays.asList(joinPoint.getArgs())+&quot;}&quot;);
+    }
+
+    @After(&quot;com.study.aop.LogAspect.pointCut()&quot;)    //也可以全类名+方法名引入其他切面类的切点
+    public void logEnd(){
+        System.out.println(&quot;除法云散结束...&quot;);
+    }
+
+    //注解添加returning字段获取被切入方法的返回值
+    @AfterReturning(value = &quot;pointCut()&quot;,returning = &quot;result&quot;)
+    public void logReturn(Object result){
+        System.out.println(&quot;除法正常返回...运行结果是：{&quot;+result+&quot;}&quot;);
+    }
+
+    //注解添加throwing字段捕获被切入方法抛出的异常
+    @AfterThrowing(value = &quot;pointCut()&quot;,throwing = &quot;e&quot;)
+    public void logException(Exception e){
+        System.out.println(&quot;除法抛出异常...异常为&quot;+e.getMessage()+&quot;&quot;);
+    }
+}</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Spring注解学习_AOP的注解方式实现</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">766</span></p>
+    <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-04-03, 18:47:08</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-05, 02:38:36</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP/" title="Spring注解学习_AOP的注解方式实现">https://qiurungeng.github.io/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP/</a>
+</div>
+
+
+
+
+
+    
+
+
+
+
     </div>
     <div class="copyright">
         <p class="footer-entry">©2020 梅罢葛</p>

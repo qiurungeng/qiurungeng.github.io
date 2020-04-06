@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>梅罢葛的博客</title>
-  <meta name="keywords" content="">
-  <meta name="description" content="梅罢葛的博客">
+  <title>Spring注解学习_AOP原理4_SpringAOP总结 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" java , spring , spring注解 , AOP ">
+  <meta name="description" content="Spring注解学习_AOP原理4_SpringAOP总结 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="@Profile：Spring为我们提供的可以根据当前环境，动态激活和切换一系列组件的功能 比如我们可以根据开发环境、测试环境、生产环境 切换不同的组件。  本例中我们用@Profile来决定运行时使用的数据源： 先新建配置类：MainConfigOfProfile.java: @Configuration @PropertySource(&quot;classpath:&#x2F;dbconfig.pro">
 <meta property="og:type" content="article">
@@ -61,7 +61,7 @@
 </div>
 
 <body>
-<aside class="nav mobile">
+<aside class="nav">
     <div class="nav-left">
         <a href="/" class="avatar_target">
     <img class="avatar" src="/img/avatar.webp" />
@@ -442,12 +442,63 @@
         </div>
     </div>
 </aside>
-<div class="post index">
+<div class="post">
     <div class="pjax">
-        <article class="index">
-            <div class="toc-ref">
+        <article id="post-Spring注解学习-AOP原理5-SpringAOP原理总结" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#My-Blog"><span class="toc-text">My Blog</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#博客平台"><span class="toc-text">博客平台</span></a></li></ol></li></ol>
+        <h1 class="article-title">Spring注解学习_AOP原理4_SpringAOP总结</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="spring">spring</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color5">java</a>
+            
+            <a class="color2">spring</a>
+            
+            <a class="color4">spring注解</a>
+            
+            <a class="color4">AOP</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-04-06 22:37:01'>2020-04-06 22:32</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:270</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Spring-AOP总结："><span class="toc-text">Spring AOP总结：</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -460,24 +511,67 @@
     }
 </style>
 </div>
-            <h1 id="My-Blog"><a href="#My-Blog" class="headerlink" title="My Blog"></a>My Blog</h1><p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
-<!-- 本站访问人数：<code class="site_uv"></code>人次 ， 访问量：<code class="site_pv"></code>次 -->
-
-<p>学习新知识的三板斧：理解+<strong>Demo</strong>+<strong>总结</strong></p>
-<h2 id="博客平台"><a href="#博客平台" class="headerlink" title="博客平台"></a>博客平台</h2><p>这个博客通过 <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 生成，部署在 <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a>，主题采用: <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank" rel="noopener">3-hexo</a></p>
-<p>主要功能：</p>
-<ul>
-<li>搜索支持文章标题、标签(#标签)、作者(@作者)</li>
-<li>pad/手机等移动端适配</li>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Spring-AOP总结："><a href="#Spring-AOP总结：" class="headerlink" title="Spring AOP总结："></a>Spring AOP总结：</h2><ol>
+<li>@EnableAspectJAutoProxy 开启AOP功能</li>
+<li>@EnableAspectJAutoProxy 会给容器中注册一个组件AnnotationAwareAspectJAutoProxyCreator</li>
+<li>AnnotationAwareAspectJAutoProxyCreator是一个后置处理器</li>
+<li>我们由容器创建流程看AnnotationAwareAspectJAutoProxyCreator是如何被注册到容器中并在容器中发挥作用的：<ol>
+<li>registerBeanPostProcessors() : 注册后置处理器，此时会创建AnnotationAwareAspectJAutoProxyCreator</li>
+<li>finishBeanFactoryInitialization() 初始化剩下的单实例bean<ol>
+<li>创建业务逻辑组件和切面组件</li>
+<li>AnnotationAwareAspectJAutoProxyCreator拦截组件的创建过程</li>
+<li>组件创建完成后，判断组件是否需要增强<ul>
+<li>需要，则：切面的通知方法，包装成增强器( Advisor ),给业务逻辑创建一个代理对象( cglib )</li>
 </ul>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+<li>执行目标方法：<ol>
+<li>代理对象执行目标方法</li>
+<li>CglibAopProxy().intercept() 进行拦截：<ul>
+<li>得到目标方法的拦截器链（增强器包装成拦截器MethodInterceptor）</li>
+<li>利用拦截器的链式机制，依次进入每一个拦截器进行执行</li>
+<li>执行效果：<br>正常执行：前置通知 –》 目标方法 –》 后置通知 –》 返回通知<br>出现异常：前置通知 –》 目标方法 –》 后置通知 –》 异常通知</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
 
-        </article>
-        
-        <p>
-            <a  class="dashang" onclick="dashangToggle()">赏</a>
-        </p>
-        
-        
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Spring注解学习_AOP原理4_SpringAOP总结</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">270</span></p>
+    <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-04-06, 22:32:08</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-06, 22:37:01</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/" title="Spring注解学习_AOP原理4_SpringAOP总结">https://qiurungeng.github.io/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/</a>
+</div>
+
+
+
+
+
+    
+
+
+
+
     </div>
     <div class="copyright">
         <p class="footer-entry">©2020 梅罢葛</p>
