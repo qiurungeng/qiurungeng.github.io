@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_AOP原理1_@EnableAspectJAutoProxy | 梅罢葛的博客</title>
-  <meta name="keywords" content=" java , spring , spring注解 , AOP , spring-InstantiationAwareBeanPostProcessor ">
-  <meta name="description" content="Spring注解学习_AOP原理1_@EnableAspectJAutoProxy | 梅罢葛的博客">
+  <title>LRU算法 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" 算法 , 数据结构 ">
+  <meta name="description" content="LRU算法 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="上一篇文章中写了一个简单的开启Spring声明式事务的Demo，知其步骤为：  给组件方法标注上@Transactional 表示当前方法是一个事务方法 给组件上标注@EnableTransactionManagement 开启基于注解的事务管理功能 向容器注册事务管理器  由之前阅读理解AOP源码的经验可知，事务管理功能的开启重点在于 @EnableTransactionManagement 注">
 <meta property="og:type" content="article">
@@ -501,9 +501,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-AOP原理1-EnableAspectJAutoProxy" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-LRU算法" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_AOP原理1_@EnableAspectJAutoProxy</h1>
+        <h1 class="article-title">LRU算法</h1>
     
     <div class="article-meta">
         
@@ -511,34 +511,28 @@
         
         <span class="book">
             
-                <a  data-rel="spring">spring</a>
+                <a  data-rel="算法与数据结构">算法与数据结构</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">java</a>
+            <a class="color3">算法</a>
             
-            <a class="color2">spring</a>
-            
-            <a class="color4">spring注解</a>
-            
-            <a class="color4">AOP</a>
-            
-            <a class="color3">spring-InstantiationAwareBeanPostProcessor</a>
+            <a class="color5">数据结构</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-08 01:20:23'>2020-04-05 03:26</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-08 22:59:08'>2020-04-08 22:14</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.1k</span>
+        <span>字数:1k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -557,7 +551,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#EnableAspectJAutoProxy注解是如何起作用的？"><span class="toc-text">@EnableAspectJAutoProxy注解是如何起作用的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#源码走读："><span class="toc-text">源码走读：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#EnableAspectJAutoProxy"><span class="toc-text">@EnableAspectJAutoProxy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SmartInstantiationAwareBeanPostProcessor-BeanFactoryAware何时运行？做了什么？"><span class="toc-text">SmartInstantiationAwareBeanPostProcessor,  BeanFactoryAware何时运行？做了什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#BeanFactoryAware的实现情况"><span class="toc-text">BeanFactoryAware的实现情况:</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#SmartInstantiationAwareBeanPostProcessor"><span class="toc-text">SmartInstantiationAwareBeanPostProcessor</span></a></li></ol></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#LeetCode题目："><span class="toc-text">LeetCode题目：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解题思路"><span class="toc-text">解题思路</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码："><span class="toc-text">代码：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#扩展点："><span class="toc-text">扩展点：</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -573,118 +567,195 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="EnableAspectJAutoProxy注解是如何起作用的？"><a class="header-anchor" href="#EnableAspectJAutoProxy注解是如何起作用的？">¶</a>@EnableAspectJAutoProxy注解是如何起作用的？</h2>
-<blockquote>
-<p>” 我们该如何阅读 Spring中 @EnableXXX 的源码？我们应当：</p>
-<ol>
-<li>看这个注解有没有给容器中注册组件</li>
-<li>如果注册组件了，这些组件：什么时候工作？功能是什么？</li>
-<li>搞清楚这些功能后，这个注解的原理也就明白了。“</li>
-</ol>
-<p>一时半会看不懂源码原因有很多，我觉得方法名太多太长容易给绕晕了算一个。尝试自己翻译一下，给它起个中文的方法名，会更好理解这个方法的意图。</p>
-</blockquote>
-<ol>
+        <p>LRU（Last Recently Used）算法一般用在缓存，作为一种缓存淘汰的机制，即淘汰掉最近最少使用的记录。其要求一般为：</p>
+<ul>
+<li>维护一个固定大小的缓存。</li>
+<li>当缓存满时，若要增加新元素，需先淘汰掉缓存中最久未使用的元素。</li>
+<li>元素最近一次访问的时间离当前越近，越不容易被淘汰。</li>
+</ul>
+<h2 id="LeetCode题目："><a class="header-anchor" href="#LeetCode题目：">¶</a>LeetCode题目：</h2>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222403376.png" alt=""></p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222500227.png" alt=""></p>
+<h2 id="解题思路"><a class="header-anchor" href="#解题思路">¶</a>解题思路</h2>
+<ul>
 <li>
-<p>@EnableAspectJAutoProxy注解类上标有@Import( AspectJAutoProxyRegistrar.class ) 注解，给容器导入了一个AspectJAutoProxyRegistrar组件。</p>
+<p>由要求put()、get()操作的时间复杂度皆为O(1)，知最合适的数据结构应当为HashMap。</p>
 </li>
 <li>
-<p>AspectJAutoProxyRegistrar组件实现了ImportBeanDefinitionRegistrar接口：通过实现 registerBeanDefinitions方法，给容器中注册其定义的bean：</p>
-<p>给容器注册 <strong>AnnotationAwareAspectJAutoProxyCreator</strong> —— “ 注解感知的<strong>切面自动代理创建器</strong> ”</p>
+<p>此外，当容量满时，我们要淘汰掉最近最少使用的元素。</p>
+<p>我们可能会想到队列，它是一个先进先出的数据结构，用队列能很快捷地淘汰掉最老的元素，但却不能淘汰掉最近最少使用的元素！</p>
+<p>所以我们需要一种机制判断每个元素最近使用的频繁程度，给元素加上一个计数器么？naive！这样要花线性时间遍历才能找到最近最少使用的元素！</p>
+<p>公布答案吧：其实队列已经很接近最终结果了，我们要做的只是一点点改进——<strong>每次get()获取到缓存中的值后，还要把它从队列里挖出来，再让它到队尾去重新排队</strong>，缓存满了我们就淘汰掉队头那些最近都没用到的元素。这样就很好地解决了“最近最少使用”这个问题。</p>
 </li>
 <li>
-<p>这个<strong>AnnotationAwareAspectJAutoProxyCreator</strong>在AOP中发挥了关键的作用。</p>
+<p>所以最终的解决方案为：</p>
+<p>HashMap&lt;key,队列节点&gt; + 基于双向链表的队列</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408224511011.png" alt="LRU缓存"></p>
 </li>
 <li>
-<p>若要研究，不妨先捋清AnnotationAwareAspectJAutoProxyCreator的继承关系：</p>
-<p><strong>AnnotationAwareAspectJAutoProxyCreator</strong>：</p>
-<p>​	➡️ AspectJAwareAdvisorAutoProxyCreator</p>
-<p>​		➡️ AbstractAdvisorAutoProxyCreator</p>
-<p>​			➡️ AbstractAutoProxyCreator</p>
-<p>​					implements <strong>SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware</strong><br>
-​					关注后置处理器（bean初始化前后做了什么）及BeanFactoryAware</p>
-<p>​				➡️ ProxyProcessorSupport</p>
+<p>一个比喻：</p>
+<p>排队的时候，队列中某人被叫去处理点事，等回来后他就得重新排队，就是这个规矩。</p>
 </li>
-<li>
-<p>总结：</p>
-<p>@EnableAspectJAutoProxy注解类上标有@Import( AspectJAutoProxyRegistrar.class ) 注解，给容器导入了一个AspectJAutoProxyRegistrar组件。而这个组件通过实现了mportBeanDefinitionRegistrar接口，给容器中注册了<strong>AnnotationAwareAspectJAutoProxyCreator</strong> “注解感知的切面自动代理创建者”。</p>
-<p>Spring切面及切面方法的生效，正是靠<strong>AnnotationAwareAspectJAutoProxyCreator</strong> 这个后置处理器来完成的！</p>
-</li>
-</ol>
-<h2 id="源码走读："><a class="header-anchor" href="#源码走读：">¶</a>源码走读：</h2>
-<h3 id="EnableAspectJAutoProxy"><a class="header-anchor" href="#EnableAspectJAutoProxy">¶</a>@EnableAspectJAutoProxy</h3>
-<p>我们直接看到@EnableAspectJAutoProxy这个注解类：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405032939942.png" alt="image-20200405032939942"></p>
-<p>可知：打上@EnableAspectJAutoProxy注解后会同时给容器中导入AspectJAutoProxyRegistrar组件。</p>
-<p>AspectJAutoProxyRegistrar组件实现了ImportBeanDefinitionRegistrar接口：通过实现 registerBeanDefinitions方法，给容器中注册其定义的组件 —— 那我们就看看到底注册了什么：</p>
-<p>可以看到调用了： AopConfigUtils.registerAspectJAnnotationAutoProxyCreatorIfNecessary( register ) 方法，（中文翻译过来就是：注册 切面注解自动代理创建者 如果需要的话）</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405173844449.png" alt="image-20200405173844449"></p>
-<p>这个方法将调用 registerOrEscalateApcAsRequired 方法（中：根据需要注册或升级Apc (自动代理创建者) ），并另外传入<strong>AnnotationAwareAspectJAutoProxyCreator</strong> 类型作为参数</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405174331612.png" alt="image-20200405174331612"></p>
-<p>接下来我们分析 registerOrEscalateApcAsRequired 方法（中：根据需要注册或升级Apc (自动代理创建者) ）的逻辑：</p>
-<p>（它将用到所在类开头就定义好的静态常量：）</p>
+</ul>
+<h2 id="代码："><a class="header-anchor" href="#代码：">¶</a>代码：</h2>
+<p>要求：15min之内手写完！作为高频题目，必须多练习</p>
 <pre><code class="language-java">/**
- * The bean name of the internally managed auto-proxy creator.
+ *
+ * 执行用时 : 18 ms , 在所有 Java 提交中击败了 97.28% 的用户
+ * 内存消耗 : 47.9 MB , 在所有 Java 提交中击败了 100.00% 的用户
  */
-public static final String AUTO_PROXY_CREATOR_BEAN_NAME =
-      &quot;org.springframework.aop.config.internalAutoProxyCreator&quot;;
-</code></pre>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405190527521.png" alt="image-20200405190527521"></p>
-<p>所以这个方法会注册一个<strong>AnnotationAwareAspectJAutoProxyCreator</strong>（注解感知的 切面 自动代理创建者）</p>
-<p>查看这个APC的源码，捋清它的继承树上的一个父类AbstractAutoProxyCreator （抽象 自动代理创建者），这个父类实现了接口：<strong>SmartInstantiationAwareBeanPostProcessor</strong>（聪明实例化感知 Bean后置处理器）,  <strong>BeanFactoryAware</strong> ，即AbstractAutoProxyCreator有两个身份：SmartInstantiationAware后置处理器、自动装配BeanFactory。</p>
-<p>我们接下来分析AbstractAutoProxyCreator凭这两个身份到底做了那些事：</p>
-<h3 id="SmartInstantiationAwareBeanPostProcessor-BeanFactoryAware何时运行？做了什么？"><a class="header-anchor" href="#SmartInstantiationAwareBeanPostProcessor-BeanFactoryAware何时运行？做了什么？">¶</a>SmartInstantiationAwareBeanPostProcessor,  BeanFactoryAware何时运行？做了什么？</h3>
-<p>首先回顾一下我以前对于BeanPostProcessor和XXXAware的学习总结：</p>
-<blockquote>
-<p><a href="https://qiurungeng.github.io/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/">BeanPostProcessor：在Bean初始化前后进行一些处理工作</a></p>
-</blockquote>
-<blockquote>
-<p><a href="https://qiurungeng.github.io/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D3-Aware%E6%B3%A8%E5%85%A5Spring%E5%BA%95%E5%B1%82%E7%BB%84%E4%BB%B6-%E5%8E%9F%E7%90%86/">XXXAware：实现这一接口，可注入Spring底层组件</a></p>
-<p>如果：自定义组件 想要使用 Spring容器底层的一些组件（如 ApplicationContext, BeanFactory, xxx）</p>
-<p>那么：自定义组件 应当实现：xxxAware 接口 （如 ApplicationContextAware等），在创建对象的时候，会调用接口规定的方法注入相关组件</p>
-</blockquote>
-<p>AbstractAutoProxyCreator抽象类 如何实现这两个接口规定的方法？：</p>
-<pre><code class="language-java">public abstract class AbstractAutoProxyCreator extends ProxyProcessorSupport
-		implements SmartInstantiationAwareBeanPostProcessor, BeanFactoryAware {
-    ...
-    @Override
-	public void setBeanFactory(BeanFactory beanFactory) {
-		this.beanFactory = beanFactory;
-	}
-    ...
-    @Override
-	public Object postProcessBeforeInstantiation(Class&lt;?&gt; beanClass, String beanName) {
-		...
-	}
-	...
-	@Override
-	public boolean postProcessAfterInstantiation(Object bean, String beanName) {
-		return true;
-	}
-    ...
+class LRUCache {
+    int capacity;
+    int currentSize=0;
+    HashMap&lt;Integer,Node&gt; map;
+    Node head;
+    Node tail;
+
+    public LRUCache(int capacity) {
+        map=new HashMap&lt;&gt;(capacity);
+        this.capacity=capacity;
+    }
+
+    /**
+     * 考虑情况：
+     * 1. 该节点为tail，直接返回其值
+     * 2. 该节点不为tail，且存在于缓存中，挪到tail后面成为新tail，返回其值
+     * 3. 该节点不存在于缓存，返回-1
+     */
+    public int get(int key) {
+        Node node=map.get(key);
+        if(node!=null){
+            if(node!=tail){
+                moveToTail(node);
+            }
+            return node.val;
+        }else{
+            return -1;
+        }
+    }
+
+    /**
+     * 考虑情况：
+     * 1. 缓存中存在该key，直接更新对应节点的value
+     * 2. 缓存中不存在该key：
+     *      若缓存已满，先从map和双向链表中淘汰掉head节点，即最近最少使用节点
+     *      生成新节点node：
+     *          缓存为空（刚刚初始化），tail,head指向node;
+     *          缓存不为空，新节点node加入map，在链表中放到到tail后，成为新的tail
+     */
+    public void put(int key, int value) {
+        Node exist=map.get(key);
+        if(exist==null){    //缓存中不存在该 kv 对
+            
+            if(currentSize&gt;=capacity){  //缓存满了，挤走head
+                Node new_head=head.next;
+                if(new_head!=null){
+                    new_head.prev=null;
+                }
+                head.next=null;
+
+                map.remove(head.key);
+                head=new_head;
+
+
+                currentSize--;
+            }
+            
+            Node node=new Node(key,value);
+            
+            if(tail==null){ //缓存为空
+                head=node;
+                tail=node;
+            }else{          //缓存不空
+
+                tail.next=node;
+                node.prev=tail;
+                tail=node;
+            }
+            
+            map.put(key,node);
+            currentSize++;
+            
+        }else{
+            exist.val=value;
+            moveToTail(exist);
+        }
+    }
+
+    /**
+     * 挪到tail位置成为新tail
+     * 情况分析：
+     * 1. node就是tail，不做任何操作，直接返回
+     * 2. node不是tail，让其前后节点互相指向，将其挪到tail后面，成为新的tail:
+     *      如果node为head，head指向node_next
+     *      tail指向node
+     * @param node 待交换节点
+     */
+    private void moveToTail(Node node){
+        if (node==tail)return;
+
+        Node node_prev=node.prev;
+        Node node_next=node.next;
+
+        if(node_prev!=null){
+            node_prev.next=node_next;
+        }
+        if(node_next!=null){
+            node_next.prev=node_prev;
+        }
+
+        node.prev=tail;
+        tail.next=node;
+        node.next=null;
+
+        if (head==node)head=node_next;
+        tail=node;
+    }
+    
+    class Node{
+        int key;
+        int val;
+        Node prev;
+        Node next;
+        Node(int key,int val){
+            this.key=key;
+            this.val=val;
+        }
+    }
 }
 </code></pre>
-<h4 id="BeanFactoryAware的实现情况"><a class="header-anchor" href="#BeanFactoryAware的实现情况">¶</a>BeanFactoryAware的实现情况:</h4>
+<h2 id="扩展点："><a class="header-anchor" href="#扩展点：">¶</a>扩展点：</h2>
 <ol>
 <li>
-<p>AbstractAutoProxyCreator.setBeanFactory(BeanFactory beanFactory)   实现了该接口规定的方法</p>
+<p>哨兵写法（dummy head、dummy tail）</p>
 </li>
 <li>
-<p>该方法被AAPC的子类重写：AbstractAdvisorAutoProxyCreator.setBeanFactory(BeanFactory beanFactory)   ，调用父类原有方法的基础上再调用本类的 initBeanFactory 方法<img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200405211839691.png" alt="image-20200405211839691"></p>
+<p>如何保障线程安全？</p>
+<ul>
+<li>
+<p>加锁：synchronize method</p>
 </li>
 <li>
-<p>AbstractAdvisorAutoProxyCreator的子类的子类，即我们研究的目标类: AnnotationAwareAspectJAutoProxyCreator，对 initBeanFactory 方法进行了重写：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406214038055.png" alt="image-20200406214038055"></p>
+<p>如何保障高效（high throughput）：CAS操作</p>
+</li>
+<li>
+<p>ConcurrentHashMap（分段锁）</p>
+</li>
+<li>
+<p>容忍一定的读写精确性损失（读写锁）</p>
+</li>
+</ul>
+</li>
+<li>
+<p>能不能做成环形而不是双向链表？</p>
+</li>
+<li>
+<p>提前分配空间（HashMap）</p>
+</li>
+<li>
+<p>分布式环境下LRU怎么解决？</p>
 </li>
 </ol>
-<h4 id="SmartInstantiationAwareBeanPostProcessor"><a class="header-anchor" href="#SmartInstantiationAwareBeanPostProcessor">¶</a>SmartInstantiationAwareBeanPostProcessor</h4>
-<p>​	继承自InstantiationAwareBeanPostProcessor</p>
-<p>​		继承自BeanPostProcessor</p>
-<p>注意：BeanPostProcessor是在Bean对象创建后完成初始化前后进行处理的</p>
-<p>InstantiationAwareBeanPostProcessor，继承自BeanPostProcessor是在创建Bean实例之前先尝试使用后置处理器返回对象的</p>
-<p><strong>故AnnotationAwareAspectJAutoProxyCreator会在创建Bean之前尝试返回Bean实例</strong></p>
-<p><strong>AnnotationAwareAspectJAutoProxyCreator</strong>会在所有Bean创建之前进行拦截，它实现了InstantiationAwareBeanPostProcessor接口，会调用postProcessBeforeInstantiation方法</p>
-<hr>
-<p>所有的问题都集中在 “ <strong>AnnotationAwareAspectJAutoProxyCreator</strong>是何时被创建的，又是何时起到了何种作用 ” 这个问题上，后续笔记着重记录分析这个问题，并作出总结。源码也不是一天两天就能完全吸收的，那就时不时回来修修补补一番！</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -698,12 +769,12 @@ public static final String AUTO_PROXY_CREATOR_BEAN_NAME =
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_AOP原理1_@EnableAspectJAutoProxy</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.1k</span></p>
+    <p><span class="copy-title">文章标题:</span>LRU算法</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-05, 03:26:30</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-08, 01:20:23</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/05/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%861-EnableAspectJAutoProxy/" title="Spring注解学习_AOP原理1_@EnableAspectJAutoProxy">https://qiurungeng.github.io/2020/04/05/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%861-EnableAspectJAutoProxy/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-08, 22:14:01</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-08, 22:59:08</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/08/LRU%E7%AE%97%E6%B3%95/" title="LRU算法">https://qiurungeng.github.io/2020/04/08/LRU%E7%AE%97%E6%B3%95/</a>
 </div>
 
 
