@@ -6,23 +6,19 @@
   <meta name="keywords" content=" Java , socket编程 ">
   <meta name="description" content="Java与C进行Socket通信的坑 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="LRU（Last Recently Used）算法一般用在缓存，作为一种缓存淘汰的机制，即淘汰掉最近最少使用的记录。其要求一般为：  维护一个固定大小的缓存。 当缓存满时，若要增加新元素，需先淘汰掉缓存中最久未使用的元素。 元素最近一次访问的时间离当前越近，越不容易被淘汰。  ¶LeetCode题目：   ¶解题思路   题目要求put()、get()操作的时间复杂度为O(1)，最合适的数据结构应">
+<meta name="description" content="背景： 睡觉前回想起一月份寒假前被那个Linux C编程实现网络游戏服务器的大作业，其中最大的坑莫属Java客户端与C服务器之间socket通讯时无法正常通信收发游戏消息。临近寒假临近DDL踩了个这样的坑，内心真是特别崩溃。 C语言中，char[]可直接与byte[]互相转换。我都把Java中要传输的游戏数据都转成char[]再转成byte[]了，为什么还是无法正常通信？啊啊啊这真让人抓狂。 疯狂">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LRU算法">
-<meta property="og:url" content="https://qiurungeng.github.io/2020/04/08/LRU%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:title" content="Java与C进行Socket通信的坑">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/04/09/Java%E4%B8%8EC%E8%BF%9B%E8%A1%8CSocket%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9D%91/index.html">
 <meta property="og:site_name" content="梅罢葛的博客">
-<meta property="og:description" content="LRU（Last Recently Used）算法一般用在缓存，作为一种缓存淘汰的机制，即淘汰掉最近最少使用的记录。其要求一般为：  维护一个固定大小的缓存。 当缓存满时，若要增加新元素，需先淘汰掉缓存中最久未使用的元素。 元素最近一次访问的时间离当前越近，越不容易被淘汰。  ¶LeetCode题目：   ¶解题思路   题目要求put()、get()操作的时间复杂度为O(1)，最合适的数据结构应">
+<meta property="og:description" content="背景： 睡觉前回想起一月份寒假前被那个Linux C编程实现网络游戏服务器的大作业，其中最大的坑莫属Java客户端与C服务器之间socket通讯时无法正常通信收发游戏消息。临近寒假临近DDL踩了个这样的坑，内心真是特别崩溃。 C语言中，char[]可直接与byte[]互相转换。我都把Java中要传输的游戏数据都转成char[]再转成byte[]了，为什么还是无法正常通信？啊啊啊这真让人抓狂。 疯狂">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222403376.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222500227.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408224511011.png">
-<meta property="article:published_time" content="2020-04-08T14:14:01.000Z">
-<meta property="article:modified_time" content="2020-04-08T15:58:18.821Z">
+<meta property="article:published_time" content="2020-04-08T20:22:15.000Z">
+<meta property="article:modified_time" content="2020-04-08T22:08:18.306Z">
 <meta property="article:author" content="梅罢葛">
-<meta property="article:tag" content="算法">
-<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="socket编程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222403376.png">
 
 
 <link rel="icon" href="/img/weini.png">
@@ -182,7 +178,7 @@
     <div><a class="about  site_url"  href="/about">关于</a></div>
 </div>
 <input type="hidden" id="yelog_site_posts_number" value="28">
-<input type="hidden" id="yelog_site_word_count" value="49.8k">
+<input type="hidden" id="yelog_site_word_count" value="49.9k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -543,12 +539,12 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-09 05:50:29'>2020-04-09 04:22</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-09 06:08:18'>2020-04-09 04:22</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:1.4k</span>
+        <span>字数:1.5k</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -567,7 +563,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#背景："><span class="toc-text">背景：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#原因分析"><span class="toc-text">原因分析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#数据类型所用到的存储字节不一致："><span class="toc-text">数据类型所用到的存储字节不一致：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#大小端字节序的问题："><span class="toc-text">大小端字节序的问题：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#补充点："><span class="toc-text">补充点：</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">背景：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">原因分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-数据类型所用到的存储字节不一致："><span class="toc-text">1. 数据类型所用到的存储字节不一致：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-大小端字节序的问题："><span class="toc-text">2. 大小端字节序的问题：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-补充点："><span class="toc-text">3. 补充点：</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -583,12 +579,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="背景："><a class="header-anchor" href="#背景：">¶</a>背景：</h2>
-<p>睡觉前回想起一月份寒假前被那个Linux C编程实现网络游戏服务器的大作业支配的恐惧，其中最大的坑莫属Java客户端与C服务器之间socket通讯时无法正常通信收发游戏消息。临近寒假临近DDL，当时内心特别崩溃。疯狂尝试了一天后，无奈之下用最原始的ASC2码装成字节来通讯，可算起作用了，激动万分。</p>
-<p>C语言中，char[]可直接与byte[]互相转换。我把Java中要传输的游戏数据都转成char[]再转成byte[]了，为什么还是无法通讯？啊啊啊真让人抓狂。</p>
-<p>ASC2码占1个字节，发过去总算能被C服务端看懂了！而String提供了与byte[]数组互化的API，好像是基于asc2码的byte数组，收发消息居然也成了！最终以 Java客户端字节流字符串互相转换的方式搭配C服务端字节数组的方式稀里糊涂的解决了这个问题，并成功在坐火车回家前的三小时完成了这项大作业。</p>
-<h2 id="原因分析"><a class="header-anchor" href="#原因分析">¶</a>原因分析</h2>
-<h3 id="数据类型所用到的存储字节不一致："><a class="header-anchor" href="#数据类型所用到的存储字节不一致：">¶</a>数据类型所用到的存储字节不一致：</h3>
+        <h1>背景：</h1>
+<p>睡觉前回想起一月份寒假前被那个Linux C编程实现网络游戏服务器的大作业，其中最大的坑莫属Java客户端与C服务器之间socket通讯时无法正常通信收发游戏消息。临近寒假临近DDL踩了个这样的坑，内心真是特别崩溃。</p>
+<p>C语言中，char[]可直接与byte[]互相转换。我都把Java中要传输的游戏数据都转成char[]再转成byte[]了，为什么还是无法正常通信？啊啊啊这真让人抓狂。</p>
+<p>疯狂尝试了一天后，无奈之下用最原始的ASC2码装成字节来通讯，可算起作用了，激动万分。</p>
+<p>ASC2码占1个字节，发过去总算能被C服务端看懂！而Java提供了String 与 byte[] 互化的API，好像是能转换成基于asc2码的byte数组，收发消息居然也成了！（后来查资料才知道：String与byte[] 互化的结果与String的编码方式有关，JDK默认编码方式为GBK，而ASC2码是GBK的子集）</p>
+<p>最终以 Java客户端字节流字符串互相转换的方式搭配C服务端字节数组的方式稀里糊涂的解决了这个问题，并成功在坐火车回家前的三小时完成了这项大作业。</p>
+<h1>原因分析</h1>
+<h2 id="1-数据类型所用到的存储字节不一致："><a class="header-anchor" href="#1-数据类型所用到的存储字节不一致：">¶</a>1. 数据类型所用到的存储字节不一致：</h2>
 <p>首先两种语言关于socket编程的API就不一样，还有一个很重要的点，那就是<strong>两种语言的基本数据类型存储字节数不完全一致</strong>。它们的比较如下：</p>
 <table>
 <thead>
@@ -643,9 +641,9 @@
 </table>
 <p>所以我在Java的Socket中传 char[ ] 过去，到C那边的Socket收到后转成 char[ ] 就一段乱码。</p>
 <p>我在Java中传ASC2码过去的话，由于一个ASC2码最大值为255=2^8-1，占1字节，所以C那边就能读懂，将其转化为对应的char。</p>
-<p>另外，一查才知道，Java的字符串类型与字节数组类型转化也挺有讲究，阅读JDK对应源码的话，就知道它还跟字符编码有关。这里转载一篇博文：<a href="https://www.cnblogs.com/Free-Thinker/p/10007165.html" target="_blank" rel="noopener">Java中String和字节数组间的转换浅析</a></p>
+<p>另外，一查才知道，Java的字符串类型与字节数组类型转化也挺有讲究，阅读JDK对应源码的话，就知道它还跟字符编码有关。这里转载两篇博文：<a href="https://www.cnblogs.com/Free-Thinker/p/10007165.html" target="_blank" rel="noopener">Java中String和字节数组间的转换浅析</a>、<a href="https://blog.csdn.net/LightUpHeaven/article/details/92008630" target="_blank" rel="noopener">一图弄懂ASCII、GB2312、GBK、GB18030编码</a></p>
 <p>所以<strong>C和Java在进行Socket通讯前，需要进行类型转换</strong>。比如对于C定义的unsign char为一个字节存储，对应Java这边用byte存储;对于C定义的int, long对应Java用int存储，具体可以参考以上的表。</p>
-<h3 id="大小端字节序的问题："><a class="header-anchor" href="#大小端字节序的问题：">¶</a>大小端字节序的问题：</h3>
+<h2 id="2-大小端字节序的问题："><a class="header-anchor" href="#2-大小端字节序的问题：">¶</a>2. 大小端字节序的问题：</h2>
 <p><strong>Socket通讯是按字节传输的（即8个bit位传输），而对于超过一个字节的类型如short 为两个字节，就存在两种传输入方式，一种是高字节在前传输；一种是高字节在后传输</strong>。即Little-Endian（小端字节序）和Big-Endian（大端字节序）。<br>
 Little-Endian和Big-Endian是表示计算机字节顺序的两种格式，所谓的字节顺序指的是长度跨越多个字节的数据的存放形式。</p>
 <blockquote>
@@ -667,7 +665,7 @@ Little-Endian和Big-Endian是表示计算机字节顺序的两种格式，所谓
 <p>所以在我之前的大作业里，我在Java客户端的socket传输一个int类型的数字过去，在C服务端的Socket接收后该int打印出来的与原来的int类型数字完全不一致！</p>
 <p>老子就不信邪了，不就是大小为4byte的int类型吗？老子让Java客户端端先将int值转化为 byte[4] 数组，再到C服务端的socket读取 byte[4] 的数据并转化为int值应该可以吧？试了好多遍，还真就不行，关键是你还屁都debug不出来，那种感觉真叫人欲哭无泪。</p>
 <p>那为什么后来把int换成ASC2就行了？因为只占1个byte！此时用socket通讯不存在大端小端互换的问题！</p>
-<h3 id="补充点："><a class="header-anchor" href="#补充点：">¶</a>补充点：</h3>
+<h2 id="3-补充点："><a class="header-anchor" href="#3-补充点：">¶</a>3. 补充点：</h2>
 <ul>
 <li>
 <p>由于Socket通讯是按字节进行传输的，而在Java中只有byte是一个字节，故可以将其它类型都转换成byte数组来存储，如：short用两位的字节数组存储，需转换了换以上方法进行，而int用四位的字节数组来存储，对String类型，直接用String.getBytes()来得到它的字节数组。</p>
@@ -699,10 +697,10 @@ public static char[] ToUnsignedChar(char[] signChar) {
 
 <div class="article_copyright">
     <p><span class="copy-title">文章标题:</span>Java与C进行Socket通信的坑</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">1.4k</span></p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">1.5k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
     <p><span class="copy-title">发布时间:</span>2020-04-09, 04:22:15</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-09, 05:50:29</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-09, 06:08:18</p>
     <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/09/Java%E4%B8%8EC%E8%BF%9B%E8%A1%8CSocket%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9D%91/" title="Java与C进行Socket通信的坑">https://qiurungeng.github.io/2020/04/09/Java%E4%B8%8EC%E8%BF%9B%E8%A1%8CSocket%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9D%91/</a>
 </div>
 

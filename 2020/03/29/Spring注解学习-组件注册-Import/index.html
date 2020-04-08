@@ -6,23 +6,19 @@
   <meta name="keywords" content=" java , spring , spring注解 ">
   <meta name="description" content="Spring注解学习_组件注册4_@Import | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="LRU（Last Recently Used）算法一般用在缓存，作为一种缓存淘汰的机制，即淘汰掉最近最少使用的记录。其要求一般为：  维护一个固定大小的缓存。 当缓存满时，若要增加新元素，需先淘汰掉缓存中最久未使用的元素。 元素最近一次访问的时间离当前越近，越不容易被淘汰。  ¶LeetCode题目：   ¶解题思路   题目要求put()、get()操作的时间复杂度为O(1)，最合适的数据结构应">
+<meta name="description" content="背景： 睡觉前回想起一月份寒假前被那个Linux C编程实现网络游戏服务器的大作业，其中最大的坑莫属Java客户端与C服务器之间socket通讯时无法正常通信收发游戏消息。临近寒假临近DDL踩了个这样的坑，内心真是特别崩溃。 C语言中，char[]可直接与byte[]互相转换。我都把Java中要传输的游戏数据都转成char[]再转成byte[]了，为什么还是无法正常通信？啊啊啊这真让人抓狂。 疯狂">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LRU算法">
-<meta property="og:url" content="https://qiurungeng.github.io/2020/04/08/LRU%E7%AE%97%E6%B3%95/index.html">
+<meta property="og:title" content="Java与C进行Socket通信的坑">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/04/09/Java%E4%B8%8EC%E8%BF%9B%E8%A1%8CSocket%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9D%91/index.html">
 <meta property="og:site_name" content="梅罢葛的博客">
-<meta property="og:description" content="LRU（Last Recently Used）算法一般用在缓存，作为一种缓存淘汰的机制，即淘汰掉最近最少使用的记录。其要求一般为：  维护一个固定大小的缓存。 当缓存满时，若要增加新元素，需先淘汰掉缓存中最久未使用的元素。 元素最近一次访问的时间离当前越近，越不容易被淘汰。  ¶LeetCode题目：   ¶解题思路   题目要求put()、get()操作的时间复杂度为O(1)，最合适的数据结构应">
+<meta property="og:description" content="背景： 睡觉前回想起一月份寒假前被那个Linux C编程实现网络游戏服务器的大作业，其中最大的坑莫属Java客户端与C服务器之间socket通讯时无法正常通信收发游戏消息。临近寒假临近DDL踩了个这样的坑，内心真是特别崩溃。 C语言中，char[]可直接与byte[]互相转换。我都把Java中要传输的游戏数据都转成char[]再转成byte[]了，为什么还是无法正常通信？啊啊啊这真让人抓狂。 疯狂">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222403376.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222500227.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408224511011.png">
-<meta property="article:published_time" content="2020-04-08T14:14:01.000Z">
-<meta property="article:modified_time" content="2020-04-08T15:58:18.821Z">
+<meta property="article:published_time" content="2020-04-08T20:22:15.000Z">
+<meta property="article:modified_time" content="2020-04-08T22:08:18.306Z">
 <meta property="article:author" content="梅罢葛">
-<meta property="article:tag" content="算法">
-<meta property="article:tag" content="数据结构">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="socket编程">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200408222403376.png">
 
 
 <link rel="icon" href="/img/weini.png">
@@ -182,7 +178,7 @@
     <div><a class="about  site_url"  href="/about">关于</a></div>
 </div>
 <input type="hidden" id="yelog_site_posts_number" value="28">
-<input type="hidden" id="yelog_site_word_count" value="49.8k">
+<input type="hidden" id="yelog_site_word_count" value="49.9k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
