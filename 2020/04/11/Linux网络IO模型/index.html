@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Linux网络IO模型 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" Linux , 操作系统 ">
+  <meta name="description" content="Linux网络IO模型 | 梅罢葛的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="Netty 主要基于主从 Reactors 多线程模型（如图）做了一定的改进，其中主从 Reactor 多线程模型有多个 Reactor">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Netty模型">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/04/18/Netty%E6%A8%A1%E5%9E%8B/index.html">
+<meta property="og:site_name" content="梅罢葛的博客">
+<meta property="og:description" content="Netty 主要基于主从 Reactors 多线程模型（如图）做了一定的改进，其中主从 Reactor 多线程模型有多个 Reactor">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200418183233083.png">
+<meta property="article:published_time" content="2020-04-18T10:01:43.000Z">
+<meta property="article:modified_time" content="2020-04-19T13:42:11.410Z">
+<meta property="article:author" content="梅罢葛">
+<meta property="article:tag" content="netty">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200418183233083.png">
+
+
+<link rel="icon" href="/img/weini.png">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.webp" />
+</a>
+<div class="author">
+    <span>梅罢葛</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/qiurungeng" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <a title="email" href="mailto:708801794@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(34)</small></div></li>
+    
+        
+            
+            <li><div data-rel="spring">spring<small>(21)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="数据库">数据库<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="设计模式">设计模式<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="后端">后端<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Java">Java<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="算法">算法<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="netty">netty<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Netty">Netty<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Linux">Linux<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="34">
+<input type="hidden" id="yelog_site_word_count" value="59.2k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color5">java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">spring</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">spring注解</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">AOP</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">测试</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">MySQL</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">设计模式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">SpringBoot</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">分布式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">后端</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">spring-InstantiationAwareBeanPostProcessor</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">算法</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">数据结构</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">Java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">socket编程</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">NIO</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">netty</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Linux</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">操作系统</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="netty "
+           href="/2020/04/18/Netty%E6%A8%A1%E5%9E%8B/"
+           data-tag="netty"
+           data-author="" >
+            <span class="post-title" title="Netty模型">Netty模型</span>
+            <span class="post-date" title="2020-04-18 18:01:43">2020/04/18</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/18/%E8%80%81%E9%BC%A0%E8%8D%AF/"
+           data-tag="算法"
+           data-author="" >
+            <span class="post-title" title="老鼠药">老鼠药</span>
+            <span class="post-date" title="2020-04-18 17:08:32">2020/04/18</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/04/18/Reactor%E6%A8%A1%E5%BC%8F/"
+           data-tag="netty"
+           data-author="" >
+            <span class="post-title" title="Reactor模式">Reactor模式</span>
+            <span class="post-date" title="2020-04-18 13:44:12">2020/04/18</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/04/18/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D/"
+           data-tag="netty"
+           data-author="" >
+            <span class="post-title" title="线程模型基本介绍">线程模型基本介绍</span>
+            <span class="post-date" title="2020-04-18 13:09:51">2020/04/18</span>
+        </a>
+        
+        <a  class="Linux "
+           href="/2020/04/11/Linux%E7%BD%91%E7%BB%9CIO%E6%A8%A1%E5%9E%8B/"
+           data-tag="Linux,操作系统"
+           data-author="" >
+            <span class="post-title" title="Linux网络IO模型">Linux网络IO模型</span>
+            <span class="post-date" title="2020-04-11 04:45:19">2020/04/11</span>
+        </a>
+        
+        <a  class="Java "
+           href="/2020/04/11/Java-NIO%E5%85%A5%E9%97%A8/"
+           data-tag="Java,NIO"
+           data-author="" >
+            <span class="post-title" title="Java NIO入门">Java NIO入门</span>
+            <span class="post-date" title="2020-04-11 02:20:35">2020/04/11</span>
+        </a>
+        
+        <a  class="Java "
+           href="/2020/04/09/Java%E4%B8%8EC%E8%BF%9B%E8%A1%8CSocket%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9D%91/"
+           data-tag="Java,socket编程"
+           data-author="" >
+            <span class="post-title" title="Java与C进行Socket通信的坑">Java与C进行Socket通信的坑</span>
+            <span class="post-date" title="2020-04-09 04:22:15">2020/04/09</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/08/LRU%E7%AE%97%E6%B3%95/"
+           data-tag="算法,数据结构"
+           data-author="" >
+            <span class="post-title" title="LRU算法">LRU算法</span>
+            <span class="post-date" title="2020-04-08 22:14:01">2020/04/08</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/08/Spring%E6%89%A9%E5%B1%95%E5%8E%9F%E7%90%861-BeanFactoryPostProcessor/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring扩展原理1_BeanFactoryPostProcessor">Spring扩展原理1_BeanFactoryPostProcessor</span>
+            <span class="post-date" title="2020-04-08 13:34:44">2020/04/08</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/07/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%A3%B0%E6%98%8E%E4%BA%8B%E5%8A%A1%E5%8E%9F%E7%90%86/"
+           data-tag="java,spring,spring注解,spring-InstantiationAwareBeanPostProcessor"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_声明式事务原理">Spring注解学习_声明式事务原理</span>
+            <span class="post-date" title="2020-04-07 23:28:49">2020/04/07</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/07/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_声明式事务">Spring注解学习_声明式事务</span>
+            <span class="post-date" title="2020-04-07 21:02:02">2020/04/07</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理5_SpringAOP总结">Spring注解学习_AOP原理5_SpringAOP总结</span>
+            <span class="post-date" title="2020-04-06 22:32:08">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%864-AopProxyFactory/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理4_AopProxyFactory">Spring注解学习_AOP原理4_AopProxyFactory</span>
+            <span class="post-date" title="2020-04-06 22:31:40">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%863-AnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E4%BD%9C%E7%94%A8/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用">Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用</span>
+            <span class="post-date" title="2020-04-06 22:30:57">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%862-%E6%B3%A8%E5%86%8CAnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E8%BF%87%E7%A8%8B/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程">Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程</span>
+            <span class="post-date" title="2020-04-06 22:30:25">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/05/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%861-EnableAspectJAutoProxy/"
+           data-tag="java,spring,spring注解,AOP,spring-InstantiationAwareBeanPostProcessor"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理1_@EnableAspectJAutoProxy">Spring注解学习_AOP原理1_@EnableAspectJAutoProxy</span>
+            <span class="post-date" title="2020-04-05 03:26:30">2020/04/05</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP的注解方式实现">Spring注解学习_AOP的注解方式实现</span>
+            <span class="post-date" title="2020-04-03 18:47:08">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D4-Profile/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配4_@Profile">Spring注解学习_自动装配4_@Profile</span>
+            <span class="post-date" title="2020-04-03 16:47:50">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D3-Aware%E6%B3%A8%E5%85%A5Spring%E5%BA%95%E5%B1%82%E7%BB%84%E4%BB%B6-%E5%8E%9F%E7%90%86/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理">Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理</span>
+            <span class="post-date" title="2020-04-03 15:53:40">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D2-Resource-Inject/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配2_@Resource&amp;@Inject">Spring注解学习_自动装配2_@Resource&amp;@Inject</span>
+            <span class="post-date" title="2020-04-03 01:55:29">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D1-Autowired-Qualifier-Primary/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary">Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary</span>
+            <span class="post-date" title="2020-04-03 00:06:03">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/02/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC-Value-PropertySource/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_属性赋值_@Value&amp;@PropertySource">Spring注解学习_属性赋值_@Value&amp;@PropertySource</span>
+            <span class="post-date" title="2020-04-02 22:53:37">2020/04/02</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_生命周期2_BeanPostProcessor">Spring注解学习_生命周期2_BeanPostProcessor</span>
+            <span class="post-date" title="2020-03-30 01:51:10">2020/03/30</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F1-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E9%94%80%E6%AF%81%E6%96%B9%E6%B3%95/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_生命周期1_初始化和销毁方法">Spring注解学习_生命周期1_初始化和销毁方法</span>
+            <span class="post-date" title="2020-03-30 00:23:45">2020/03/30</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-FactoryBean/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册5_FactoryBean">Spring注解学习_组件注册5_FactoryBean</span>
+            <span class="post-date" title="2020-03-29 17:17:41">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册4_@Import">Spring注解学习_组件注册4_@Import</span>
+            <span class="post-date" title="2020-03-29 15:33:06">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Condition/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册3_@Condition">Spring注解学习_组件注册3_@Condition</span>
+            <span class="post-date" title="2020-03-29 14:52:02">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-ComponentScan/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册2_@ComponentScan">Spring注解学习_组件注册2_@ComponentScan</span>
+            <span class="post-date" title="2020-03-29 13:22:00">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Configuration/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册1_@Configuration与@Bean">Spring注解学习_组件注册1_@Configuration与@Bean</span>
+            <span class="post-date" title="2020-03-29 12:14:14">2020/03/29</span>
+        </a>
+        
+        <a  class="设计模式 "
+           href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"
+           data-tag="java,设计模式"
+           data-author="" >
+            <span class="post-title" title="工厂模式">工厂模式</span>
+            <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
+        </a>
+        
+        <a  class="后端 "
+           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
+           data-tag="java,SpringBoot,分布式,后端"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="数据库 "
+           href="/2020/03/28/mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0/"
+           data-tag="MySQL"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记：MySQL">谷粒商城项目学习笔记：MySQL</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
+           data-tag="测试"
+           data-author="" >
+            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/27/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-27 22:09:17">2020/03/27</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-Linux网络IO模型" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Linux网络IO模型</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="Linux">Linux</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">Linux</a>
+            
+            <a class="color5">操作系统</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-04-11 04:59:08'>2020-04-11 04:45</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:3.2k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Linux-网络-I-O模型"><span class="toc-text">Linux 网络 I&#x2F;O模型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#阻塞I-O-Blocking-I-O"><span class="toc-text">阻塞I&#x2F;O (Blocking I&#x2F;O)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#非阻塞I-O-Non-Blocking-I-O"><span class="toc-text">非阻塞I&#x2F;O (Non-Blocking I&#x2F;O)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#I-O复用（I-O-Multiplexing"><span class="toc-text">I&#x2F;O复用（I&#x2F;O Multiplexing)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#文件描述符fd"><span class="toc-text">文件描述符fd</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#select"><span class="toc-text">select</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#poll"><span class="toc-text">poll</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#epoll"><span class="toc-text">epoll</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#信号驱动的I-O-Signal-Driven-I-O"><span class="toc-text">信号驱动的I&#x2F;O (Signal Driven I&#x2F;O)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异步I-O"><span class="toc-text">异步I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5中I-O模型的对比"><span class="toc-text">5中I&#x2F;O模型的对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#"><span class="toc-text">¶</span></a></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="Linux-网络-I-O模型"><a class="header-anchor" href="#Linux-网络-I-O模型">¶</a>Linux 网络 I/O模型</h2>
+<p>我们都知道，为了OS的安全性等的考虑，<strong>进程是无法直接操作I/O设备的，其必须通过系统调用请求内核来协助完成I/O动作，而内核会为每个I/O设备维护一个buffer</strong>。 如下图所示：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e653c57b68?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p><strong>整个请求过程为： 用户进程发起请求，内核接受到请求后，从I/O设备中获取数据到buffer中，再将buffer中的数据copy到用户进程的地址空间，该用户进程获取到数据后再响应客户端。</strong></p>
+<p>在整个请求过程中，数据输入至buffer需要时间，而从buffer复制数据至进程也需要时间。因此根据在这两段时间内等待方式的不同，I/O动作可以分为以下<strong>五种模式</strong>：</p>
+<blockquote>
+<ul>
+<li><strong>阻塞I/O (Blocking I/O)</strong></li>
+<li><strong>非阻塞I/O (Non-Blocking I/O)</strong></li>
+<li><strong>I/O复用（I/O Multiplexing)</strong></li>
+<li><strong>信号驱动的I/O (Signal Driven I/O)</strong></li>
+<li><strong>异步I/O (Asynchrnous I/O)</strong> **说明：**如果像了解更多可能需要linux/unix方面的知识了，可自行去学习一些网络编程原理应该有详细说明，<strong>不过对大多数java程序员来说，不需要了解底层细节，知道个概念就行，知道对于系统而言，底层是支持的</strong>。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>本文最重要的参考文献是Richard Stevens的“UNIX® Network Programming Volume 1, Third Edition: The Sockets Networking ”，6.2节“I/O Models ”，<strong>公众号【匠心零度】回复：linux</strong> ，获取该资料，建议电脑下载（比较大以及chm格式），<strong>本文中的流程图也是截取自中</strong>。</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e64bcfbd7c?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e654ac8c5d?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<blockquote>
+<p><strong>记住这两点很重要</strong> 1 等待数据准备 (Waiting for the data to be ready) 2 将数据从内核拷贝到进程中 (Copying the data from the kernel to the process)</p>
+</blockquote>
+<h3 id="阻塞I-O-Blocking-I-O"><a class="header-anchor" href="#阻塞I-O-Blocking-I-O">¶</a>阻塞I/O (Blocking I/O)</h3>
+<p>在linux中，默认情况下所有的socket都是blocking，一个典型的读操作流程大概是这样：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e672044818?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p>当用户进程调用了recvfrom这个系统调用，内核就开始了IO的第一个阶段：等待数据准备。对于network io来说，很多时候数据在一开始还没有到达（比如，还没有收到一个完整的UDP包），这个时候内核就要等待足够的数据到来。而在用户进程这边，整个进程会被阻塞。当内核一直等到数据准备好了，它就会将数据从内核中拷贝到用户内存，然后内核返回结果，用户进程才解除block的状态，重新运行起来。 所以，blocking IO的特点就是<strong>在IO执行的两个阶段都被block了。</strong></p>
+<h3 id="非阻塞I-O-Non-Blocking-I-O"><a class="header-anchor" href="#非阻塞I-O-Non-Blocking-I-O">¶</a>非阻塞I/O (Non-Blocking I/O)</h3>
+<p>linux下，可以通过设置socket使其变为non-blocking。当对一个non-blocking socket执行读操作时，流程是这个样子：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e6745fbaa6?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p>当用户进程调用recvfrom时，系统不会阻塞用户进程，而是立刻返回一个ewouldblock错误，从用户进程角度讲 ，并不需要等待，而是马上就得到了一个结果。用户进程判断标志是ewouldblock时，就知道数据还没准备好，于是它就可以去做其他的事了，于是它可以再次发送recvfrom，一旦内核中的数据准备好了。并且又再次收到了用户进程的system call，那么它马上就将数据拷贝到了用户内存，然后返回。 当一个应用程序在一个循环里对一个非阻塞调用recvfrom，我们称为轮询。应用程序不断轮询内核，看看是否已经准备好了某些操作。这通常是<strong>浪费CPU时间</strong>，但这种模式偶尔会遇到。</p>
+<h3 id="I-O复用（I-O-Multiplexing"><a class="header-anchor" href="#I-O复用（I-O-Multiplexing">¶</a>I/O复用（I/O Multiplexing)</h3>
+<p>IO multiplexing这个词可能有点陌生，但是如果我说select，epoll，大概就都能明白了。有些地方也称这种IO方式为event driven IO。我们都知道，select/epoll的好处就在于单个process就可以同时处理多个网络连接的IO。它的基本原理就是select/epoll这个function会不断的轮询所负责的所有socket，当某个socket有数据到达了，就通知用户进程。它的流程如图：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e677fb19d1?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p>当用户进程调用了select，那么整个进程会被block，而同时，内核会“监视”所有select负责的socket，当任何一个socket中的数据准备好了，select就会返回。这个时候用户进程再调用read操作，将数据从内核拷贝到用户进程。 这个图和blocking IO的图其实并没有太大的不同，事实上，还更差一些。因为这里需要使用两个system call (select 和 recvfrom)，而blocking IO只调用了一个system call (recvfrom)。但是，用select的优势在于它可以同时处理多个connection。（多说一句。所以，如果处理的连接数不是很高的话，使用select/epoll的web server不一定比使用multi-threading + blocking IO的web server性能更好，可能延迟还更大。select/epoll的优势并不是对于单个连接能处理得更快，而是在于能处理更多的连接。） 在IO multiplexing Model中，实际中，对于每一个socket，一般都设置成为non-blocking，但是，如上图所示，整个用户的process其实是一直被block的。只不过process是被select这个函数block，而不是被socket IO给block。</p>
+<h4 id="文件描述符fd"><a class="header-anchor" href="#文件描述符fd">¶</a>文件描述符fd</h4>
+<p>Linux的内核将所有外部设备都可以看做一个文件来操作。那么我们对与外部设备的操作都可以看做对文件进行操作。我们对一个文件的读写，都通过调用内核提供的系统调用；内核给我们返回一个filede scriptor（fd,文件描述符）。而对一个socket的读写也会有相应的描述符，称为socketfd(socket描述符）。描述符就是一个数字，指向内核中一个结构体（文件路径，数据区，等一些属性）。那么我们的应用程序对文件的读写就通过对描述符的读写完成。</p>
+<h4 id="select"><a class="header-anchor" href="#select">¶</a>select</h4>
+<p>**基本原理：**select 函数监视的文件描述符分3类，分别是writefds、readfds、和exceptfds。调用后select函数会阻塞，直到有描述符就绪（有数据 可读、可写、或者有except），或者超时（timeout指定等待时间，如果立即返回设为null即可），函数返回。当select函数返回后，可以通过遍历fdset，来找到就绪的描述符。</p>
+<p>缺点: 1、select最大的缺陷就是单个进程所打开的FD是有一定限制的，它由FD_SETSIZE设置，32位机默认是1024个，64位机默认是2048。 一般来说这个数目和系统内存关系很大，”具体数目可以cat /proc/sys/fs/file-max察看”。32位机默认是1024个。64位机默认是2048. 2、对socket进行扫描时是线性扫描，即采用轮询的方法，效率较低。 当套接字比较多的时候，每次select()都要通过遍历FD_SETSIZE个Socket来完成调度，不管哪个Socket是活跃的，都遍历一遍。这会浪费很多CPU时间。”如果能给套接字注册某个回调函数，当他们活跃时，自动完成相关操作，那就避免了轮询”，这正是epoll与kqueue做的。 3、需要维护一个用来存放大量fd的数据结构，这样会使得用户空间和内核空间在传递该结构时复制开销大。</p>
+<h4 id="poll"><a class="header-anchor" href="#poll">¶</a>poll</h4>
+<p>**基本原理：**poll本质上和select没有区别，它将用户传入的数组拷贝到内核空间，然后查询每个fd对应的设备状态，如果设备就绪则在设备等待队列中加入一项并继续遍历，如果遍历完所有fd后没有发现就绪设备，则挂起当前进程，直到设备就绪或者主动超时，被唤醒后它又要再次遍历fd。这个过程经历了多次无谓的遍历。</p>
+<p><strong>它没有最大连接数的限制，原因是它是基于链表来存储的，但是同样有一个缺点：</strong> 1、大量的fd的数组被整体复制于用户态和内核地址空间之间，而不管这样的复制是不是有意义。 2 、poll还有一个特点是“水平触发”，如果报告了fd后，没有被处理，那么下次poll时会再次报告该fd。</p>
+<p>**注意：**从上面看，select和poll都需要在返回后，通过遍历文件描述符来获取已经就绪的socket。事实上，同时连接的大量客户端在一时刻可能只有很少的处于就绪状态，因此随着监视的描述符数量的增长，其效率也会线性下降。</p>
+<h4 id="epoll"><a class="header-anchor" href="#epoll">¶</a>epoll</h4>
+<p>epoll是在2.6内核中提出的，是之前的select和poll的增强版本。相对于select和poll来说，epoll更加灵活，没有描述符限制。epoll使用一个文件描述符管理多个描述符，将用户关系的文件描述符的事件存放到内核的一个事件表中，这样在用户空间和内核空间的copy只需一次。</p>
+<p>**基本原理：**epoll支持水平触发和边缘触发，最大的特点在于边缘触发，它只告诉进程哪些fd刚刚变为就绪态，并且只会通知一次。还有一个特点是，epoll使用“事件”的就绪通知方式，通过epoll_ctl注册fd，一旦该fd就绪，内核就会采用类似callback的回调机制来激活该fd，epoll_wait便可以收到通知。</p>
+<p><strong>epoll的优点：</strong> 1、没有最大并发连接的限制，能打开的FD的上限远大于1024（1G的内存上能监听约10万个端口）。 2、效率提升，不是轮询的方式，不会随着FD数目的增加效率下降。 只有活跃可用的FD才会调用callback函数；即Epoll最大的优点就在于它只管你“活跃”的连接，而跟连接总数无关，因此在实际的网络环境中，Epoll的效率就会远远高于select和poll。 3、内存拷贝，利用mmap()文件映射内存加速与内核空间的消息传递；即epoll使用mmap减少复制开销。</p>
+<p><strong>JDK1.5_update10版本使用epoll替代了传统的select/poll，极大的提升了NIO通信的性能。</strong></p>
+<blockquote>
+<p>**备注：**JDK NIO的BUG，例如臭名昭著的epoll bug，它会导致Selector空轮询，最终导致CPU 100%。官方声称在JDK1.6版本的update18修复了该问题，但是直到JDK1.7版本该问题仍旧存在，只不过该BUG发生概率降低了一些而已，它并没有被根本解决。<strong>这个可以在后续netty系列里面进行说明下。</strong></p>
+</blockquote>
+<h3 id="信号驱动的I-O-Signal-Driven-I-O"><a class="header-anchor" href="#信号驱动的I-O-Signal-Driven-I-O">¶</a>信号驱动的I/O (Signal Driven I/O)</h3>
+<blockquote>
+<p>由于signal driven IO在实际中并不常用，所以简单提下。</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e679c7717e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p>很明显可以看出用户进程不是阻塞的。首先用户进程建立SIGIO信号处理程序，并通过系统调用sigaction执行一个信号处理函数，这时用户进程便可以做其他的事了，一旦数据准备好，系统便为该进程生成一个SIGIO信号，去通知它数据已经准备好了，于是用户进程便调用recvfrom把数据从内核拷贝出来，并返回结果。</p>
+<h3 id="异步I-O"><a class="header-anchor" href="#异步I-O">¶</a>异步I/O</h3>
+<p>一般来说，这些函数通过告诉内核启动操作并在整个操作（包括内核的数据到缓冲区的副本）完成时通知我们。这个模型和前面的信号驱动I/O模型的主要区别是，在信号驱动的I/O中，内核告诉我们何时可以启动I/O操作，但是异步I/O时，内核告诉我们何时I/O操作完成。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e68098adbd?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p>当用户进程向内核发起某个操作后，会立刻得到返回，并把所有的任务都交给内核去完成（包括将数据从内核拷贝到用户自己的缓冲区），内核完成之后，只需返回一个信号告诉用户进程已经完成就可以了。</p>
+<h3 id="5中I-O模型的对比"><a class="header-anchor" href="#5中I-O模型的对比">¶</a>5中I/O模型的对比</h3>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e688345771?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<blockquote>
+<p>**结果表明：**前四个模型之间的主要区别是第一阶段，四个模型的第二阶段是一样的：过程受阻在调用recvfrom当数据从内核拷贝到用户缓冲区。然而，异步I/O处理两个阶段，与前四个不同。</p>
+</blockquote>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e6a1e5a5a7?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<p><strong>从同步、异步，以及阻塞、非阻塞两个维度来划分来看：</strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/12/26/160902e6a379763e?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt="img"></p>
+<h2 id=""><a class="header-anchor" href="#">¶</a></h2>
+<p>作者：匠心零度<br>
+链接：<a href="https://juejin.im/post/5a41951af265da43176a6270" target="_blank" rel="noopener">https://juejin.im/post/5a41951af265da43176a6270</a><br>
+来源：掘金<br>
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Linux网络IO模型</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">3.2k</span></p>
+    <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-04-11, 04:45:19</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-11, 04:59:08</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/11/Linux%E7%BD%91%E7%BB%9CIO%E6%A8%A1%E5%9E%8B/" title="Linux网络IO模型">https://qiurungeng.github.io/2020/04/11/Linux%E7%BD%91%E7%BB%9CIO%E6%A8%A1%E5%9E%8B/</a>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2020 梅罢葛</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#java','#spring','#spring注解','#AOP','#测试','#MySQL','#设计模式','#SpringBoot','#分布式','#后端','#spring-InstantiationAwareBeanPostProcessor','#算法','#数据结构','#Java','#socket编程','#NIO','#netty','#Linux','#操作系统',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: ;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 552px;
+    }
+    .nav.fullscreen {
+        margin-left: -552px;
+    }
+    .nav-left {
+        width: 130px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    .post {
+        background: url(https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/20200329232512.png);
+    }
+    
+    
+    .post.index {
+        background: url(https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/20200329232512.png);
+    }
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+        background: url("https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/%E5%A4%A7%E6%B4%AA%E6%B0%B4.jpg");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
