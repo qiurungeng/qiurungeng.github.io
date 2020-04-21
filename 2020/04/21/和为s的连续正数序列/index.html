@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>线程模型基本介绍 | 梅罢葛的博客</title>
-  <meta name="keywords" content=" netty ">
-  <meta name="description" content="线程模型基本介绍 | 梅罢葛的博客">
+  <title>和为s的连续正数序列 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" 算法 , LeetCode , 剑指Offer ">
+  <meta name="description" content="和为s的连续正数序列 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Netty 主要基于主从 Reactors 多线程模型（如图）做了一定的改进，其中主从 Reactor 多线程模型有多个 Reactor">
 <meta property="og:type" content="article">
@@ -618,9 +618,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-线程模型基本介绍" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-和为s的连续正数序列" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">线程模型基本介绍</h1>
+        <h1 class="article-title">和为s的连续正数序列</h1>
     
     <div class="article-meta">
         
@@ -628,26 +628,30 @@
         
         <span class="book">
             
-                <a  data-rel="Netty">Netty</a>
+                <a  data-rel="算法">算法</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color1">netty</a>
+            <a class="color3">算法</a>
+            
+            <a class="color4">LeetCode</a>
+            
+            <a class="color3">剑指Offer</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-18 13:44:50'>2020-04-18 13:09</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-21 13:33:54'>2020-04-21 12:53</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:319</span>
+        <span>字数:407</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -666,7 +670,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">线程模型基本介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#传统阻塞-I-O-服务模型"><span class="toc-text">传统阻塞 I&#x2F;O 服务模型</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#如何找到符合条件的-i-？"><span class="toc-text">如何找到符合条件的 i ？</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -682,50 +686,76 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1>线程模型基本介绍</h1>
-<ol>
-<li>
-<p>不同的线程模式，对程序的性能有很大影响，为了搞清Netty 线程模式，我们来系统的讲解下 各个线程模式， 最后看看Netty 线程模型有什么优越性.</p>
-</li>
-<li>
-<p>目前存在的线程模型有：</p>
-<ul>
-<li>传统阻塞 I/O 服务模型</li>
-<li>Reactor 模式</li>
-</ul>
-</li>
-<li>
-<p>根据 Reactor 的数量和处理资源池线程的数量不同，有 3 种典型的实现</p>
-<ul>
-<li>单 Reactor 单线程；</li>
-<li>单 Reactor 多线程；</li>
-<li>主从 Reactor 多线程</li>
-</ul>
-</li>
-<li>
-<p>Netty 线程模式</p>
-<p>(Netty 主要基于主从 Reactor 多线程模型做了一定的改进，其中主从 Reactor 多线程模型有多个 Reactor)</p>
-</li>
-</ol>
-<h2 id="传统阻塞-I-O-服务模型"><a class="header-anchor" href="#传统阻塞-I-O-服务模型">¶</a>传统阻塞 I/O 服务模型</h2>
-<p>工作原理图</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200418134142421.png" alt=""></p>
-<p>黄色的框表示对象， 蓝色的框表示线程<br>
-白色的框表示方法(API)</p>
-<p>模型特点：</p>
-<ul>
-<li>采用阻塞IO模式获取输入的数据</li>
-<li>每个连接都需要独立的线程完成数据的输入，业务处理, 数据返回</li>
-</ul>
-<p>存在问题：</p>
-<ul>
-<li>
-<p>当并发数很大，就会创建大量的线程，占用很大系统资源</p>
-</li>
-<li>
-<p>连接创建后，如果当前线程暂时没有数据可读，该线程会阻塞在read 操作，造成线程资源浪费</p>
-</li>
-</ul>
+        <p>剑指offer中的一道题：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200421125607036.png" alt="image-20200421125607036"></p>
+<p>一般解法也就考虑到滑动窗口什么的，但在评论区里发现了一个双百的新解法：</p>
+<pre><code class="language-java">public int[][] findContinuousSequence(int target) {
+
+    List&lt;int[]&gt; result = new ArrayList&lt;&gt;();
+    int i = 1;
+
+    while(target&gt;0)
+    {
+        target -= i++;
+        if(target&gt;0 &amp;&amp; target%i == 0)
+        {
+
+            int[] array = new int[i];
+            for(int k = target/i, j = 0; k &lt; target/i+i; k++,j++)
+            {
+                array[j] = k;
+            }
+            result.add(array);
+        }
+    }
+    Collections.reverse(result);
+    return result.toArray(new int[0][]);
+}
+</code></pre>
+<p>初看一脸懵，细思则大有门道。思路为 数学优化+枚举</p>
+<p>我们先由题意可得等式：</p>
+<pre><code class="language-matlab">x + (x+1) + (x+2) + ... + (x+i-1) = target;
+//等价于
+ix + i(i-1)/2 = target;
+//等价于
+x = (2target + i - i^2) / 2i = target/i + (1-i)/2;
+</code></pre>
+<p>即起始整数为 x 的连续 i 个整数相加，等于 target 。</p>
+<p>所以我们只要挨个试 i ，找到符合的 x 就可以获得相关序列；</p>
+<h2 id="如何找到符合条件的-i-？"><a class="header-anchor" href="#如何找到符合条件的-i-？">¶</a>如何找到符合条件的 i ？</h2>
+<p>由等式：</p>
+<pre><code class="language-matlab">x + (x+1) + (x+2) + ... + (x+i-1) = target;
+</code></pre>
+<p>可得</p>
+<pre><code class="language-matlab">ix = target - ( 0 + 1 + 2 +...+ i-1 )
+</code></pre>
+<p>所以要找是否有连续 i 个整数的序列符合条件，我们只要判断 (target - （0+1+…+i-1)) % i == 0</p>
+<p>所以有：</p>
+<pre><code class="language-java">while(target&gt;0)
+{
+    target -= i++;
+    if(target&gt;0 &amp;&amp; target%i == 0)
+    {
+        //...
+    }
+}
+</code></pre>
+<p>然后我们就确定这连续 i 个整数的起始数：用已减去( 0 + 1 + 2 +…+ i-1 )的新target值除以 i 就能得到。随后的数字由起始数累加就能得到了。</p>
+<pre><code class="language-java">while(target&gt;0)
+{
+    target -= i++;
+    if(target&gt;0 &amp;&amp; target%i == 0)
+    {
+        int[] array = new int[i];
+        for(int k = target/i, j = 0; k &lt; target/i+i; k++,j++)
+        {
+            array[j] = k;
+        }
+        result.add(array);
+    }
+}
+</code></pre>
+<p>最后再次佩服想出此解法的数学小机灵。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -739,12 +769,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>线程模型基本介绍</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">319</span></p>
+    <p><span class="copy-title">文章标题:</span>和为s的连续正数序列</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">407</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-18, 13:09:51</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-18, 13:44:50</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/18/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D/" title="线程模型基本介绍">https://qiurungeng.github.io/2020/04/18/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-21, 12:53:58</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-21, 13:33:54</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/21/%E5%92%8C%E4%B8%BAs%E7%9A%84%E8%BF%9E%E7%BB%AD%E6%AD%A3%E6%95%B0%E5%BA%8F%E5%88%97/" title="和为s的连续正数序列">https://qiurungeng.github.io/2020/04/21/%E5%92%8C%E4%B8%BAs%E7%9A%84%E8%BF%9E%E7%BB%AD%E6%AD%A3%E6%95%B0%E5%BA%8F%E5%88%97/</a>
 </div>
 
 
