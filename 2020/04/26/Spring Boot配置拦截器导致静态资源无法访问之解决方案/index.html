@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Spring Boot配置拦截器导致静态资源无法访问之解决方案 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" java , SpringBoot ">
+  <meta name="description" content="Spring Boot配置拦截器导致静态资源无法访问之解决方案 | 梅罢葛的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="最近在自行开发 SpringBoot+Thymeleaf 项目过程中，想要实现一个局部刷新的功能。查阅了许多网站，最终得以实现，这里记录一下过程。 实现 前端">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端局部刷新的实现">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/04/26/%E5%AE%9E%E7%8E%B0%E5%89%8D%E7%AB%AF%E5%B1%80%E9%83%A8%E5%88%B7%E6%96%B0/index.html">
+<meta property="og:site_name" content="梅罢葛的博客">
+<meta property="og:description" content="最近在自行开发 SpringBoot+Thymeleaf 项目过程中，想要实现一个局部刷新的功能。查阅了许多网站，最终得以实现，这里记录一下过程。 实现 前端">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-04-25T17:16:39.000Z">
+<meta property="article:modified_time" content="2020-04-26T15:22:19.213Z">
+<meta property="article:author" content="梅罢葛">
+<meta property="article:tag" content="jQuery">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="icon" href="/img/weini.png">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.webp" />
+</a>
+<div class="author">
+    <span>梅罢葛</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/qiurungeng" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <a title="email" href="mailto:708801794@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(39)</small></div></li>
+    
+        
+            
+            <li><div data-rel="spring">spring<small>(21)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="数据库">数据库<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="设计模式">设计模式<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Java">Java<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="算法">算法<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="netty">netty<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Netty">Netty<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Linux">Linux<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Spring Boot">Spring Boot<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="SpringBoot">SpringBoot<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="前端">前端<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="SpringBoot - 后端项目笔记">SpringBoot - 后端项目笔记<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="39">
+<input type="hidden" id="yelog_site_word_count" value="61.3k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color5">java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">spring</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">spring注解</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">AOP</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">测试</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">MySQL</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">设计模式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">SpringBoot</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">分布式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">后端</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">spring-InstantiationAwareBeanPostProcessor</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">算法</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">数据结构</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">Java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">socket编程</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">NIO</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">netty</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Linux</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">操作系统</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">LeetCode</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">剑指Offer</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">jQuery</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">前端</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Netty</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="前端 "
+           href="/2020/04/26/%E5%AE%9E%E7%8E%B0%E5%89%8D%E7%AB%AF%E5%B1%80%E9%83%A8%E5%88%B7%E6%96%B0/"
+           data-tag="jQuery,前端"
+           data-author="" >
+            <span class="post-title" title="前端局部刷新的实现">前端局部刷新的实现</span>
+            <span class="post-date" title="2020-04-26 01:16:39">2020/04/26</span>
+        </a>
+        
+        <a  class="Spring Boot "
+           href="/2020/04/26/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AF%BC%E8%87%B4%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E4%B9%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"
+           data-tag="java,SpringBoot"
+           data-author="" >
+            <span class="post-title" title="Spring Boot配置拦截器导致静态资源无法访问之解决方案">Spring Boot配置拦截器导致静态资源无法访问之解决方案</span>
+            <span class="post-date" title="2020-04-26 01:16:39">2020/04/26</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/04/23/Ajax%E6%8F%90%E4%BA%A4%E8%A1%A8%E5%8D%95/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Ajax提交表单">Ajax提交表单</span>
+            <span class="post-date" title="2020-04-23 09:55:02">2020/04/23</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/21/%E5%92%8C%E4%B8%BAs%E7%9A%84%E8%BF%9E%E7%BB%AD%E6%AD%A3%E6%95%B0%E5%BA%8F%E5%88%97/"
+           data-tag="算法,LeetCode,剑指Offer"
+           data-author="" >
+            <span class="post-title" title="和为s的连续正数序列">和为s的连续正数序列</span>
+            <span class="post-date" title="2020-04-21 12:53:58">2020/04/21</span>
+        </a>
+        
+        <a  class="netty "
+           href="/2020/04/18/Netty%E6%A8%A1%E5%9E%8B/"
+           data-tag="netty"
+           data-author="" >
+            <span class="post-title" title="Netty模型">Netty模型</span>
+            <span class="post-date" title="2020-04-18 18:01:43">2020/04/18</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/18/%E8%80%81%E9%BC%A0%E8%8D%AF/"
+           data-tag="算法"
+           data-author="" >
+            <span class="post-title" title="老鼠药">老鼠药</span>
+            <span class="post-date" title="2020-04-18 17:08:32">2020/04/18</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/04/18/Reactor%E6%A8%A1%E5%BC%8F/"
+           data-tag="Netty"
+           data-author="" >
+            <span class="post-title" title="Reactor模式">Reactor模式</span>
+            <span class="post-date" title="2020-04-18 13:44:12">2020/04/18</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/04/18/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D/"
+           data-tag="netty"
+           data-author="" >
+            <span class="post-title" title="线程模型基本介绍">线程模型基本介绍</span>
+            <span class="post-date" title="2020-04-18 13:09:51">2020/04/18</span>
+        </a>
+        
+        <a  class="Linux "
+           href="/2020/04/11/Linux%E7%BD%91%E7%BB%9CIO%E6%A8%A1%E5%9E%8B/"
+           data-tag="Linux,操作系统"
+           data-author="" >
+            <span class="post-title" title="Linux网络IO模型">Linux网络IO模型</span>
+            <span class="post-date" title="2020-04-11 04:45:19">2020/04/11</span>
+        </a>
+        
+        <a  class="Java "
+           href="/2020/04/11/Java-NIO%E5%85%A5%E9%97%A8/"
+           data-tag="Java,NIO"
+           data-author="" >
+            <span class="post-title" title="Java NIO入门">Java NIO入门</span>
+            <span class="post-date" title="2020-04-11 02:20:35">2020/04/11</span>
+        </a>
+        
+        <a  class="Java "
+           href="/2020/04/09/Java%E4%B8%8EC%E8%BF%9B%E8%A1%8CSocket%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9D%91/"
+           data-tag="Java,socket编程"
+           data-author="" >
+            <span class="post-title" title="Java与C进行Socket通信的坑">Java与C进行Socket通信的坑</span>
+            <span class="post-date" title="2020-04-09 04:22:15">2020/04/09</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/08/LRU%E7%AE%97%E6%B3%95/"
+           data-tag="算法,数据结构"
+           data-author="" >
+            <span class="post-title" title="LRU算法">LRU算法</span>
+            <span class="post-date" title="2020-04-08 22:14:01">2020/04/08</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/08/Spring%E6%89%A9%E5%B1%95%E5%8E%9F%E7%90%861-BeanFactoryPostProcessor/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring扩展原理1_BeanFactoryPostProcessor">Spring扩展原理1_BeanFactoryPostProcessor</span>
+            <span class="post-date" title="2020-04-08 13:34:44">2020/04/08</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/07/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%A3%B0%E6%98%8E%E4%BA%8B%E5%8A%A1%E5%8E%9F%E7%90%86/"
+           data-tag="java,spring,spring注解,spring-InstantiationAwareBeanPostProcessor"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_声明式事务原理">Spring注解学习_声明式事务原理</span>
+            <span class="post-date" title="2020-04-07 23:28:49">2020/04/07</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/07/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_声明式事务">Spring注解学习_声明式事务</span>
+            <span class="post-date" title="2020-04-07 21:02:02">2020/04/07</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理5_SpringAOP总结">Spring注解学习_AOP原理5_SpringAOP总结</span>
+            <span class="post-date" title="2020-04-06 22:32:08">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%864-AopProxyFactory/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理4_AopProxyFactory">Spring注解学习_AOP原理4_AopProxyFactory</span>
+            <span class="post-date" title="2020-04-06 22:31:40">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%863-AnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E4%BD%9C%E7%94%A8/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用">Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用</span>
+            <span class="post-date" title="2020-04-06 22:30:57">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%862-%E6%B3%A8%E5%86%8CAnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E8%BF%87%E7%A8%8B/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程">Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程</span>
+            <span class="post-date" title="2020-04-06 22:30:25">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/05/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%861-EnableAspectJAutoProxy/"
+           data-tag="java,spring,spring注解,AOP,spring-InstantiationAwareBeanPostProcessor"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理1_@EnableAspectJAutoProxy">Spring注解学习_AOP原理1_@EnableAspectJAutoProxy</span>
+            <span class="post-date" title="2020-04-05 03:26:30">2020/04/05</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP的注解方式实现">Spring注解学习_AOP的注解方式实现</span>
+            <span class="post-date" title="2020-04-03 18:47:08">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D4-Profile/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配4_@Profile">Spring注解学习_自动装配4_@Profile</span>
+            <span class="post-date" title="2020-04-03 16:47:50">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D3-Aware%E6%B3%A8%E5%85%A5Spring%E5%BA%95%E5%B1%82%E7%BB%84%E4%BB%B6-%E5%8E%9F%E7%90%86/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理">Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理</span>
+            <span class="post-date" title="2020-04-03 15:53:40">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D2-Resource-Inject/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配2_@Resource&amp;@Inject">Spring注解学习_自动装配2_@Resource&amp;@Inject</span>
+            <span class="post-date" title="2020-04-03 01:55:29">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D1-Autowired-Qualifier-Primary/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary">Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary</span>
+            <span class="post-date" title="2020-04-03 00:06:03">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/02/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC-Value-PropertySource/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_属性赋值_@Value&amp;@PropertySource">Spring注解学习_属性赋值_@Value&amp;@PropertySource</span>
+            <span class="post-date" title="2020-04-02 22:53:37">2020/04/02</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_生命周期2_BeanPostProcessor">Spring注解学习_生命周期2_BeanPostProcessor</span>
+            <span class="post-date" title="2020-03-30 01:51:10">2020/03/30</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F1-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E9%94%80%E6%AF%81%E6%96%B9%E6%B3%95/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_生命周期1_初始化和销毁方法">Spring注解学习_生命周期1_初始化和销毁方法</span>
+            <span class="post-date" title="2020-03-30 00:23:45">2020/03/30</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-FactoryBean/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册5_FactoryBean">Spring注解学习_组件注册5_FactoryBean</span>
+            <span class="post-date" title="2020-03-29 17:17:41">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册4_@Import">Spring注解学习_组件注册4_@Import</span>
+            <span class="post-date" title="2020-03-29 15:33:06">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Condition/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册3_@Condition">Spring注解学习_组件注册3_@Condition</span>
+            <span class="post-date" title="2020-03-29 14:52:02">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-ComponentScan/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册2_@ComponentScan">Spring注解学习_组件注册2_@ComponentScan</span>
+            <span class="post-date" title="2020-03-29 13:22:00">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Configuration/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册1_@Configuration与@Bean">Spring注解学习_组件注册1_@Configuration与@Bean</span>
+            <span class="post-date" title="2020-03-29 12:14:14">2020/03/29</span>
+        </a>
+        
+        <a  class="设计模式 "
+           href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"
+           data-tag="java,设计模式"
+           data-author="" >
+            <span class="post-title" title="工厂模式">工厂模式</span>
+            <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
+        </a>
+        
+        <a  class="SpringBoot - 后端项目笔记 "
+           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
+           data-tag="java,SpringBoot,分布式,后端"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="SpringBoot "
+           href="/2020/03/28/SpringBoot-debug%E7%90%90%E8%AE%B0/"
+           data-tag="java,SpringBoot"
+           data-author="" >
+            <span class="post-title" title="SpringBoot-Debug持续记录">SpringBoot-Debug持续记录</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="数据库 "
+           href="/2020/03/28/mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0/"
+           data-tag="MySQL"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记：MySQL">谷粒商城项目学习笔记：MySQL</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
+           data-tag="测试"
+           data-author="" >
+            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/27/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-27 22:09:17">2020/03/27</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-Spring Boot配置拦截器导致静态资源无法访问之解决方案" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">Spring Boot配置拦截器导致静态资源无法访问之解决方案</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="Spring Boot">Spring Boot</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color5">java</a>
+            
+            <a class="color1">SpringBoot</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-04-26 23:26:06'>2020-04-26 01:16</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:796</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">Spring Boot配置拦截器导致静态资源无法访问之解决方案</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">自行配置静态资源地址映射的其他注意点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#分析"><span class="toc-text">分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#解决办法"><span class="toc-text">解决办法</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1>Spring Boot配置拦截器导致静态资源无法访问之解决方案</h1>
+<p>Spring Boot版本：2.1.9</p>
+<p>我的静态文件都位于static文件夹中。原错误代码如下：</p>
+<pre><code class="language-java">@Configuration
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
+
+    @Autowired
+    SessionInterceptor sessionInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(sessionInterceptor).addPathPatterns(&quot;js/**&quot;,&quot;css/**&quot;,&quot;/&quot;);//放行静态资源
+    }
+}
+</code></pre>
+<pre><code class="language-java">@Component
+public class SessionInterceptor implements HandlerInterceptor {
+    @Autowired
+    UserMapper userMapper;
+
+    @Override
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        Cookie[] cookies=request.getCookies();
+        if(cookies!=null &amp;&amp; cookies.length!=0){
+            User user=null;
+            for (Cookie cookie:cookies) {
+                if (cookie.getName().equals(&quot;token&quot;)){
+                    String token=cookie.getValue();
+                    user=userMapper.findByToken(token);
+                    if (user!=null){
+                        request.getSession().setAttribute(&quot;user&quot;,user);
+                    }
+                    break;
+                }
+            }
+            if (user==null){
+                response.sendRedirect(&quot;/&quot;);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        
+    }
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+
+    }
+}
+</code></pre>
+<p>但始终无法放行静态资源，网上查询良久，得知：一旦添加拦截器后，Spring Boot不能像以往一样直接访问到static文件夹。</p>
+<p>原因：我配置拦截器继承的类是：WebMvcConfigurationSupport这个类，它会让spring boot的自动配置失效。</p>
+<p>要想访问得静态文件应使用地址如：localhost:8080/static/js/jquery.min.js</p>
+<p>方便起见，我们可以自行配置静态资源地址映射：</p>
+<pre><code class="language-java">@Configuration
+@EnableWebMvc
+public class WebConfig implements WebMvcConfigurer {
+    
+    ······
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler(&quot;/**&quot;).addResourceLocations(&quot;classpath:/static/&quot;);
+    }
+    
+    ······
+}
+</code></pre>
+<p>(以上为2019年10月所作)</p>
+<h1>自行配置静态资源地址映射的其他注意点</h1>
+<p>2020年四月的一天，我在接活做外包，做一个简单的后台系统（SpringBoot+Thymeleaf），又遇到了这个问题：</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426223747064.png" alt="image-20200426223747064"></p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426223654161.png" alt="image-20200426223654161"></p>
+<p>该页面的逻辑是，搜索某客户价值信息时，将跳转到 “原url/客户档案号” 显示搜索结果。当我访问&quot;/valueCalculating&quot;时页面正常，但访问&quot;/valueCalculating/1&quot;时页面静态资源全部失效。</p>
+<p>我翻到以前写的这篇文章，按照上面的笔记自行配置静态资源，但失败了：</p>
+<pre><code class="language-java">@EnableWebMvc
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler(&quot;/**&quot;).addResourceLocations(&quot;classpath:/static/&quot;);
+    }
+}
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426224608204.png" alt="image-20200426224608204"></p>
+<p>尝试了很久发现，当这样配置资源处理正则式，生效：</p>
+<pre><code class="language-java">public void addResourceHandlers(ResourceHandlerRegistry registry) {
+registry.addResourceHandler(&quot;/**&quot;,&quot;/valueCalculating/**&quot;).addResourceLocations(&quot;classpath:/static/&quot;);
+}
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426225207077.png" alt="image-20200426225207077"></p>
+<h2 id="分析"><a class="header-anchor" href="#分析">¶</a>分析</h2>
+<p><a href="http://xn--www-p18doh26bg17df1grtw747emoxav2de7d.haha.com" target="_blank" rel="noopener">正常我们访问一个页面www.haha.com</a></p>
+<p>如果该页面引用了&quot;my.css&quot;文件，引用写法为：</p>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;css/my.css&quot;&gt;
+</code></pre>
+<p><a href="http://xn--www-x98do1bt80ah9jtp8alt7c2delmnp2ay4cjy1b.haha.com/css/my.css%E8%8E%B7%E5%8F%96%E8%AF%A5%E9%9D%99%E6%80%81%E6%96%87%E4%BB%B6" target="_blank" rel="noopener">那么浏览器就会通过访问www.haha.com/css/my.css获取该静态文件</a></p>
+<p>回到之前的问题</p>
+<p>“/**” 正则式仅代表 资源文件路径的一个层级，所以当我访问&quot;/valueCalculating/1&quot;时会出现如下情形：</p>
+<p>比方说我在界面里引入了jquery:</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426230014927.png" alt="image-20200426230014927"></p>
+<p>我之前所写的资源配置类就会请求&quot;localhost:8080/valueCalculating/plugins/jquery/jquery.min.js&quot;来获取该文件。 “/**” 这个写法只去掉了一个层级，将“localhost:8080/valueCalculating/1” 变为 “localhost:8080/valueCalculating”  。并没实现我所想要的去掉所有层级的目的。</p>
+<p>所以当我将其改为&quot;/valueCalculating/**&quot;就起作用了</p>
+<h2 id="解决办法"><a class="header-anchor" href="#解决办法">¶</a>解决办法</h2>
+<p>如果我想去掉所有层级的相对路径，更方便的写法应该是这样：</p>
+<pre><code class="language-java">public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    registry.addResourceHandler(&quot;/***&quot;).addResourceLocations(&quot;classpath:/static/&quot;);
+}
+</code></pre>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>Spring Boot配置拦截器导致静态资源无法访问之解决方案</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">796</span></p>
+    <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-04-26, 01:16:39</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-26, 23:26:06</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/26/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AF%BC%E8%87%B4%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E4%B9%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/" title="Spring Boot配置拦截器导致静态资源无法访问之解决方案">https://qiurungeng.github.io/2020/04/26/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AF%BC%E8%87%B4%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E4%B9%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/</a>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2020 梅罢葛</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#java','#spring','#spring注解','#AOP','#测试','#MySQL','#设计模式','#SpringBoot','#分布式','#后端','#spring-InstantiationAwareBeanPostProcessor','#算法','#数据结构','#Java','#socket编程','#NIO','#netty','#Linux','#操作系统','#LeetCode','#剑指Offer','#jQuery','#前端','#Netty',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: ;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 552px;
+    }
+    .nav.fullscreen {
+        margin-left: -552px;
+    }
+    .nav-left {
+        width: 130px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    .post {
+        background: url(https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/20200329232512.png);
+    }
+    
+    
+    .post.index {
+        background: url(https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/20200329232512.png);
+    }
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+        background: url("https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/%E5%A4%A7%E6%B4%AA%E6%B0%B4.jpg");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
