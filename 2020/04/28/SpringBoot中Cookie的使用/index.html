@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>工厂模式 | 梅罢葛的博客</title>
-  <meta name="keywords" content=" java , 设计模式 ">
-  <meta name="description" content="工厂模式 | 梅罢葛的博客">
+  <title>SpringBoot中Cookie的使用 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" java , SpringBoot ">
+  <meta name="description" content="SpringBoot中Cookie的使用 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="Spring Boot配置拦截器导致静态资源无法访问之解决方案 Spring Boot版本：2.1.9 我的静态文件都位于static文件夹中。原错误代码如下： @Configuration @EnableWebMvc public class WebConfig implements WebMvcConfigurer {      @Autowired     SessionIntercepto">
 <meta property="og:type" content="article">
@@ -655,9 +655,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-工厂模式" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-SpringBoot中Cookie的使用" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">工厂模式</h1>
+        <h1 class="article-title">SpringBoot中Cookie的使用</h1>
     
     <div class="article-meta">
         
@@ -665,7 +665,7 @@
         
         <span class="book">
             
-                <a  data-rel="设计模式">设计模式</a>
+                <a  data-rel="SpringBoot">SpringBoot</a>
             
         </span>
         
@@ -674,19 +674,19 @@
             
             <a class="color5">java</a>
             
-            <a class="color5">设计模式</a>
+            <a class="color1">SpringBoot</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-03-28 22:23:16'>2020-03-28 14:21</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-28 02:07:21'>2020-04-28 01:52</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:2.4k</span>
+        <span>字数:654</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -705,7 +705,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#简单工厂："><span class="toc-text">简单工厂：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#优点"><span class="toc-text">优点</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#缺点"><span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#工厂模式："><span class="toc-text">工厂模式：</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#创建者："><span class="toc-text">创建者：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#产品："><span class="toc-text">产品：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#工厂好处："><span class="toc-text">工厂好处：</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#依赖倒置原则（Dependency-Inversion-Principle）："><span class="toc-text">依赖倒置原则（Dependency Inversion Principle）：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#抽象工厂："><span class="toc-text">抽象工厂：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#比较抽象工厂模式和工厂模式"><span class="toc-text">比较抽象工厂模式和工厂模式</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#销毁cookie（将cookie的持续时间设置为0）"><span class="toc-text">销毁cookie（将cookie的持续时间设置为0）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过HttpServletResponse设置cookie，通过HttpServletRequest获取cookie"><span class="toc-text">通过HttpServletResponse设置cookie，通过HttpServletRequest获取cookie</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#通过HttpServletResponse设置cookie，通过注解获取cookie"><span class="toc-text">通过HttpServletResponse设置cookie，通过注解获取cookie</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#安全的Cookie"><span class="toc-text">安全的Cookie</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HttpOnly-Cookie"><span class="toc-text">HttpOnly Cookie</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -721,443 +721,111 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>问题回顾：</p>
-<pre><code class="language-java">ArrayList&lt;String&gt; list=new ArrayList&lt;&gt;();
-</code></pre>
-<p>代码绑定者具体实现类，会让代码脆弱且缺乏弹性。我们可以使用接口使它更有弹性：</p>
-<pre><code class="language-java">List&lt;String&gt; list = new ArrayList&lt;&gt;();
-Duck duck = new MallardDuck();
-</code></pre>
-<p>但有一些要实例化的具体类，究竟实例化为哪一个类，需要由运行时的条件决定。一旦有变化或扩展，就必须重新打开上面那段代码检查修改，这将令维护更新变得困难。</p>
-<p>在这个例子中，new一个对象没有错，真正有问题的是“改变”没被隔离出来，影响了new的使用。</p>
-<blockquote>
-<p>设计原则：类应当对扩展开放，对修改关闭。</p>
-</blockquote>
-<p>针对接口编程可以隔离掉系统以后将发生的一大堆改变。我们需要一种方法找出会变化的部分，把它们从不变的部分隔离出来。</p>
-<p>再看一个例子：</p>
-<pre><code class="language-java">Pizza orderPizza(String type){
-    Pizza pizza;
-    
-    /*************创建对象部分************/
-    if(type.equals(&quot;a&quot;))pizza=new APizza();
-    else if(type.equals(&quot;b&quot;))pizza=new BPizza();
-    else{/*...*/}
-    /***********************************/
-    
-    pizza.prepare();
-    pizza.bake();
-    pizza.cut();
-    pizza.box();
-    return pizza;
-}
-</code></pre>
-<p>如果披萨的种类不断增加，那么这段代码就必须一改再改。进而我们知道，如果在代码中new某个对象（实例化某个对象），将使orderPizza()出问题，无法让orderPizza()对修改关闭。所以我们得做一些封装。</p>
-<p>将创建Pizza对象转移到orderPizza()之外，给专职创建披萨的新对象，即工厂。</p>
-<p>**工厂（Factory）**处理创建对象的细节</p>
-<h4 id="简单工厂："><a class="header-anchor" href="#简单工厂：">¶</a>简单工厂：</h4>
-<pre><code class="language-java">public class SimplePizzaFactory{
-    public Pizza createPizza(String type){
-        Pizza pizza=null;
-        if(type.equals(&quot;a&quot;))pizza=new APizza();
-        else if(type.equals(&quot;b&quot;))pizza=new BPizza();
-        else{/*...*/}
-        return pizza;
-    }
-}
-</code></pre>
-<p>利用静态方法定义一个简单工厂：<strong>静态工厂：</strong></p>
-<pre><code class="language-java">public class SimplePizzaFactory{
-    public static Pizza createPizza(String type){
-        Pizza pizza=null;
-        if(type.equals(&quot;a&quot;))pizza=new APizza();
-        else if(type.equals(&quot;b&quot;))pizza=new BPizza();
-        else{/*...*/}
-        return pizza;
-    }
-}
-</code></pre>
-<h5 id="优点"><a class="header-anchor" href="#优点">¶</a><strong>优点</strong></h5>
-<p>​	帮助封装。客户端可以更好的面向接口编程。<br>
-​	解耦。客户端不需要知道实现类。</p>
-<h5 id="缺点"><a class="header-anchor" href="#缺点">¶</a><strong>缺点</strong></h5>
-<p>​	需要理解参数的意义，增加复杂度。<br>
-​	静态工厂不方便扩展子类。</p>
-<p>简单工厂其实不是一种设计模式，更像是一种编程习惯</p>
-<p>升级原有代码，用工厂去创建披萨：</p>
-<pre><code class="language-java">public class PizzaStore{
-    SimplePizzaFactory factory;
-    
-    //构造注入
-    public PizzaStore(SimplePizzaFactory factory){
-        thi.factory=factory;
-    }
-    
-    Pizza orderPizza(String type){
-        Pizza pizza=factory.createPizza(type);
-        pizza.prepare();
-        pizza.bake();
-        pizza.cut();
-        pizza.box();
-        return pizza;
-    }
-}
-</code></pre>
-<h4 id="工厂模式："><a class="header-anchor" href="#工厂模式：">¶</a>工厂模式：</h4>
-<p>让子类决定该创建的对象是什么，来达到将对象创建的过程封装的目的。工厂模式的组成元素：创建者类和产品类</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328165134999.png" alt=""></p>
-<h5 id="创建者："><a class="header-anchor" href="#创建者：">¶</a>创建者：</h5>
-<pre><code class="language-java">/*创建者类*/
-public abstract class PizzaStore{
-	Pizza orderPizza(String type){
-        Pizza pizza = createPizza(type);	//创建对象的业务
-        pizza.prepare();
-        pizza.bake();
-        pizza.cut();
-        pizza.box();
-        return pizza;
-    }
-    
-    protected abstract Pizza createPizza(String type);	//让子类决定该创建的对象是什么
-}
-</code></pre>
-<pre><code class="language-java">//创建者类：纽约披萨店
-public class NYPizzaStore extends PizzaStore{
-    //子类决定该创建的对象是什么
-    Pizza createPizza(String item){
-        if(item.equals(&quot;cheese&quot;)){
-            return new NYStyleCheesePizza();
-        }else if(item.equals(&quot;clam&quot;)){
-            return new NYStyleClamPizza();
-        }else if(...){
-            ...
-        }return null;
-    }
-}
+        <p>cookie是浏览器缓存，下次读取优先读取缓存</p>
+<p>cookie是以key、value的形式存储的</p>
+<p>cookie也是有过期时间：cookie.setMaxAge(0);</p>
+<p>设置cookie的过期时间<br>
+通过response设置</p>
+<p>cookie<br>
+session是通过request设置的</p>
+<p>cookie是javax.servlet.http.cookie的包，别引错包</p>
+<h2 id="销毁cookie（将cookie的持续时间设置为0）"><a class="header-anchor" href="#销毁cookie（将cookie的持续时间设置为0）">¶</a>销毁cookie（将cookie的持续时间设置为0）</h2>
+<pre><code class="language-java">// 将Cookie的值设置为null
+Cookie cookie = new Cookie(&quot;username&quot;, null);
+//将`Max-Age`设置为0
+cookie.setMaxAge(0);
 
-//创建者类：洛杉矶披萨店
-public class LAPizzaStore extends PizzaStore{
-    //子类决定该创建的对象是什么
-    Pizza createPizza(String item){
-        if(item.equals(&quot;cheese&quot;)){
-            return new LAStyleCheesePizza();
-        }else if(item.equals(&quot;clam&quot;)){
-            return new LAStyleClamPizza();
-        }else if(...){
-            ...
-        }return null;
-    }
-}
-
-....
+response.addCookie(cookie);
 </code></pre>
-<h5 id="产品："><a class="header-anchor" href="#产品：">¶</a>产品：</h5>
-<pre><code class="language-java">public abstract class Pizza{
-    String name;
-    String dough;
-    String sauce;
-    
-    void prepare(){
-        System.out.println(&quot;preparing...&quot;);
-    }
-    void bake(){
-        System.out.println(&quot;baking...&quot;);
-    }
-    void cut(){
-        System.out.println(&quot;cutting...&quot;);
-    }
-    void box(){
-        System.out.println(&quot;boxing...&quot;);
+<h2 id="通过HttpServletResponse设置cookie，通过HttpServletRequest获取cookie"><a class="header-anchor" href="#通过HttpServletResponse设置cookie，通过HttpServletRequest获取cookie">¶</a>通过HttpServletResponse设置cookie，通过HttpServletRequest获取cookie</h2>
+<pre><code class="language-java">import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@Controller
+@RequestMapping(&quot;/test&quot;)
+public class SpringBootTest {
+    //设置cookie
+    @RequestMapping(&quot;/test1&quot;)
+    public void test1(HttpServletResponse httpServletResponse){
+        //使用cookie的构造方法，传key，value
+        Cookie cookie=new Cookie(&quot;cookieName&quot;,&quot;cookie名称&quot;);
+        //设置过期时间，单位：秒
+        cookie.setMaxAge(maxAge);
+        //HttpServletResponse的addCookie方法设置cookie
+        httpServletResponse.addCookie(cookie);
     }
 
-    public String getName() {
-        return name;
-    }
-}
-...
-public class LAStyleCheesePizza extends Pizza{
-    LAStyleCheesePizza(){
-        name=&quot;NEW YORK STYLE CHEESE PIZZA&quot;;
-        dough=&quot;dough&quot;;
-        sauce=&quot;sauce&quot;;
-        toppings.add(&quot;LA Cheese&quot;);
-    }
 
-    @Override
-    void cut() {
-        System.out.println(&quot;cutting in LA Style...&quot;);
-    }
-}
-...
-public class NYStyleCheesePizza extends Pizza {
-    NYStyleCheesePizza(){
-        name=&quot;NEW YORK STYLE CHEESE PIZZA&quot;;
-        dough=&quot;dough&quot;;
-        sauce=&quot;sauce&quot;;
-        toppings.add(&quot;Cheese&quot;);
-    }
-}
-</code></pre>
-<p>Test：</p>
-<pre><code class="language-java">public class Test {
-    public static void main(String[] args) {
-        PizzaStore nyStore=new NYPizzaStore();
-        PizzaStore laStore=new LAPizzaStore();
-        System.out.println(&quot;吃一个&quot;+nyStore.orderPizza(&quot;cheese&quot;).getName());
-        System.out.println();
-        System.out.println(&quot;吃一个&quot;+laStore.orderPizza(&quot;cheese&quot;).getName());
-    }
-}
-</code></pre>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328165557352.png" alt=""></p>
-<p><strong>工厂方法</strong>：</p>
-<ul>
-<li>是抽象的，具体的实现封装在子类中。</li>
-<li>将返回一个产品类</li>
-<li>将业务和实际创建具体产品的代码分隔开来。</li>
-</ul>
-<h5 id="工厂好处："><a class="header-anchor" href="#工厂好处：">¶</a>工厂好处：</h5>
-<ul>
-<li>将创建对象的代码集中在一个对象或方法中，可以避免代码中的重复，并更方便以后的维护。也意味着客户在实例化对象时，只会依赖于接口而不是具体类。帮助我们针对接口编程。</li>
-</ul>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328205525707.png" alt=""></p>
-<h4 id="依赖倒置原则（Dependency-Inversion-Principle）："><a class="header-anchor" href="#依赖倒置原则（Dependency-Inversion-Principle）：">¶</a>依赖倒置原则（Dependency Inversion Principle）：</h4>
-<blockquote>
-<p>设计原则：要依赖抽象，不要依赖具体类</p>
-</blockquote>
-<p>不能让高层组件依赖底层组件，不管是高层底层组件，都应当依赖于抽象</p>
-<p>PizzaStore是高层组件，披萨实现是底层组件。</p>
-<blockquote>
-<p>避免违反依赖导致原则的指导方针：</p>
-<ul>
-<li><strong>变量不可以持有具体类的引用</strong><br>
-如果使用new，就会持有具体类的引用，你可以改用<strong>工厂方法</strong>来避免这么做</li>
-<li><strong>不要让类派生自具体类</strong><br>
-如果派生自具体类，就会依赖具体类。请<strong>派生自一个抽象</strong>（接口或抽象类）</li>
-<li><strong>不要覆盖基类中已实现的方法</strong><br>
-如果覆盖基类已实现的方法，那么这个基类就不适合作为被继承的抽象。基类中已实现的方法要由子类共享。</li>
-</ul>
-</blockquote>
-<h4 id="抽象工厂："><a class="header-anchor" href="#抽象工厂：">¶</a>抽象工厂：</h4>
-<p><strong>抽象工厂模式</strong>提供一个接口，用于创建相关或依赖对象的<strong>家族</strong>，而不需要明确指定具体类</p>
-<p>通过抽象工厂所提供的接口，可以创建产品的家族，利用这个接口书写代码，我们的代码将从实际工厂解耦，以便在不同的上下文实现各式各样的工厂，制造不同的商品。</p>
-<p>我们引入了抽象工厂来创建 “披萨原料”家族 。</p>
-<p>披萨店：</p>
-<pre><code class="language-java">public abstract class PizzaStore {
-    protected abstract Pizza createPizza(String item);
-
-    public Pizza orderPizza(String type) {
-        Pizza pizza = createPizza(type);
-        System.out.println(&quot;--- Making a &quot; + pizza.getName() + &quot; ---&quot;);
-        pizza.prepare();
-        pizza.bake();
-        pizza.cut();
-        pizza.box();
-        return pizza;
-    }
-}
-
-/*************纽约披萨店***************/
-public class NYPizzaStore extends PizzaStore {
-    protected Pizza createPizza(String item) {
-        Pizza pizza = null;
-        // 原料工厂
-        PizzaIngredientFactory ingredientFactory = new NYPizzaIngredientFactory();
-        if (item.equals(&quot;cheese&quot;)) {
-            // 注入抽象原料工厂
-            pizza = new CheesePizza(ingredientFactory);
-            pizza.setName(&quot;New York Style Cheese Pizza&quot;);
-        } else if (item.equals(&quot;veggie&quot;)) {
-            pizza = new VeggiePizza(ingredientFactory);
-            pizza.setName(&quot;New York Style Veggie Pizza&quot;);
-        } else if (item.equals(&quot;clam&quot;)) {
-            pizza = new ClamPizza(ingredientFactory);
-            pizza.setName(&quot;New York Style Clam Pizza&quot;);
-        } else if (item.equals(&quot;pepperoni&quot;)) {
-            pizza = new PepperoniPizza(ingredientFactory);
-            pizza.setName(&quot;New York Style Pepperoni Pizza&quot;);
+    @RequestMapping(&quot;/test2&quot;)
+    //获取cookie,用request获取，参数请求用name
+    public @ResponseBody String test2(HttpServletRequest request,String name){
+        //获取到的cookie是个数组，用数组接收
+        Cookie [] cookies=request.getCookies();
+        for (Cookie cookie:cookies){
+            //获取与cookie相同的名称参数并返回该cookie的value
+            if(cookie.getName().equalsIgnoreCase(name)){
+                return cookie.getValue();
+            }
         }
-        return pizza;
-    }
-}
-
-/*************芝加哥披萨店***************/
-public class ChicagoPizzaStore extends PizzaStore {
-    @Override
-    protected Pizza createPizza(String item) {
-        Pizza pizza = null;
-        PizzaIngredientFactory ingredientFactory = new ChicagoPizzaIngredientFactory();
-        switch (item){
-            case &quot;cheese&quot;:
-                pizza = new CheesePizza(ingredientFactory);
-                pizza.setName(&quot;Chicago Style Cheese Pizza&quot;);
-                break;
-            case &quot;veggie&quot;:
-                pizza = new VeggiePizza(ingredientFactory);
-                pizza.setName(&quot;Chicago Style Veggie Pizza&quot;);
-                break;
-            case &quot;clam&quot;:
-                pizza = new ClamPizza(ingredientFactory);
-                pizza.setName(&quot;Chicago Style Clam Pizza&quot;);
-                break;
-            case &quot;pepperoni&quot;:
-                pizza = new PepperoniPizza(ingredientFactory);
-                pizza.setName(&quot;Chicago Style Pepperoni Pizza&quot;);
-                break;
-        }
-        return pizza;
+        return &quot;cookie名称不匹配&quot;;
     }
 }
 </code></pre>
-<p>披萨：</p>
-<pre><code class="language-java">public abstract class Pizza {
-    String name;
-    String dough;
-    String sauce;
-    ArrayList toppings=new ArrayList();
-    void prepare(){
-        System.out.println(&quot;preparing &quot;+name);
+<h2 id="通过HttpServletResponse设置cookie，通过注解获取cookie"><a class="header-anchor" href="#通过HttpServletResponse设置cookie，通过注解获取cookie">¶</a>通过HttpServletResponse设置cookie，通过注解获取cookie</h2>
+<pre><code class="language-java">import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+@Controller
+@RequestMapping(&quot;/test&quot;)
+public class SpringBootTest {
+    //设置cookie
+    @RequestMapping(&quot;/test1&quot;)
+    public @ResponseBody String test1(HttpServletResponse httpServletResponse){
+        //使用cookie的构造方法，传key，value
+        Cookie cookie=new Cookie(&quot;cookieName&quot;,&quot;cookie名称&quot;);
+        //HttpServletResponse的addCookie方法设置cookie
+        httpServletResponse.addCookie(cookie);
+        return &quot;cookie设置成功!!!&quot;;
     }
-    void bake(){
-        System.out.println(&quot;baking...&quot;);
-    }
-    void cut(){
-        System.out.println(&quot;cutting...&quot;);
-    }
-    void box(){
-        System.out.println(&quot;boxing...&quot;);
-    }
-    public String getName() {
-        return name;
+
+
+
+    @RequestMapping(&quot;/test2&quot;)
+    /**
+     * *****************用注解@CookieValue，************************
+     * 参数name的值与设置cookie的key相同才能取到设置的value，
+     * 否则获取到的是defaultValue
+     */
+    public @ResponseBody String test2
+            (@CookieValue(name=&quot;cookieName&quot;,defaultValue = &quot;默认的cookie值&quot;)String value) {
+        return value+&quot;!!!&quot;;
     }
 }
-
-/*******************************************************/
-public class CheesePizza extends Pizza {
-    PizzaIngredientFactory ingredientFactory;
-    //披萨构造函数注入抽象原料工厂，运行时动态地注入对应地区原料工厂，造出对应地区口味披萨
-    public CheesePizza(PizzaIngredientFactory ingredientFactory) {
-        this.ingredientFactory = ingredientFactory;
-    }
-    void prepare() {
-        System.out.println(&quot;Preparing &quot; + name);
-        dough = ingredientFactory.createDough();
-        sauce = ingredientFactory.createSauce();
-        cheese = ingredientFactory.createCheese();
-    }
-}
-
-/*******************************************************/
-public class ClamPizza extends Pizza {
-    PizzaIngredientFactory ingredientFactory;
-    public ClamPizza(PizzaIngredientFactory ingredientFactory) {
-        this.ingredientFactory = ingredientFactory;
-    }
-    void prepare() {
-        System.out.println(&quot;Preparing &quot; + name);
-        dough = ingredientFactory.createDough();
-        sauce = ingredientFactory.createSauce();
-        cheese = ingredientFactory.createCheese();
-        clam = ingredientFactory.createClam();
-    }
-}
-
-......
 </code></pre>
-<p>原料工厂：</p>
-<pre><code class="language-java">public interface PizzaIngredientFactory {
-    Dough createDough();
-    Sauce createSauce();
-    Cheese createCheese();
-    Veggies[] createVeggies();
-    Pepperoni createPepperoni();
-    Clams createClam();
-}
+<h2 id="安全的Cookie"><a class="header-anchor" href="#安全的Cookie">¶</a>安全的Cookie</h2>
+<p>安全的cookie是仅可以通过加密的HTTPS连接发送到服务器的cookie。无法通过未加密的HTTP连接将cookie发送到服务器。也就是说，如果设置了setSecure(true)，该Cookie将无法在Http连接中传输，只能是Https连接中传输。</p>
+<pre><code class="language-java">// 创建一个 cookie对象
+Cookie cookie = new Cookie(&quot;username&quot;, &quot;Jovan&quot;);
+cookie.setSecure(true);  //Https 安全cookie
 
-/*********************纽约原料工厂***********************/
-public class NYPizzaIngredientFactory implements PizzaIngredientFactory {
-    public Dough createDough() {
-        return new ThinCrustDough();
-    }
-    public Sauce createSauce() {
-        return new MarinaraSauce();
-    }
-    public Cheese createCheese() {
-        return new ReggianoCheese();
-    }
-    public Veggies[] createVeggies() {
-        Veggies veggies[] = {new Garlic(), new Onion(), new Mushroom(), new RedPepper()};
-        return veggies;
-    }
-    public Pepperoni createPepperoni() {
-        return new SlicedPepperoni();
-    }
-    public Clams createClam() {
-        return new FreshClams();
-    }
-}
-
-/*********************芝加哥原料工厂***********************/
-public class ChicagoPizzaIngredientFactory implements PizzaIngredientFactory {
-    @Override
-    public Dough createDough() {
-        return new ThickCrustDough();
-    }
-    @Override
-    public Sauce createSauce() {
-        return new PlumTomatoSauce();
-    }
-    @Override
-    public Cheese createCheese() {
-        return new MozzarellaCheese();
-    }
-    @Override
-    public Veggies[] createVeggies() {
-        Veggies[] veggies = {
-                new BlackOlives(),
-                new Spinach(),
-                new Eggplant()
-        };
-        return veggies;
-    }
-    @Override
-    public Pepperoni createPepperoni() {
-        return new SlicedPepperoni();
-    }
-    @Override
-    public Clams createClam() {
-        return new FrozenClams();
-    }
-}
-
-......
+//将cookie对象加入response响应
+response.addCookie(cookie);
 </code></pre>
-<p><strong>一图胜千言</strong>：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200328211526914.png" alt="image-20200328211526914"></p>
-<p><strong>抽象工厂的任务是定义一个负责创建一组产品的接口</strong>。<strong>这个接口内的每一个方法都负责创建一个具体产品</strong>，同时我们利用实现抽象工厂的子类来提供这些方法的具体做法。</p>
-<p>在抽象工厂中利用工厂方法实现生产方法是相当自然的。</p>
-<h4 id="比较抽象工厂模式和工厂模式"><a class="header-anchor" href="#比较抽象工厂模式和工厂模式">¶</a>比较抽象工厂模式和工厂模式</h4>
-<table>
-<thead>
-<tr>
-<th>工厂方法</th>
-<th>抽象工厂</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>负责创建对象，采用<strong>继承</strong>方式：利用工厂方法创建对象时需要扩展一个类，并覆盖它的工厂方法，即通过子类来创建对象。</td>
-<td>负责创建对象，采用<strong>组合</strong>方式：提供一个用来创建产品家族的抽象类型，这个类型的子类定义了产生产品的方法。要想使用抽象工厂，必须先实例化它，然后将实例传入针对抽象类型所写的代码中。</td>
-</tr>
-<tr>
-<td>抽象创建者（creator）中的方法  经常会用到子类所创建的具体类型</td>
-<td>实现抽象类型的具体工厂  经常使用工厂方法来创建他们的产品</td>
-</tr>
-<tr>
-<td>将客户代码从需要实例化的具体类中解耦。如果目前不知道将来需要实例化哪些类时，也可以用工厂模式。</td>
-<td>创建产品家族，或想让制造的相关产品集合起来时，可以使用抽象工厂模式</td>
-</tr>
-</tbody>
-</table>
+<h2 id="HttpOnly-Cookie"><a class="header-anchor" href="#HttpOnly-Cookie">¶</a>HttpOnly Cookie</h2>
+<p>HttpOnly cookie用于防止跨站点脚本（XSS）攻击，也就是说设置了Http Only的Cookie不能通过JavaScript的<code>Document.cookie</code> API访问，仅能在服务端由服务器程序访问。</p>
+<pre><code class="language-java">// 创建一个 cookie对象
+Cookie cookie = new Cookie(&quot;username&quot;, &quot;Jovan&quot;);
+cookie.setHttpOnly(true);  //不能被js访问的Cookie
+
+//将cookie对象加入response响应
+response.addCookie(cookie);
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -1171,12 +839,12 @@ public class ChicagoPizzaIngredientFactory implements PizzaIngredientFactory {
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>工厂模式</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">2.4k</span></p>
+    <p><span class="copy-title">文章标题:</span>SpringBoot中Cookie的使用</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">654</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-03-28, 14:21:29</p>
-    <p><span class="copy-title">最后更新:</span>2020-03-28, 22:23:16</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/" title="工厂模式">https://qiurungeng.github.io/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/</a>
+    <p><span class="copy-title">发布时间:</span>2020-04-28, 01:52:20</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-28, 02:07:21</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/28/SpringBoot%E4%B8%ADCookie%E7%9A%84%E4%BD%BF%E7%94%A8/" title="SpringBoot中Cookie的使用">https://qiurungeng.github.io/2020/04/28/SpringBoot%E4%B8%ADCookie%E7%9A%84%E4%BD%BF%E7%94%A8/</a>
 </div>
 
 
