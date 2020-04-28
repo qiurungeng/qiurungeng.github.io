@@ -2,29 +2,23 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Ajax提交表单 | 梅罢葛的博客</title>
+  <title>梅罢葛的博客</title>
   <meta name="keywords" content="">
-  <meta name="description" content="Ajax提交表单 | 梅罢葛的博客">
+  <meta name="description" content="梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="Spring Boot配置拦截器导致静态资源无法访问之解决方案 Spring Boot版本：2.1.9 我的静态文件都位于static文件夹中。原错误代码如下： @Configuration @EnableWebMvc public class WebConfig implements WebMvcConfigurer {      @Autowired     SessionIntercepto">
+<meta name="description" content="cookie是浏览器缓存，下次读取优先读取缓存 cookie是以key、value的形式存储的 cookie也是有过期时间：cookie.setMaxAge(0); 设置cookie的过期时间 通过response设置 cookie session是通过request设置的 cookie是javax.servlet.http.cookie的包，别引错包 ¶销毁cookie（将cookie的持续时间">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Spring Boot静态资源无法访问之解决方案">
-<meta property="og:url" content="https://qiurungeng.github.io/2020/04/26/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AF%BC%E8%87%B4%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E4%B9%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/index.html">
+<meta property="og:title" content="SpringBoot中Cookie的使用">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/04/28/SpringBoot%E4%B8%ADCookie%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="梅罢葛的博客">
-<meta property="og:description" content="Spring Boot配置拦截器导致静态资源无法访问之解决方案 Spring Boot版本：2.1.9 我的静态文件都位于static文件夹中。原错误代码如下： @Configuration @EnableWebMvc public class WebConfig implements WebMvcConfigurer {      @Autowired     SessionIntercepto">
+<meta property="og:description" content="cookie是浏览器缓存，下次读取优先读取缓存 cookie是以key、value的形式存储的 cookie也是有过期时间：cookie.setMaxAge(0); 设置cookie的过期时间 通过response设置 cookie session是通过request设置的 cookie是javax.servlet.http.cookie的包，别引错包 ¶销毁cookie（将cookie的持续时间">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426223747064.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426223654161.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426224608204.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426225207077.png">
-<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426230014927.png">
-<meta property="article:published_time" content="2020-04-25T17:16:39.000Z">
-<meta property="article:modified_time" content="2020-04-27T18:07:54.300Z">
+<meta property="article:published_time" content="2020-04-27T17:52:20.000Z">
+<meta property="article:modified_time" content="2020-04-27T18:07:21.473Z">
 <meta property="article:author" content="梅罢葛">
 <meta property="article:tag" content="java">
 <meta property="article:tag" content="SpringBoot">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200426223747064.png">
 
 
 <link rel="icon" href="/img/weini.png">
@@ -60,7 +54,7 @@
 </div>
 
 <body>
-<aside class="nav">
+<aside class="nav mobile">
     <div class="nav-left">
         <a href="/" class="avatar_target">
     <img class="avatar" src="/img/avatar.webp" />
@@ -123,7 +117,7 @@
 
 
 <ul>
-    <li><div class="all active">全部文章<small>(39)</small></div></li>
+    <li><div class="all active">全部文章<small>(40)</small></div></li>
     
         
             
@@ -191,6 +185,14 @@
     
         
             
+            <li><div data-rel="前端">前端<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
             <li><div data-rel="项目笔记">项目笔记<small>(1)</small></div>
                 
             </li>
@@ -207,8 +209,8 @@
     </div>
     <div><a class="about  site_url"  href="/about">关于</a></div>
 </div>
-<input type="hidden" id="yelog_site_posts_number" value="39">
-<input type="hidden" id="yelog_site_word_count" value="61.8k">
+<input type="hidden" id="yelog_site_posts_number" value="40">
+<input type="hidden" id="yelog_site_word_count" value="62.6k">
 <div style="display: none">
     <span id="busuanzi_value_site_uv"></span>
     <span id="busuanzi_value_site_pv"></span>
@@ -322,6 +324,10 @@
     </li>
     
     <li class="article-tag-list-item">
+        <a class="color3">前端</a>
+    </li>
+    
+    <li class="article-tag-list-item">
         <a class="color1">Netty</a>
     </li>
     
@@ -330,6 +336,22 @@
 
     
     <nav id="title-list-nav">
+        
+        <a  class="前端 "
+           href="/2020/04/28/Thymeleaf%E9%9A%8F%E6%89%8B%E8%AE%B0/"
+           data-tag="SpringBoot,前端"
+           data-author="" >
+            <span class="post-title" title="Thymeleaf随手记">Thymeleaf随手记</span>
+            <span class="post-date" title="2020-04-28 19:24:31">2020/04/28</span>
+        </a>
+        
+        <a  class="前端 "
+           href="/2020/04/28/Ajax%E6%8F%90%E4%BA%A4%E8%A1%A8%E5%8D%95/"
+           data-tag="前端"
+           data-author="" >
+            <span class="post-title" title="Ajax提交form表单">Ajax提交form表单</span>
+            <span class="post-date" title="2020-04-28 19:24:31">2020/04/28</span>
+        </a>
         
         <a  class="SpringBoot "
            href="/2020/04/28/SpringBoot%E4%B8%ADCookie%E7%9A%84%E4%BD%BF%E7%94%A8/"
@@ -345,14 +367,6 @@
            data-author="" >
             <span class="post-title" title="Spring Boot静态资源无法访问之解决方案">Spring Boot静态资源无法访问之解决方案</span>
             <span class="post-date" title="2020-04-26 01:16:39">2020/04/26</span>
-        </a>
-        
-        <a  class=""
-           href="/2020/04/23/Ajax%E6%8F%90%E4%BA%A4%E8%A1%A8%E5%8D%95/"
-           data-tag=""
-           data-author="" >
-            <span class="post-title" title="Ajax提交表单">Ajax提交表单</span>
-            <span class="post-date" title="2020-04-23 09:55:02">2020/04/23</span>
         </a>
         
         <a  class="算法 "
@@ -603,11 +617,11 @@
             <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
         </a>
         
-        <a  class="项目笔记 "
-           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
-           data-tag="java,SpringBoot,分布式,后端"
+        <a  class=""
+           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
+           data-tag="测试"
            data-author="" >
-            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
+            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
             <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
         </a>
         
@@ -619,19 +633,19 @@
             <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
         </a>
         
+        <a  class="项目笔记 "
+           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
+           data-tag="java,SpringBoot,分布式,后端"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
         <a  class="数据库 "
            href="/2020/03/28/mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0/"
            data-tag="MySQL"
            data-author="" >
             <span class="post-title" title="谷粒商城项目学习笔记：MySQL">谷粒商城项目学习笔记：MySQL</span>
-            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
-        </a>
-        
-        <a  class=""
-           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
-           data-tag="测试"
-           data-author="" >
-            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
             <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
         </a>
         
@@ -653,45 +667,12 @@
         </div>
     </div>
 </aside>
-<div class="post">
+<div class="post index">
     <div class="pjax">
-        <article id="post-Ajax提交表单" class="article article-type-post" itemscope itemprop="blogPost">
+        <article class="index">
+            <div class="toc-ref">
     
-        <h1 class="article-title">Ajax提交表单</h1>
-    
-    <div class="article-meta">
-        
-        
-        
-        
-    </div>
-    <div class="article-meta">
-        
-        创建时间:<time class="date" title='更新时间: 2020-04-23 09:57:24'>2020-04-23 09:55</time>
-        
-    </div>
-    <div class="article-meta">
-        
-        <span>字数:664</span>
-        
-        
-        <span id="busuanzi_container_page_pv">
-            阅读:<span id="busuanzi_value_page_pv">
-                <span class="count-comment">
-                    <span class="spinner">
-                      <div class="cube1"></div>
-                      <div class="cube2"></div>
-                    </span>
-                </span>
-            </span>
-        </span>
-        
-        
-    </div>
-    
-    <div class="toc-ref">
-    
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">My Blog</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#博客平台"><span class="toc-text">博客平台</span></a></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -704,77 +685,25 @@
     }
 </style>
 </div>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>ajax提交form表单，这在日常项目中是经常用到的。前台无论是简单的html、jsp或者使用了easyui框架，只要是提交表单一般都会使用到ajax。</p>
-<p>ajax提交表单分为两种：</p>
-<p>1、无返回结果的，就是把表单数据直接提交给后台，让后台直接处理；</p>
-<p>最简单的就是$(“#formid”).submit();直接将form表单提交到后台。</p>
-<p>2、返回有结果的，这种情况下，后台不管是执行成功还是失败，最终的信息都需要返回到前台。</p>
-<p>第二种是使用最多的一种，因为程序的执行成功与否都需要给用户提示，程序一般也都是多步完成的，执行完插入操作，需要发起流程，这就需要在界面上判断成功与否。ajax本身属于有返回结果的一类，其中的success方法就是处理后台返回结果的。</p>
-<p>ajax提交表单有返回结果的有两种实现方式：</p>
-<p>1、将form表单数据序列化</p>
-<pre><code class="language-javascript">&lt;span style=&quot;font-size:18px;&quot;&gt;  $.ajax({  
-    type: &quot;POST&quot;,  
-    url:your-url,  
-    data:$('#yourformid').serialize(),  
-    async: false,  
-    error: function(request) {  
-        alert(&quot;Connection error&quot;);  
-    },  
-    success: function(data) {  
-        //接收后台返回的结果  
-    }  
-  });&lt;/span&gt;  
-</code></pre>
-<p>需要注意的是，使用这种方法的前提是form表单中的项一定要有name属性，后台获取的键值对为key=name值，value=各项值。</p>
-<p>注意：无论是input标签还是span标签或者其他标签，一定要有name属性，没有name属性后台是获取不到该项的。</p>
-<p>2、通过窗口查找form提交</p>
-<pre><code class="language-javascript">&lt;span style=&quot;font-size:18px;&quot;&gt;  // 提交表单  
-  var obj = document.getElementById(&quot;xx_iframe&quot;).contentWindow;  
-  obj.$(&quot;#yourform&quot;).form(&quot;submit&quot;,{  
-    success :function(data){  
-        //对结果处理  
-    }    
-  });&lt;/span&gt;
-</code></pre>
-<p>因为在当前界面上弹出对话框，然后在对话框上的按钮触发对话框中表单提交，对话框又是链接的另外的html页面，如此通过$(“#formid”)的方式是找不到对话框中的form的，因此这种情况下只能使用这种方式提交表单。</p>
-<p>另外ajax中封装的get,post请求也都属于有返回结果的一类。</p>
-<p>总的来说，无返回结果的和有返回结果的(将form表单数据序列化+通过窗口实现form提交)，form表单都必须要有name属性。</p>
-<p>————————————————</p>
-<p>版权声明：本文为CSDN博主「不为人知的小小鸟」的原创文章，遵循 CC 4.0 BY-SA 版权协议，转载请附上原文出处链接及本声明。<br>
-原文链接：<a href="https://blog.csdn.net/cgj19960119/java/article/details/84982476" target="_blank" rel="noopener">https://blog.csdn.net/cgj19960119/java/article/details/84982476</a></p>
+            <h1>My Blog</h1>
+<p>到目前为止已经写了<code class="article_number"></code>篇文章， 共<code class="site_word_count"></code>字。</p>
+<!-- 本站访问人数：<code class="site_uv"></code>人次 ， 访问量：<code class="site_pv"></code>次 -->
+<p>学习新知识的三板斧：理解+<strong>Demo</strong>+<strong>总结</strong></p>
+<h2 id="博客平台"><a class="header-anchor" href="#博客平台">¶</a>博客平台</h2>
+<p>这个博客通过 <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a> 生成，部署在 <a href="https://pages.github.com/" target="_blank" rel="noopener">GitHub Pages</a>，主题采用: <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank" rel="noopener">3-hexo</a></p>
+<p>主要功能：</p>
+<ul>
+<li>搜索支持文章标题、标签(#标签)、作者(@作者)</li>
+<li>pad/手机等移动端适配</li>
+</ul>
 
-      
-       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
-    </div>
-</article>
-
-
-<p>
-    <a  class="dashang" onclick="dashangToggle()">赏</a>
-</p>
-
-
-<div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Ajax提交表单</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">664</span></p>
-    <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-23, 09:55:02</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-23, 09:57:24</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/23/Ajax%E6%8F%90%E4%BA%A4%E8%A1%A8%E5%8D%95/" title="Ajax提交表单">https://qiurungeng.github.io/2020/04/23/Ajax%E6%8F%90%E4%BA%A4%E8%A1%A8%E5%8D%95/</a>
-</div>
-
-
-
-
-
-    
-
-
-
-
+        </article>
+        
+        <p>
+            <a  class="dashang" onclick="dashangToggle()">赏</a>
+        </p>
+        
+        
     </div>
     <div class="copyright">
         <p class="footer-entry">©2020 梅罢葛</p>
@@ -822,7 +751,7 @@
     /*作者、标签的自动补全*/
     $(function () {
         $('.search').AutoComplete({
-            'data': ['#java','#spring','#spring注解','#AOP','#测试','#MySQL','#设计模式','#SpringBoot','#分布式','#后端','#spring-InstantiationAwareBeanPostProcessor','#算法','#数据结构','#Java','#socket编程','#NIO','#Linux','#操作系统','#LeetCode','#剑指Offer','#Netty',],
+            'data': ['#java','#spring','#spring注解','#AOP','#测试','#MySQL','#设计模式','#SpringBoot','#分布式','#后端','#spring-InstantiationAwareBeanPostProcessor','#算法','#数据结构','#Java','#socket编程','#NIO','#Linux','#操作系统','#LeetCode','#剑指Offer','#前端','#Netty',],
             'itemHeight': 20,
             'width': 418
         }).AutoComplete('show');
