@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用 | 梅罢葛的博客</title>
-  <meta name="keywords" content=" java , spring , spring注解 , AOP ">
-  <meta name="description" content="Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用 | 梅罢葛的博客">
+  <title>CentOS安装及配置Mysql | 梅罢葛的博客</title>
+  <meta name="keywords" content=" MySQL , Linux ">
+  <meta name="description" content="CentOS安装及配置Mysql | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="ajax提交form表单，这在日常项目中是经常用到的。前台无论是简单的html、jsp或者使用了easyui框架，只要是提交表单一般都会使用到ajax。 ajax提交表单分为两种： 1、无返回结果的，就是把表单数据直接提交给后台，让后台直接处理； 最简单的就是$(“#formid”).submit();直接将form表单提交到后台。 2、返回有结果的，这种情况下，后台不管是执行成功还是失败，最终的">
 <meta property="og:type" content="article">
@@ -676,9 +676,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-AOP原理3-AnnotationAwareAspectJAutoProxyCreator的作用" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-CentOS安装Mysql" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用</h1>
+        <h1 class="article-title">CentOS安装及配置Mysql</h1>
     
     <div class="article-meta">
         
@@ -686,32 +686,28 @@
         
         <span class="book">
             
-                <a  data-rel="spring">spring</a>
+                <a  data-rel="Linux">Linux</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">java</a>
+            <a class="color1">MySQL</a>
             
-            <a class="color2">spring</a>
-            
-            <a class="color4">spring注解</a>
-            
-            <a class="color4">AOP</a>
+            <a class="color1">Linux</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-06 22:36:00'>2020-04-06 22:30</time>
+        创建时间:<time class="date" title='更新时间: 2020-04-29 16:35:03'>2020-03-28 14:21</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:773</span>
+        <span>字数:556</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -730,7 +726,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AnnotationAwareAspectJAutoProxyCreator的作用："><span class="toc-text">AnnotationAwareAspectJAutoProxyCreator的作用：</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">1.下载mysql</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">2 MySQL数据库设置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">3.允许远程主机连接到数据库</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -746,119 +742,67 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="AnnotationAwareAspectJAutoProxyCreator的作用："><a class="header-anchor" href="#AnnotationAwareAspectJAutoProxyCreator的作用：">¶</a>AnnotationAwareAspectJAutoProxyCreator的作用：</h2>
-<ol>
-<li>
-<p>每一个Bean创建之前，调用postProcessBeforeInstantiation(beanClass, beanName) 。我们重点关注前面文章中的自定义的业务逻辑类MathCalculator和LogAspect的创建流程：</p>
-<ol>
-<li>
-<p>判断当前Bean是否在advisedBeans中（保存了所有需要增强的Bean）</p>
-</li>
-<li>
-<p>判断当前Bean是否是基础类型的：实现了Advice、PointCut、Advisor、AopInfrastructureBean接口，或者是否为切面（@Aspect）</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406043328824.png" alt="image-20200406043328824"></p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406043456921.png" alt="image-20200406043456921"></p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406043944483.png" alt="image-20200406043944483"></p>
-</li>
-<li>
-<p>判断当前Bean是否需要跳过：shouldSkip():</p>
-<ul>
-<li>
-<p>获取候选的增强器（切面里的通知方法）【List<Advisor> candidateAdvisors】</p>
-<p>每一个封装的通知方法的增强器的类型为：InstantationModelAwarePointcutAdvisor</p>
-</li>
-<li>
-<p>遍历候选增强器，如果其为AspectJPointAdvisor，返回true</p>
-</li>
-<li>
-<p>调用父类的shouldSkip（直接返回false）</p>
-</li>
-</ul>
-</li>
-</ol>
-</li>
-<li>
-<p>创建对象：</p>
-<p>AbstractAutoProxyCreator中：初始化后处理postProcessAfterInitialization：调用 wrapIfNecessary 方法，如果需要则返回包装Bean</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406050013338.png" alt="image-20200406050013338"></p>
-<ul>
-<li>
-<p>获取当前Bean的通知方法和增强器：getAdvicesAndAdvisorsForBean( ) --&gt; findEligibleAdvisors( )</p>
-<ul>
-<li>
-<p>找到能在当前bean使用的所有候选增强器（哪些通知方法是需要切入到当前bean方法的）</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406053341881.png" alt="image-20200406053341881"></p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406053707946.png" alt="image-20200406053707946"></p>
-</li>
-<li>
-<p>找到能在当前Bean使用的增强器：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406054403787.png" alt="image-20200406054403787"></p>
-</li>
-<li>
-<p>给增强器排序</p>
-</li>
-</ul>
-</li>
-<li>
-<p>保存当前bean在advisedBeans中</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406055744786.png" alt="image-20200406055744786"></p>
-</li>
-<li>
-<p>如果当前bean需要增强，创建当前bean的代理对象：</p>
-<ul>
-<li>获取所有增强器（通知方法）</li>
-<li>保存到proxyFactory</li>
-<li>创建代理对象：proxyFactory.getProxy()，用代理工厂来创建并得到代理对象</li>
-</ul>
-</li>
-<li>
-<p>给容器返回当前组件增强后的代理对象</p>
-</li>
-<li>
-<p>以后容器中获取到的就是这个组建的代理对象，执行目标方法的时候，代理对象就会执行通知方法的流程</p>
-</li>
-</ul>
-</li>
-<li>
-<p>目标方法的执行</p>
-<p>容器中保存了组件的代理对象（本例MathCalculator为CgLib增强后的代理对象），这个对象里面保存了详细信息，如增强器、目标对象等。我们分析Cglib代理对象如何执行目标方法：</p>
-<ol>
-<li>
-<p>CglibAopProxy.intercept() : 拦截目标方法的执行</p>
-</li>
-<li>
-<p>根据ProxyFactory对象获取将要执行的目标方法的拦截器链：</p>
-<p>List&lt;Object&gt; chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, rootClass);</p>
-<ul>
-<li>
-<p>List&lt;Object&gt; chain 保存所有拦截器，包括：一个默认的ExposeInvocationInterceptor和本例中我们在切面中自定义的四个增强器（@Befor、@After、@AfterReturning、@AfterThrowing）</p>
-</li>
-<li>
-<p>遍历所有增强器，将其转为interceptor：register.getInterceptors(advisor);</p>
-</li>
-<li>
-<p>将增强器转为List&lt;MethodIinterceptor&gt;，转化完成后返回该数组。 :</p>
-<p>如果是MethodInterceptor，直接加入到集合中</p>
-<p>如果不是，使用AdvisorAdapter将增强器转为MethodInterceptor</p>
-</li>
-</ul>
-</li>
-<li>
-<p>如果没有拦截器链，直接执行目标方法：</p>
-<p>拦截器链：每一个通知方法又被包装为方法拦截器，利用MethodInterceptor机制</p>
-</li>
-<li>
-<p>如果有拦截器链，把需要执行的目标对象，目标方法，拦截器等信息作为参数传入，创建一个cglibMethodInvocation对象，并调用这个对象的proceed() 方法</p>
-<pre><code class="language-java">Object retVal = new CglibMethodInvocation(proxy, target, method, args, targetClass, chain, methodProxy).proceed();
+        <h1>1.下载mysql</h1>
+<pre><code>wget -i -c https://repo.mysql.com//mysql80-community-release-el7-3.noarch.rpm
 </code></pre>
-</li>
-<li>
-<p>拦截器链的触发过程</p>
-<p>如果没有拦截器执行目标方法，或者拦截器的索引和拦截器数组-1大小一样（指定到了最后一个拦截器），执行目标方法</p>
-</li>
-</ol>
-</li>
-</ol>
+<p>使用上面的命令就直接下载了安装用的Yum Repository，大概25KB的样子，然后就可以直接yum安装了。</p>
+<pre><code>yum -y install mysql80-community-release-el7-3.noarch.rpm
+</code></pre>
+<p>之后就开始安装MySQL服务器。</p>
+<pre><code>yum -y install mysql-community-server
+</code></pre>
+<p>这步可能会花些时间，安装完成后就会覆盖掉之前的mariadb。</p>
+<h1>2 MySQL数据库设置</h1>
+<p>启动mysql</p>
+<pre><code>systemctl start  mysqld.service
+</code></pre>
+<p>查看运行状态</p>
+<pre><code>systemctl status mysqld.service
+</code></pre>
+<p><img src="https://img2018.cnblogs.com/blog/1735716/201907/1735716-20190708232252988-726710168.png" alt="img"></p>
+<p>此时MySQL已经开始正常运行，不过要想进入MySQL还得先找出此时root用户的密码，通过如下命令可以在日志文件中找出密码：</p>
+<pre><code>grep &quot;password&quot; /var/log/mysqld.log
+</code></pre>
+<p><img src="https://img2018.cnblogs.com/blog/1735716/201907/1735716-20190708232336766-753330848.png" alt="img"></p>
+<p>进入数据库</p>
+<pre><code>mysql -uroot -p
+</code></pre>
+<p>输入初始密码，此时不能做任何事情，因为MySQL默认必须修改密码之后才能操作数据库：</p>
+<pre><code>ALTER USER 'root'@'localhost' IDENTIFIED BY '新密码'; //NEU!@#123qweasdzxc
+</code></pre>
+<p>这里有个问题，新密码设置的时候如果设置的过于简单会报错：</p>
+<p>原因是因为MySQL有密码设置的规范，具体是与validate_password_policy的值有关：</p>
+<p>MySQL完整的初始密码规则查看</p>
+<pre><code>SHOW VARIABLES LIKE 'validate_password%';
+</code></pre>
+<p>初始情况下第一个的值是ON，validate_password_length是8。可以通过如下命令修改：</p>
+<pre><code>mysql&gt; set global validate_password.policy=0;
+mysql&gt; set global validate_password.length=1;
+</code></pre>
+<p>设置之后就是我上面查出来的那几个值了，此时密码就可以设置的很简单，例如1234之类的。到此数据库的密码设置就完成了。</p>
+<p>但此时还有一个问题，就是因为安装了Yum Repository，以后每次yum操作都会自动更新，需要把这个卸载掉：</p>
+<pre><code>yum -y remove mysql57-community-release-el7-10.noarch
+</code></pre>
+<h1>3.允许远程主机连接到数据库</h1>
+<p>1.首先本地登录mysql命令行</p>
+<p>2.show databases;</p>
+<pre><code class="language-mysql">show databases;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200429163008732.png" alt="image-20200429163008732"></p>
+<p>3.更改需要操作使用的数据库为mysql</p>
+<pre><code class="language-mysql"> use mysql;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200429163028980.png" alt="image-20200429163028980"></p>
+<p>4.查看当前的host和user的状态</p>
+<pre><code class="language-sql">select host,user from user;
+</code></pre>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200429163105222.png" alt="image-20200429163105222"></p>
+<p>5.开启root的远程访问</p>
+<p>update user set host = ‘%’ where user = ‘root’;</p>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200429163130804.png" alt="image-20200429163130804"></p>
+<p>6.然后输入下面的命令刷新下立即生效就行或者你也可以重启mysql服务器让配置生效</p>
+<pre><code class="language-mysql">flush privileges; 
+</code></pre>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -872,12 +816,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">773</span></p>
+    <p><span class="copy-title">文章标题:</span>CentOS安装及配置Mysql</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">556</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-06, 22:30:57</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-06, 22:36:00</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%863-AnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E4%BD%9C%E7%94%A8/" title="Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用">https://qiurungeng.github.io/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%863-AnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E4%BD%9C%E7%94%A8/</a>
+    <p><span class="copy-title">发布时间:</span>2020-03-28, 14:21:29</p>
+    <p><span class="copy-title">最后更新:</span>2020-04-29, 16:35:03</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/28/CentOS%E5%AE%89%E8%A3%85Mysql/" title="CentOS安装及配置Mysql">https://qiurungeng.github.io/2020/03/28/CentOS%E5%AE%89%E8%A3%85Mysql/</a>
 </div>
 
 
