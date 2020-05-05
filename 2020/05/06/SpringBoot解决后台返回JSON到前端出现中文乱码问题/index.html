@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_AOP原理4_AopProxyFactory | 梅罢葛的博客</title>
-  <meta name="keywords" content=" java , spring , spring注解 , AOP ">
-  <meta name="description" content="Spring注解学习_AOP原理4_AopProxyFactory | 梅罢葛的博客">
+  <title>SpringBoot解决后台返回JSON到前端出现中文乱码问题 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" SpringBoot ">
+  <meta name="description" content="SpringBoot解决后台返回JSON到前端出现中文乱码问题 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="配置JMX连接参数 在启动xxx.jar项目时，需要添加参数： java  -Djava.rmi.server.hostname&#x3D;10.160.13.111  #远程服务器ip，即本机ip -Dcom.sun.management.jmxremote #允许JMX远程调用 -Dcom.sun.management.jmxremote.port&#x3D;3214  #自定义jmx 端口号 -Dcom.sun">
 <meta property="og:type" content="article">
@@ -702,9 +702,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-AOP原理4-AopProxyFactory" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-SpringBoot解决后台返回JSON到前端出现中文乱码问题" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_AOP原理4_AopProxyFactory</h1>
+        <h1 class="article-title">SpringBoot解决后台返回JSON到前端出现中文乱码问题</h1>
     
     <div class="article-meta">
         
@@ -712,32 +712,26 @@
         
         <span class="book">
             
-                <a  data-rel="spring">spring</a>
+                <a  data-rel="SpringBoot">SpringBoot</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">java</a>
-            
-            <a class="color2">spring</a>
-            
-            <a class="color4">spring注解</a>
-            
-            <a class="color4">AOP</a>
+            <a class="color1">SpringBoot</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-06 22:36:25'>2020-04-06 22:31</time>
+        创建时间:<time class="date" title='更新时间: 2020-05-06 02:55:12'>2020-05-06 02:51</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:255</span>
+        <span>字数:167</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -756,7 +750,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#AOP代理工厂"><span class="toc-text">AOP代理工厂</span></a></li></ol>
+        
     
 <style>
     .left-col .switch-btn,
@@ -772,30 +766,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="AOP代理工厂"><a class="header-anchor" href="#AOP代理工厂">¶</a>AOP代理工厂</h2>
-<p>spring中代理对象的产生，是通过代理工厂（抽象工厂模式）实现的。spring中的动态代理是使用jdk或者cglib的动态代理，具体用哪种目标类是否实现接口。</p>
-<p>AOP代理工厂为抽象工厂，其工厂接口为：</p>
-<pre><code class="language-java">public interface AopProxyFactory {
+        <p>两种解决方法</p>
+<p>第一种：在Controller 中@RequestMapping中添加注解 produces=“application/json;charset=UTF-8”</p>
+<pre><code class="language-java">@RequestMapping(value = &quot;/listForDoing&quot;, method=RequestMethod.POST, produces=&quot;application/json;charset=UTF-8&quot;)
+</code></pre>
+<p>第一种方法的弊端就是需要在每个注解上都要加</p>
+<p>第二种：修改配置类</p>
+<pre><code class="language-java">@Configuration
+@EnableWebMvc
+@ComponentScan
+public class MvcConfiguration extends WebMvcConfigurerAdapter{
+    @Bean
+    public HttpMessageConverter&lt;String&gt; responseBodyConverter(){
+    StringHttpMessageConverter converter = new StringHttpMessageConverter(Charset.forName(&quot;UTF-8&quot;));
+    return converter;
+    }
 
-	/**
-	 * Create an {@link AopProxy} for the given AOP configuration.
-	 * @param config the AOP configuration in the form of an
-	 * AdvisedSupport object
-	 * @return the corresponding AOP proxy
-	 * @throws AopConfigException if the configuration is invalid
-	 */
-	AopProxy createAopProxy(AdvisedSupport config) throws AopConfigException;
+    @Override
+    public void configureMessageConverters(List&lt;HttpMessageConverter&lt;?&gt;&gt; converters) {
+    super.configureMessageConverters(converters);
 
+    converters.add(responseBodyConverter());
+    }
 }
 </code></pre>
-<p>查看其实现情况，发现实现类只有：DefaultAopProxyFactory实现了这一接口</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200406060805745.png" alt="image-20200406060805745"></p>
-<p>阅读源码，可知默认情况下Spring自动决定如何创建代理对象：</p>
-<ul>
-<li>如果被代理对象实现了某个接口，就用Jdk动态代理</li>
-<li>如果被代理对象没有实现某个接口，jdk没法创建动态代理，使用cglib动态代理</li>
-</ul>
-<p>这其实就是一个典型的简单的抽象工厂模式，工厂类实现了父工厂接口，生产产品（代理对象）</p>
+<p>————————————————<br>
+版权声明：本文为CSDN博主「EnjoySelfLife」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>
+原文链接：<a href="https://blog.csdn.net/enjoyselflife/article/details/79009417" target="_blank" rel="noopener">https://blog.csdn.net/enjoyselflife/article/details/79009417</a></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -809,12 +806,12 @@
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_AOP原理4_AopProxyFactory</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">255</span></p>
+    <p><span class="copy-title">文章标题:</span>SpringBoot解决后台返回JSON到前端出现中文乱码问题</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">167</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-06, 22:31:40</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-06, 22:36:25</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%864-AopProxyFactory/" title="Spring注解学习_AOP原理4_AopProxyFactory">https://qiurungeng.github.io/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%864-AopProxyFactory/</a>
+    <p><span class="copy-title">发布时间:</span>2020-05-06, 02:51:19</p>
+    <p><span class="copy-title">最后更新:</span>2020-05-06, 02:55:12</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/05/06/SpringBoot%E8%A7%A3%E5%86%B3%E5%90%8E%E5%8F%B0%E8%BF%94%E5%9B%9EJSON%E5%88%B0%E5%89%8D%E7%AB%AF%E5%87%BA%E7%8E%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/" title="SpringBoot解决后台返回JSON到前端出现中文乱码问题">https://qiurungeng.github.io/2020/05/06/SpringBoot%E8%A7%A3%E5%86%B3%E5%90%8E%E5%8F%B0%E8%BF%94%E5%9B%9EJSON%E5%88%B0%E5%89%8D%E7%AB%AF%E5%87%BA%E7%8E%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/</a>
 </div>
 
 
