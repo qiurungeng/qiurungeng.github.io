@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_组件注册1_@Configuration与@Bean | 梅罢葛的博客</title>
-  <meta name="keywords" content=" java , spring , spring注解 ">
-  <meta name="description" content="Spring注解学习_组件注册1_@Configuration与@Bean | 梅罢葛的博客">
+  <title>解决阿里云服务器上SpringBoot项目启动巨慢的问题 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" SpringBoot , Linux ">
+  <meta name="description" content="解决阿里云服务器上SpringBoot项目启动巨慢的问题 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="有时候，当你把你的springboot项目打成可执行的jar，放在linux上启动时，发现启动超级慢； 这往往是因为springboot内置tomcat启动时实例化SecureRandom对象随机数策略问题； 解决办法： 打开$JAVA_PATH&#x2F;jre&#x2F;lib&#x2F;security&#x2F;java.security这个文件，找到下面的内容： securerandom.source&#x3D;file:&#x2F;dev&#x2F;ra">
 <meta property="og:type" content="article">
@@ -705,9 +705,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-组件注册-Configuration" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-解决阿里云服务器上SpringBoot项目启动巨慢的问题" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_组件注册1_@Configuration与@Bean</h1>
+        <h1 class="article-title">解决阿里云服务器上SpringBoot项目启动巨慢的问题</h1>
     
     <div class="article-meta">
         
@@ -715,30 +715,28 @@
         
         <span class="book">
             
-                <a  data-rel="spring">spring</a>
+                <a  data-rel="Linux">Linux</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">java</a>
+            <a class="color1">SpringBoot</a>
             
-            <a class="color2">spring</a>
-            
-            <a class="color4">spring注解</a>
+            <a class="color1">Linux</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-03-29 14:52:17'>2020-03-29 12:14</time>
+        创建时间:<time class="date" title='更新时间: 2020-05-13 16:00:06'>2020-05-13 15:52</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:451</span>
+        <span>字数:800</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -757,7 +755,7 @@
     
     <div class="toc-ref">
     
-        
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">tomcat启动慢， Creation of SecureRandom instance for session ID generation using [SHA1PRNG]took [xx] mil</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -773,108 +771,43 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>传统的xml配置文件注册bean：</p>
-<pre><code class="language-xml">&lt;bean id=&quot;person&quot; class=&quot;com.study.bean.Person&quot;  scope=&quot;prototype&quot; &gt;
-    &lt;property name=&quot;age&quot; value=&quot;${}&quot;&gt;&lt;/property&gt;
-    &lt;property name=&quot;name&quot; value=&quot;zhangsan&quot;&gt;&lt;/property&gt;
-&lt;/bean&gt;
+        <p>有时候，当你把你的springboot项目打成可执行的jar，放在linux上启动时，发现启动超级慢；</p>
+<p>这往往是因为springboot内置tomcat启动时实例化SecureRandom对象随机数策略问题；</p>
+<p>解决办法：</p>
+<p>打开$JAVA_PATH/jre/lib/security/java.security这个文件，找到下面的内容：</p>
+<pre><code class="language-sh">securerandom.source=file:/dev/random
 </code></pre>
-<p>通过@Cnfiguration+@Bean的方式，可以给Spring容器中注册组件，取代了传统的xml配置文件，更加灵活便捷。</p>
-<p>我们写一个pojo，一个配置类，还有一个配置文件，演示一下@Configuration是如何使用的：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329122034580.png" alt="image-20200329122034580"></p>
-<p>Person：POJO，懒惰起见，能用lombok的地方都用lombok</p>
-<pre><code class="language-java">@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Person {
-    private String name;
-    private Integer age;
-}
+<p>替换成:</p>
+<pre><code class="language-sh">securerandom.source=file:/dev/urandom
 </code></pre>
-<p>MainConfig：注解类</p>
-<pre><code class="language-java">import org.springframework.context.annotation.Configuration;
-//配置类=配置文件
-@Configuration
-public class MainConfig {
-    //给容器中注册一个bean，其类型为返回值类型，id为方法名
-    @Bean
-    public Person person(){
-        return new Person(&quot;小米&quot;,12);	//有参构造
-    }
-    @Bean
-    public Person person2(){
-        Person person = new Person();
-        person.setName(&quot;红米&quot;);
-        person.setAge(44);
-        return person;
-    }
-    @Bean(&quot;改名&quot;) //Bean注解中可设置name,value字段
-    //或者可写成 @Bean(name=&quot;改名&quot;,value=&quot;改名&quot;)
-    public Person person3(){
-        return new Person(&quot;黑米&quot;,12);
-    }
-}
+<p>或</p>
+<pre><code class="language-sh">securerandom.source=file:/dev/./urandom
 </code></pre>
-<p>MainTest:</p>
-<pre><code class="language-java">public class MainTest {
-    public static void main(String[] args) {
-        ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig.class);
-        Person person = context.getBean(&quot;person&quot;, Person.class);
-        System.out.println(person);
-        Person person2 = context.getBean(&quot;person2&quot;, Person.class);
-        System.out.println(person2);
-        String[] beanNamesForType = context.getBeanNamesForType(Person.class);
-        for (String s : beanNamesForType) {
-            System.out.println(s);
-        }
-    }
-}
-</code></pre>
-<p>运行结果：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200329123348667.png" alt="image-20200329123348667"></p>
-<p>比较两种Bean注册方式：</p>
-<table>
-<thead>
-<tr>
-<th>注解</th>
-<th>配置文件</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>在配置类上标注@Configuration</td>
-<td>创建一个.xml文件</td>
-</tr>
-<tr>
-<td>在类中方法上标注@Bean</td>
-<td>xml配置文件中添加bean标签</td>
-</tr>
-<tr>
-<td>方法名</td>
-<td>bean标签中的id字段</td>
-</tr>
-<tr>
-<td>方法返回值</td>
-<td>bean标签中的class字段</td>
-</tr>
-<tr>
-<td>@Bean(name=&quot;&quot;,value=&quot;&quot;)</td>
-<td>bean标签中的name,value字段</td>
-</tr>
-<tr>
-<td>方法中用setter为返回对象设值</td>
-<td><property name="" value=""></td>
-</tr>
-<tr>
-<td>@Scope(&quot;&quot;)</td>
-<td>bean标签中设置bean的作用域</td>
-</tr>
-<tr>
-<td>@Lazy懒加载，单例懒汉模式</td>
-<td></td>
-</tr>
-</tbody>
-</table>
+<p>以下是原博主的宝帖：</p>
+<hr>
+<h1>tomcat启动慢， Creation of SecureRandom instance for session ID generation using [SHA1PRNG]took [xx] mil</h1>
+<p>通常情况下，tomcat启动只要7-8秒钟，突然有一天，tomcat启动非常慢，要花5~6分钟，甚至更久，以下是解决方案SHA1PRNG算法是基于SHA-1算法实现且保密性较强的伪随机数生成器。</p>
+<p>在SHA1PRNG中，有一个种子产生器，它根据配置执行各种操作。</p>
+<p>1）如果Java.security.egd属性或securerandom.source属性指定的是”file:/dev/random”或”file:/dev/urandom”，那么JVM会使用本地种子产生器NativeSeedGenerator，它会调用super()方法，即调用SeedGenerator.URLSeedGenerator(/dev/random)方法进行初始化。</p>
+<p>2）如果java.security.egd属性或securerandom.source属性指定的是其它已存在的URL，那么会调用SeedGenerator.URLSeedGenerator(url)方法进行初始化。</p>
+<p>这就是为什么我们设置值为”file:///dev/urandom”或者值为”file:/./dev/random”都会起作用的原因。</p>
+<p>在这个实现中，产生器会评估熵池（entropy pool）中的噪声数量。随机数是从熵池中进行创建的。当读操作时，/dev/random设备会只返回熵池中噪声的随机字节。/dev/random非常适合那些需要非常高质量随机性的场景，比如一次性的支付或生成密钥的场景。</p>
+<p>当熵池为空时，来自/dev/random的读操作将被阻塞，直到熵池收集到足够的环境噪声数据。这么做的目的是成为一个密码安全的伪随机数发生器，熵池要有尽可能大的输出。对于生成高质量的加密密钥或者是需要长期保护的场景，一定要这么做。</p>
+<p>那么什么是环境噪声？</p>
+<p>随机数产生器会手机来自设备驱动器和其它源的环境噪声数据，并放入熵池中。产生器会评估熵池中的噪声数据的数量。当熵池为空时，这个噪声数据的收集是比较花时间的。这就意味着，Tomcat在生产环境中使用熵池时，会被阻塞较长的时间。</p>
+<p>解决<br>
+有两种解决办法：</p>
+<p>1）在Tomcat环境中解决</p>
+<p>可以通过配置JRE使用非阻塞的Entropy Source。</p>
+<p>在catalina.sh中加入这么一行：-Djava.security.egd=file:/dev/./urandom 即可。</p>
+<p>加入后再启动Tomcat，整个启动耗时下降到Server startup in 2912 ms。</p>
+<p>2）在JVM环境中解决</p>
+<p>打开$JAVA_PATH/jre/lib/security/java.security这个文件，找到下面的内容：</p>
+<p>securerandom.source=file:/dev/urandom<br>
+替换成</p>
+<p>securerandom.source=file:/dev/./urandom</p>
+<p>版权声明：本文为CSDN博主「killer-leon」的原创文章，遵循CC 4.0 BY-SA版权协议，转载请附上原文出处链接及本声明。<br>
+原文链接：<a href="https://blog.csdn.net/u011627980/article/details/54024974" target="_blank" rel="noopener">https://blog.csdn.net/u011627980/article/details/54024974</a></p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -888,12 +821,12 @@ public class MainConfig {
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_组件注册1_@Configuration与@Bean</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">451</span></p>
+    <p><span class="copy-title">文章标题:</span>解决阿里云服务器上SpringBoot项目启动巨慢的问题</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">800</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-03-29, 12:14:14</p>
-    <p><span class="copy-title">最后更新:</span>2020-03-29, 14:52:17</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Configuration/" title="Spring注解学习_组件注册1_@Configuration与@Bean">https://qiurungeng.github.io/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Configuration/</a>
+    <p><span class="copy-title">发布时间:</span>2020-05-13, 15:52:04</p>
+    <p><span class="copy-title">最后更新:</span>2020-05-13, 16:00:06</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/05/13/%E8%A7%A3%E5%86%B3%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ASpringBoot%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%E5%B7%A8%E6%85%A2%E7%9A%84%E9%97%AE%E9%A2%98/" title="解决阿里云服务器上SpringBoot项目启动巨慢的问题">https://qiurungeng.github.io/2020/05/13/%E8%A7%A3%E5%86%B3%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ASpringBoot%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%E5%B7%A8%E6%85%A2%E7%9A%84%E9%97%AE%E9%A2%98/</a>
 </div>
 
 
