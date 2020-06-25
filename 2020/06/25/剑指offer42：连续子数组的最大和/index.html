@@ -2,9 +2,9 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Spring注解学习_属性赋值_@Value&amp;@PropertySource | 梅罢葛的博客</title>
-  <meta name="keywords" content=" java , spring , spring注解 ">
-  <meta name="description" content="Spring注解学习_属性赋值_@Value&amp;@PropertySource | 梅罢葛的博客">
+  <title>剑指offer42：连续子数组的最大和 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" 算法 , 动态规划 ">
+  <meta name="description" content="剑指offer42：连续子数组的最大和 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <meta name="description" content="剑指offer42：连续子数组的最大和  链接：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;lian-xu-zi-shu-zu-de-zui-da-he-lcof&#x2F; 解法：动态规划 class Solution {     &#x2F;**      * 遍历数组中每一个数字，      * 若当前索引的前一个数字为正数，将它累加到当前索引指向的数字中      * 若当前索引的前一个">
 <meta property="og:type" content="article">
@@ -719,9 +719,9 @@
 </aside>
 <div class="post">
     <div class="pjax">
-        <article id="post-Spring注解学习-属性赋值-Value-PropertySource" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-剑指offer42：连续子数组的最大和" class="article article-type-post" itemscope itemprop="blogPost">
     
-        <h1 class="article-title">Spring注解学习_属性赋值_@Value&amp;@PropertySource</h1>
+        <h1 class="article-title">剑指offer42：连续子数组的最大和</h1>
     
     <div class="article-meta">
         
@@ -729,30 +729,28 @@
         
         <span class="book">
             
-                <a  data-rel="spring">spring</a>
+                <a  data-rel="算法">算法</a>
             
         </span>
         
         
         <span class="tag">
             
-            <a class="color5">java</a>
+            <a class="color3">算法</a>
             
-            <a class="color2">spring</a>
-            
-            <a class="color4">spring注解</a>
+            <a class="color5">动态规划</a>
             
         </span>
         
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-04-02 23:48:58'>2020-04-02 22:53</time>
+        创建时间:<time class="date" title='更新时间: 2020-06-25 22:27:25'>2020-06-25 22:20</time>
         
     </div>
     <div class="article-meta">
         
-        <span>字数:467</span>
+        <span>字数:489</span>
         
         
         <span id="busuanzi_container_page_pv">
@@ -771,7 +769,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Value"><span class="toc-text">@Value</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#PropertySource"><span class="toc-text">@PropertySource</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">剑指offer42：连续子数组的最大和</span></a></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -787,84 +785,33 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="Value"><a class="header-anchor" href="#Value">¶</a>@Value</h2>
-<p>可以用@Value给Bean的属性赋值，这个注解对应于原来xml中<bean>标签<property>里的value字段：</p>
-<pre><code class="language-xml">&lt;bean id=&quot;person&quot; class=&quot;com.study.bean.Person&quot;&gt;
-	&lt;property name=&quot;age&quot; value=&quot;18&quot;/&gt;
-    &lt;property name=&quot;name&quot; value=&quot;张三&quot; /&gt;
-&lt;/bean&gt;
-</code></pre>
-<p>直接在Person中打上Bean注解，可免去以上xml配置：</p>
-<pre><code class="language-java">@Data
-public class Person {
-    @Value(&quot;张三&quot;)
-    private String name;
-    @Value(&quot;#{20-2}&quot;)	// SpEL表达式
-    private Integer age;
-}
-</code></pre>
-<p>测试一下：</p>
-<pre><code class="language-java">public class IOCTest_PropertyValue {
-    @Test
-    public void test1(){
-        AnnotationConfigApplicationContext context = 
-            new AnnotationConfigApplicationContext(MyConfigOfPropertyValue.class);
-        Person person = context.getBean(&quot;person&quot;, Person.class);
-        System.out.println(person);
+        <h1>剑指offer42：连续子数组的最大和</h1>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200625214123272.png" alt="image-20200625214123272"></p>
+<p>链接：<a href="https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/" target="_blank" rel="noopener">https://leetcode-cn.com/problems/lian-xu-zi-shu-zu-de-zui-da-he-lcof/</a></p>
+<p>解法：动态规划</p>
+<pre><code class="language-java">class Solution {
+    /**
+     * 遍历数组中每一个数字，
+     * 若当前索引的前一个数字为正数，将它累加到当前索引指向的数字中
+     * 若当前索引的前一个数字不为正数，就不累加了
+     * 每一步都将当前索引指向的值与已有最大值比较。
+     */
+    public int maxSubArray(int[] nums) {
+        int maxSum = nums[0];
+        for(int i = 1 ; i &lt; nums.length ; i++){
+            nums[i] += Math.max(nums[i-1], 0);
+            maxSum = Math.max(maxSum, nums[i]);
+        }
+        return maxSum;
     }
 }
 </code></pre>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200402230312244.png" alt="image-20200402230312244"></p>
-<p>总结：使用@Value赋值，可以写</p>
-<ul>
-<li>基本数值</li>
-<li>SpEL：#{ }</li>
-<li>${ }：取出配置文件中的值（运行环境变量中的值）</li>
-</ul>
-<h2 id="PropertySource"><a class="header-anchor" href="#PropertySource">¶</a>@PropertySource</h2>
-<p>@PropertySource：加载指定配置文件</p>
-<p>resource目录下新建peroson.properties:</p>
-<pre><code class="language-properties">person.nickname=&quot;小张&quot;
-</code></pre>
-<p>按照xml配置，如果我们想为bean属性赋xml中的值，应当在xml中标上配置文件位置：</p>
-<pre><code class="language-xml">&lt;context:property-placeholder location=&quot;classpath:person.properties&quot;/&gt;
-&lt;bean id=&quot;person&quot; class=&quot;com.study.bean.Person&quot;&gt;
-	&lt;property name=&quot;age&quot; value=&quot;18&quot;/&gt;
-    &lt;property name=&quot;name&quot; value=&quot;张三&quot; /&gt;
-&lt;/bean&gt;
-</code></pre>
-<p>现在改用@PropertySource引入配置文件</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200402232622746.png" alt="image-20200402232622746"></p>
-<p>可以看到，这个注解中将传入一个value数组，其元素内容为配置文件路径，如<br>
-“classpath:/com/myco/app.properties” or @code “file:/path/to/file.xml”</p>
-<pre><code class="language-java">//使用PropertySource加载外部配置文件中的kv保存到运行时环境变量,加载完外部配置文件后使用${}取出配置文件的值
-@PropertySource(value = {&quot;classpath:/person.properties&quot;})
-@Configuration
-public class MyConfigOfPropertyValue {
-    @Bean
-    public Person person(){
-        return new Person();
-    }
-}
-</code></pre>
-<p>Person类：</p>
-<pre><code class="language-java">@Data
-public class Person {
-    @Value(&quot;张三&quot;)
-    private String name;
-    @Value(&quot;#{20-2}&quot;)
-    private Integer age;
-    @Value(&quot;${person.nickname}&quot;)
-    private String nickname;
-}
-</code></pre>
-<p>运行刚才的测试：</p>
-<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200402233742672.png" alt="image-20200402233742672"></p>
-<p>此外，在运行时也可以从容器中取到配置文件信息：</p>
-<pre><code class="language-java">ConfigurableEnvironment environment = context.getEnvironment();
-String property = environment.getProperty(&quot;person.nickname&quot;);
-System.out.println(property);	//小张
-</code></pre>
+<p>从索引1开始，将前一个索引的值累加到当前索引，除非前一个索引值是负的，导致累加到当前索引后当前索引值比原来要小，还不如不加它。</p>
+<p>每次遍历一个索引后，都将当前索引值与历史最大值比较，若比既有最大值还大，那么该值成为新的最大值。</p>
+<p>反推，理解该算法：</p>
+<p>对于和最大的连续子数组（设起点索引为 x 终点索引为 y ），前面的任意连续子数组（前面任意索引 到 x-1）都是负资产（负数），后面的连续任意子数组（y+1 到 后面任意索引）也是负资产。</p>
+<p>所以我从其前面无论哪个索引出发开始累加，累加到 x-1 时都是非正数，此时我不再将这段累加结果再累加到 x 上。也就是说，这种做法使我一定能抛弃掉 x 前的任何负资产，找到 x 。</p>
+<p>我从 x 开始新的一轮累加，每一次都与已有最大值作比较，所以遍历累加到 y 出现新的最大值时我一定能记录得到。此后再累加多少负资产也没所谓，因为我已经在遍历到 y 时记录到最大值了。</p>
 
       
        <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
@@ -878,12 +825,12 @@ System.out.println(property);	//小张
 
 
 <div class="article_copyright">
-    <p><span class="copy-title">文章标题:</span>Spring注解学习_属性赋值_@Value&amp;@PropertySource</p>
-    <p><span class="copy-title">文章字数:</span><span class="post-count">467</span></p>
+    <p><span class="copy-title">文章标题:</span>剑指offer42：连续子数组的最大和</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">489</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
-    <p><span class="copy-title">发布时间:</span>2020-04-02, 22:53:37</p>
-    <p><span class="copy-title">最后更新:</span>2020-04-02, 23:48:58</p>
-    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/04/02/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC-Value-PropertySource/" title="Spring注解学习_属性赋值_@Value&amp;@PropertySource">https://qiurungeng.github.io/2020/04/02/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC-Value-PropertySource/</a>
+    <p><span class="copy-title">发布时间:</span>2020-06-25, 22:20:43</p>
+    <p><span class="copy-title">最后更新:</span>2020-06-25, 22:27:25</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/06/25/%E5%89%91%E6%8C%87offer42%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%92%8C/" title="剑指offer42：连续子数组的最大和">https://qiurungeng.github.io/2020/06/25/%E5%89%91%E6%8C%87offer42%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%92%8C/</a>
 </div>
 
 
