@@ -6,20 +6,22 @@
   <meta name="keywords" content="">
   <meta name="description" content="Hello World | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="¶HTTP状态码：  1xxs - 信息性：服务器正在处理请求。 2xxs - 成功信息：请求已经完成，服务器向浏览器提供了预期的响应。 3xxs –重定向：你的请求被重定向到了其他地方。服务器收到了请求，但是有某种重定向。 4xxs – 客户端错误：客户端发生错误，导致服务器无法处理请求。 5xxs – 服务端错误：客户端发出了有效的请求，但是服务器未能正确处理请求。   备注：3xxs类中的3">
+<meta name="description" content="TCP ¶TCP中序号的单位是什么，滑动窗口的单位是什么？   序列号：它表示发送数据的位置，假设当前的序列号为 s，发送数据长度为 l，则下次发送数据时的序列号为 s + l。在建立连接时通常由计算机生成一个随机数作为序列号的初始值。 确认应答号：它等于下一次应该接收到的数据的序列号。假设发送端的序列号为 s，发送数据的长度为 l，那么接收端返回的确认应答号也是 s + l。发送端接收到这个确认">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计网查漏补缺-应用层协议">
-<meta property="og:url" content="https://qiurungeng.github.io/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:title" content="计网查漏补缺-运输层协议">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E8%BF%90%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE/index.html">
 <meta property="og:site_name" content="梅罢葛的博客">
-<meta property="og:description" content="¶HTTP状态码：  1xxs - 信息性：服务器正在处理请求。 2xxs - 成功信息：请求已经完成，服务器向浏览器提供了预期的响应。 3xxs –重定向：你的请求被重定向到了其他地方。服务器收到了请求，但是有某种重定向。 4xxs – 客户端错误：客户端发生错误，导致服务器无法处理请求。 5xxs – 服务端错误：客户端发出了有效的请求，但是服务器未能正确处理请求。   备注：3xxs类中的3">
+<meta property="og:description" content="TCP ¶TCP中序号的单位是什么，滑动窗口的单位是什么？   序列号：它表示发送数据的位置，假设当前的序列号为 s，发送数据长度为 l，则下次发送数据时的序列号为 s + l。在建立连接时通常由计算机生成一个随机数作为序列号的初始值。 确认应答号：它等于下一次应该接收到的数据的序列号。假设发送端的序列号为 s，发送数据的长度为 l，那么接收端返回的确认应答号也是 s + l。发送端接收到这个确认">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/1967392-8335feea68acc6a2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
-<meta property="article:published_time" content="2020-11-04T04:57:32.000Z">
-<meta property="article:modified_time" content="2020-11-04T05:01:03.266Z">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4917702553b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4917affaab0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4a42ce0527d?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta property="article:published_time" content="2020-11-04T05:01:43.000Z">
+<meta property="article:modified_time" content="2020-11-04T06:09:13.696Z">
 <meta property="article:author" content="梅罢葛">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/1967392-8335feea68acc6a2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1200/format/webp">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4917702553b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
 
 
 <link rel="icon" href="/img/weini.png">
