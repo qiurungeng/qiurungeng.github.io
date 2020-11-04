@@ -6,22 +6,21 @@
   <meta name="keywords" content=" 计算机网络 ">
   <meta name="description" content="计网查漏补缺-应用层协议 | 梅罢葛的博客">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<meta name="description" content="TCP ¶TCP中序号的单位是什么，滑动窗口的单位是什么？   序列号：它表示发送数据的位置，假设当前的序列号为 s，发送数据长度为 l，则下次发送数据时的序列号为 s + l。在建立连接时通常由计算机生成一个随机数作为序列号的初始值。 确认应答号：它等于下一次应该接收到的数据的序列号。假设发送端的序列号为 s，发送数据的长度为 l，那么接收端返回的确认应答号也是 s + l。发送端接收到这个确认">
+<meta name="description" content="¶多主机如何共用一个IP地址？ NAT (Network Address Translator) 是一种用于将局域网中的私有地址转换成全局 IP 地址的技术。 在连接上无线路由器的时候，如果检查一下设备的 IP 地址，也许你会发现是类似于 192.168.1.1 这样的局域网 IP 地址。 下图描绘了 NAT 的工作原理： 局域网中 IP 地址为 10.0.0.10 的主机向全局 IP 地址 16">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计网查漏补缺-运输层协议">
-<meta property="og:url" content="https://qiurungeng.github.io/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E8%BF%90%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE/index.html">
+<meta property="og:title" content="计网查漏补缺-网络层协议">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/index.html">
 <meta property="og:site_name" content="梅罢葛的博客">
-<meta property="og:description" content="TCP ¶TCP中序号的单位是什么，滑动窗口的单位是什么？   序列号：它表示发送数据的位置，假设当前的序列号为 s，发送数据长度为 l，则下次发送数据时的序列号为 s + l。在建立连接时通常由计算机生成一个随机数作为序列号的初始值。 确认应答号：它等于下一次应该接收到的数据的序列号。假设发送端的序列号为 s，发送数据的长度为 l，那么接收端返回的确认应答号也是 s + l。发送端接收到这个确认">
+<meta property="og:description" content="¶多主机如何共用一个IP地址？ NAT (Network Address Translator) 是一种用于将局域网中的私有地址转换成全局 IP 地址的技术。 在连接上无线路由器的时候，如果检查一下设备的 IP 地址，也许你会发现是类似于 192.168.1.1 这样的局域网 IP 地址。 下图描绘了 NAT 的工作原理： 局域网中 IP 地址为 10.0.0.10 的主机向全局 IP 地址 16">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4917702553b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4917affaab0?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4a42ce0527d?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
-<meta property="article:published_time" content="2020-11-04T05:01:43.000Z">
-<meta property="article:modified_time" content="2020-11-04T06:09:13.696Z">
+<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20201104150027121.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20201104145939691.png">
+<meta property="article:published_time" content="2020-11-04T06:09:29.000Z">
+<meta property="article:modified_time" content="2020-11-04T07:01:08.245Z">
 <meta property="article:author" content="梅罢葛">
 <meta property="article:tag" content="计算机网络">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/12/12/1604b4917702553b?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20201104150027121.png">
 
 
 <link rel="icon" href="/img/weini.png">
@@ -836,7 +835,7 @@
     </div>
     <div class="article-meta">
         
-        创建时间:<time class="date" title='更新时间: 2020-11-04 14:48:12'>2020-11-04 12:57</time>
+        创建时间:<time class="date" title='更新时间: 2020-11-04 14:51:49'>2020-11-04 12:57</time>
         
     </div>
     <div class="article-meta">
@@ -860,7 +859,7 @@
     
     <div class="toc-ref">
     
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP状态码："><span class="toc-text">HTTP状态码：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重定向机制："><span class="toc-text">重定向机制：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端实现重定向的一些其他机制"><span class="toc-text">客户端实现重定向的一些其他机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#keep-alive机制"><span class="toc-text">keep-alive机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cookie和session的区别"><span class="toc-text">cookie和session的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-存储位置不同"><span class="toc-text">1.存储位置不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-存储容量大小不同"><span class="toc-text">2.存储容量大小不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-存储有效期不同"><span class="toc-text">3.存储有效期不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-安全性不同"><span class="toc-text">4.安全性不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-域支持范围不同"><span class="toc-text">5.域支持范围不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-对服务器压力不同"><span class="toc-text">6.对服务器压力不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-存储的数据类型不同"><span class="toc-text">7.存储的数据类型不同</span></a></li></ol></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">HTTP状态码：</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">重定向机制：</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#客户端实现重定向的一些其他机制"><span class="toc-text">客户端实现重定向的一些其他机制</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">keep-alive机制</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#"><span class="toc-text">cookie和session的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-存储位置不同"><span class="toc-text">1.存储位置不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-存储容量大小不同"><span class="toc-text">2.存储容量大小不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-存储有效期不同"><span class="toc-text">3.存储有效期不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-安全性不同"><span class="toc-text">4.安全性不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-域支持范围不同"><span class="toc-text">5.域支持范围不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-对服务器压力不同"><span class="toc-text">6.对服务器压力不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-存储的数据类型不同"><span class="toc-text">7.存储的数据类型不同</span></a></li></ol></li></ol></li></ol>
     
 <style>
     .left-col .switch-btn,
@@ -876,7 +875,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="HTTP状态码："><a class="header-anchor" href="#HTTP状态码：">¶</a>HTTP状态码：</h2>
+        <h1>HTTP状态码：</h1>
 <ul>
 <li><strong>1xxs - 信息性</strong>：服务器正在处理请求。</li>
 <li><strong>2xxs - 成功信息</strong>：请求已经完成，服务器向浏览器提供了预期的响应。</li>
@@ -946,7 +945,7 @@
 <p><strong>504 Gateway Timeout</strong>：网关超时，服务器未能快速的做出反应。请求接口返回pedding时间过长基本就是这个问题了，囧。</p>
 </li>
 </ul>
-<h2 id="重定向机制："><a class="header-anchor" href="#重定向机制：">¶</a>重定向机制：</h2>
+<h1>重定向机制：</h1>
 <p>在HTTP的诸多状态码中，由3开头的3XX这一类状态码表示的含义是一类重定向状态码，服务器会在需要指示浏览器进行重定向的时候返回这些状态码给浏览器，且大多数3XX状态码都会附上Location字段，其中的值则是服务器要求浏览器转向的URL的值。浏览器接受到重定向响应以后，会根据Location字段的值，自动的将请求转向其中的URL。</p>
 <p>这一类状态码的值即其具体的含义如下：</p>
 <p><strong>301 Moved Permanently</strong>：被请求的资源已<code>永久</code>移动到新位置，并且将来任何对此资源的引用都应该使用响应返回的若干个URI之一。</p>
@@ -956,14 +955,14 @@
 <p><strong>307 Temporary Redirect</strong>：307的意义如上302。与历史上302不同的是<code>在重新发出原始请求时不允许更改请求方法</code>。比如，使用POST请求始终就该用POST请求。</p>
 <p>308 Permanent Redirect：含义同301，不过区别在于这个状态码不会改变请求的方法和实体数据。</p>
 <p>在上面的状态码介绍中提到了307和302， 308和301的区别，具体说来，301和302在大多数情况下不会改变请求的方法和实体，不过在某些旧的用户代理上，可能会发生意想不到的改变，除了GET和HEAD方法以外的请求方法在使用301和302进行重定向时可能会被改变成GET方法，并且请求的实体也会被清空。因此，如果需要在使用非GET方法的请求中进行重定向的话，那么307和308是要优于301和302的。</p>
-<h3 id="客户端实现重定向的一些其他机制"><a class="header-anchor" href="#客户端实现重定向的一些其他机制">¶</a>客户端实现重定向的一些其他机制</h3>
+<h2 id="客户端实现重定向的一些其他机制"><a class="header-anchor" href="#客户端实现重定向的一些其他机制">¶</a>客户端实现重定向的一些其他机制</h2>
 <p>在HTML页面的头部，我们可以通过添加meta标签的方式，来实现重定向。例如：</p>
 <pre><code class="language-html">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;0;https://www.baidu.com&quot;&gt;
 </code></pre>
 <p>我们也可以使用JS来实现重定向：</p>
 <pre><code class="language-javascript">window.location = &quot;https://www.baidu.com&quot;
 </code></pre>
-<h2 id="keep-alive机制"><a class="header-anchor" href="#keep-alive机制">¶</a>keep-alive机制</h2>
+<h1>keep-alive机制</h1>
 <p>传统HTTP应用，一次TCP连接，一次request，这样效率非常低下：</p>
 <ul>
 <li>
@@ -981,8 +980,8 @@
 在Http1.1的版本里， 解决方案是request 和reponse里使用contentLength来帮助确认是否收到全部数据。</p>
 <p>另一个问题就是在使用keepalive的情况，客户端依然有同时发送多个请求的情况，比如网页加载是需要同时load多个静态资源。比如 浏览器默认最大连接数是6，现在有十个资源同时加载，那么这十个里会有6个并行，4个与前6个串行。</p>
 <p>在keepalive里有个问题就是如果能知道每个repose与其对应的request的话，并发的请求可以只需要一次TCP连接，这也就是http2.0实现的多路复用。</p>
-  <img src="https://upload-images.jianshu.io/upload_images/1967392-8335feea68acc6a2.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp" alt="img" style="zoom:50%;" />
-<h2 id="cookie和session的区别"><a class="header-anchor" href="#cookie和session的区别">¶</a>cookie和session的区别</h2>
+<p><img src="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20201104145039215.png" alt=""></p>
+<h1>cookie和session的区别</h1>
 <p><strong>Cookie是访问某些网站以后在本地存储的一些网站相关的信息，下次再访问的时候减少一些步骤</strong>。<br>
 Cookie中一般包括如下主要内容：</p>
 <ol>
@@ -1035,7 +1034,7 @@ session中能够存储任何类型的数据，包括且不限于string，integer
     <p><span class="copy-title">文章字数:</span><span class="post-count">3.2k</span></p>
     <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
     <p><span class="copy-title">发布时间:</span>2020-11-04, 12:57:32</p>
-    <p><span class="copy-title">最后更新:</span>2020-11-04, 14:48:12</p>
+    <p><span class="copy-title">最后更新:</span>2020-11-04, 14:51:49</p>
     <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE/" title="计网查漏补缺-应用层协议">https://qiurungeng.github.io/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE/</a>
 </div>
 
