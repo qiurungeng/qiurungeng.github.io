@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>计网查漏补缺-应用层协议 | 梅罢葛的博客</title>
+  <meta name="keywords" content=" 计算机网络 ">
+  <meta name="description" content="计网查漏补缺-应用层协议 | 梅罢葛的博客">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="description" content="剑指offer42：连续子数组的最大和  链接：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;lian-xu-zi-shu-zu-de-zui-da-he-lcof&#x2F; 解法：动态规划 class Solution {     &#x2F;**      * 遍历数组中每一个数字，      * 若当前索引的前一个数字为正数，将它累加到当前索引指向的数字中      * 若当前索引的前一个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="剑指offer42：连续子数组的最大和">
+<meta property="og:url" content="https://qiurungeng.github.io/2020/06/25/%E5%89%91%E6%8C%87offer42%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%92%8C/index.html">
+<meta property="og:site_name" content="梅罢葛的博客">
+<meta property="og:description" content="剑指offer42：连续子数组的最大和  链接：https:&#x2F;&#x2F;leetcode-cn.com&#x2F;problems&#x2F;lian-xu-zi-shu-zu-de-zui-da-he-lcof&#x2F; 解法：动态规划 class Solution {     &#x2F;**      * 遍历数组中每一个数字，      * 若当前索引的前一个数字为正数，将它累加到当前索引指向的数字中      * 若当前索引的前一个">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200625214123272.png">
+<meta property="article:published_time" content="2020-06-25T14:20:43.000Z">
+<meta property="article:modified_time" content="2020-06-25T14:27:25.598Z">
+<meta property="article:author" content="梅罢葛">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="动态规划">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/image-20200625214123272.png">
+
+
+<link rel="icon" href="/img/weini.png">
+
+<link href="/css/style.css?v=1.0.1" rel="stylesheet">
+
+<link href="/css/hl_theme/atom-dark.css?v=1.0.1" rel="stylesheet">
+
+<link href="//cdn.bootcss.com/animate.css/3.5.2/animate.min.css" rel="stylesheet">
+<link href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="/js/jquery.autocomplete.min.js?v=1.0.1" ></script>
+
+<script src="//cdn.bootcss.com/highlight.js/9.12.0/highlight.min.js"></script>
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+<script src="//cdn.bootcss.com/nprogress/0.2.0/nprogress.min.js"></script>
+
+
+
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js" ></script>
+
+<script src="/js/iconfont.js?v=1.0.1" ></script>
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+<div style="display: none">
+  <input class="theme_disqus_on" value="false">
+  <input class="theme_preload_comment" value="false">
+  <input class="theme_blog_path" value="">
+</div>
+
+<body>
+<aside class="nav">
+    <div class="nav-left">
+        <a href="/" class="avatar_target">
+    <img class="avatar" src="/img/avatar.webp" />
+</a>
+<div class="author">
+    <span>梅罢葛</span>
+</div>
+
+<div class="icon">
+    
+        
+        <a title="github" href="https://github.com/qiurungeng" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-github"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+    
+        
+        <a title="email" href="mailto:708801794@qq.com" target="_blank">
+            
+                <svg class="iconfont-svg" aria-hidden="true">
+                    <use xlink:href="#icon-email"></use>
+                </svg>
+            
+        </a>
+        
+    
+        
+    
+        
+    
+        
+    
+</div>
+
+
+
+
+<ul>
+    <li><div class="all active">全部文章<small>(54)</small></div></li>
+    
+        
+            
+            <li><div data-rel="Linux">Linux<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="前端">前端<small>(2)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Java">Java<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="算法">算法<small>(6)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="Netty">Netty<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="SpringBoot">SpringBoot<small>(4)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="spring">spring<small>(21)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="数据库">数据库<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="设计模式">设计模式<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="项目笔记">项目笔记<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="操作系统">操作系统<small>(1)</small></div>
+                
+            </li>
+            
+        
+    
+        
+            
+            <li><div data-rel="计算机网络">计算机网络<small>(3)</small></div>
+                
+            </li>
+            
+        
+    
+</ul>
+<div class="left-bottom">
+    <div class="menus">
+    
+    
+    
+    
+    </div>
+    <div><a class="about  site_url"  href="/about">关于</a></div>
+</div>
+<input type="hidden" id="yelog_site_posts_number" value="54">
+<input type="hidden" id="yelog_site_word_count" value="74.4k">
+<div style="display: none">
+    <span id="busuanzi_value_site_uv"></span>
+    <span id="busuanzi_value_site_pv"></span>
+</div>
+
+    </div>
+    <div class="nav-right">
+        <div class="friends-area">
+    <div class="friends-title">
+        友情链接
+        <i class="back-title-list"></i>
+    </div>
+    <div class="friends-content">
+        <ul>
+            
+            <li><a target="_blank" href="http://yelog.org/">叶落阁</a></li>
+            
+        </ul>
+    </div>
+</div>
+        <div class="title-list">
+    <form onkeydown="if(event.keyCode === 13){return false;}">
+        <input id="local-search-input" class="search" type="text" placeholder="Search..." />
+        <i class="cross"></i>
+        <span>
+            <label for="tagswitch">Tags:</label>
+            <input id="tagswitch" type="checkbox" style="display: none" />
+            <i id="tagsWitchIcon"></i>
+        </span>
+    </form>
+    <div class="tags-list">
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Linux</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">MySQL</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">前端</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">jvm</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">算法</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">数据结构</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">Java</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">socket编程</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">Netty</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">SpringBoot</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color2">spring</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">spring注解</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">AOP</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">spring-InstantiationAwareBeanPostProcessor</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">动态规划</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">LeetCode</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">剑指Offer</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">测试</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">操作系统</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color5">设计模式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">NIO</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color4">分布式</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color3">后端</a>
+    </li>
+    
+    <li class="article-tag-list-item">
+        <a class="color1">计算机网络</a>
+    </li>
+    
+    <div class="clearfix"></div>
+</div>
+
+    
+    <nav id="title-list-nav">
+        
+        <a  class="计算机网络 "
+           href="/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E7%BD%91%E7%BB%9C%E5%B1%82%E5%8D%8F%E8%AE%AE/"
+           data-tag="计算机网络"
+           data-author="" >
+            <span class="post-title" title="计网查漏补缺-网络层协议">计网查漏补缺-网络层协议</span>
+            <span class="post-date" title="2020-11-04 14:09:29">2020/11/04</span>
+        </a>
+        
+        <a  class="计算机网络 "
+           href="/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E8%BF%90%E8%BE%93%E5%B1%82%E5%8D%8F%E8%AE%AE/"
+           data-tag="计算机网络"
+           data-author="" >
+            <span class="post-title" title="计网查漏补缺-运输层协议">计网查漏补缺-运输层协议</span>
+            <span class="post-date" title="2020-11-04 13:01:43">2020/11/04</span>
+        </a>
+        
+        <a  class="计算机网络 "
+           href="/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE/"
+           data-tag="计算机网络"
+           data-author="" >
+            <span class="post-title" title="计网查漏补缺-应用层协议">计网查漏补缺-应用层协议</span>
+            <span class="post-date" title="2020-11-04 12:57:32">2020/11/04</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/10/27/Netty%E5%85%A5%E9%97%A8%E6%A1%88%E4%BE%8B/"
+           data-tag="Netty"
+           data-author="" >
+            <span class="post-title" title="Netty入门案例">Netty入门案例</span>
+            <span class="post-date" title="2020-10-27 20:28:27">2020/10/27</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/10/01/leetcode_LCP19%E7%A7%8B%E5%8F%B6%E6%94%B6%E8%97%8F%E9%9B%86/"
+           data-tag="算法,LeetCode"
+           data-author="" >
+            <span class="post-title" title="LeetCode_LCP19秋叶收藏集">LeetCode_LCP19秋叶收藏集</span>
+            <span class="post-date" title="2020-10-01 17:08:32">2020/10/01</span>
+        </a>
+        
+        <a  class="操作系统 "
+           href="/2020/09/06/CPU%E5%86%85%E5%AD%98%E3%80%81%E7%BC%93%E5%AD%98%E3%80%81%E7%BC%93%E5%AD%98%E8%A1%8C/"
+           data-tag="操作系统"
+           data-author="" >
+            <span class="post-title" title="CPU内存、缓存、缓存行">CPU内存、缓存、缓存行</span>
+            <span class="post-date" title="2020-09-06 15:14:34">2020/09/06</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/08/26/Netty%E5%AD%A6%E4%B9%A0-1/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Netty学习-1">Netty学习-1</span>
+            <span class="post-date" title="2020-08-26 21:30:22">2020/08/26</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/08/26/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92-%E8%82%A1%E7%A5%A86/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="动态规划-股票6">动态规划-股票6</span>
+            <span class="post-date" title="2020-08-26 21:30:22">2020/08/26</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/06/25/%E5%89%91%E6%8C%87offer42%EF%BC%9A%E8%BF%9E%E7%BB%AD%E5%AD%90%E6%95%B0%E7%BB%84%E7%9A%84%E6%9C%80%E5%A4%A7%E5%92%8C/"
+           data-tag="算法,动态规划"
+           data-author="" >
+            <span class="post-title" title="剑指offer42：连续子数组的最大和">剑指offer42：连续子数组的最大和</span>
+            <span class="post-date" title="2020-06-25 22:20:43">2020/06/25</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/06/25/%E5%89%91%E6%8C%87Offer60%20n%E4%B8%AA%E9%AA%B0%E5%AD%90%E7%9A%84%E7%82%B9%E6%95%B0/"
+           data-tag="算法,动态规划"
+           data-author="" >
+            <span class="post-title" title="剑指offer42：连续子数组的最大和">剑指offer42：连续子数组的最大和</span>
+            <span class="post-date" title="2020-06-25 22:20:43">2020/06/25</span>
+        </a>
+        
+        <a  class="Linux "
+           href="/2020/05/13/%E8%A7%A3%E5%86%B3%E9%98%BF%E9%87%8C%E4%BA%91%E6%9C%8D%E5%8A%A1%E5%99%A8%E4%B8%8ASpringBoot%E9%A1%B9%E7%9B%AE%E5%90%AF%E5%8A%A8%E5%B7%A8%E6%85%A2%E7%9A%84%E9%97%AE%E9%A2%98/"
+           data-tag="Linux,SpringBoot"
+           data-author="" >
+            <span class="post-title" title="解决阿里云服务器上SpringBoot项目启动巨慢的问题">解决阿里云服务器上SpringBoot项目启动巨慢的问题</span>
+            <span class="post-date" title="2020-05-13 15:52:04">2020/05/13</span>
+        </a>
+        
+        <a  class="SpringBoot "
+           href="/2020/05/06/SpringBoot%E8%A7%A3%E5%86%B3%E5%90%8E%E5%8F%B0%E8%BF%94%E5%9B%9EJSON%E5%88%B0%E5%89%8D%E7%AB%AF%E5%87%BA%E7%8E%B0%E4%B8%AD%E6%96%87%E4%B9%B1%E7%A0%81%E9%97%AE%E9%A2%98/"
+           data-tag="SpringBoot"
+           data-author="" >
+            <span class="post-title" title="SpringBoot解决后台返回JSON到前端出现中文乱码问题">SpringBoot解决后台返回JSON到前端出现中文乱码问题</span>
+            <span class="post-date" title="2020-05-06 02:51:19">2020/05/06</span>
+        </a>
+        
+        <a  class="Java "
+           href="/2020/05/01/Jconsole%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5%E6%9C%8D%E5%8A%A1%E5%99%A8/"
+           data-tag="Linux,java,jvm"
+           data-author="" >
+            <span class="post-title" title="Jconsole远程连接服务器">Jconsole远程连接服务器</span>
+            <span class="post-date" title="2020-05-01 01:13:11">2020/05/01</span>
+        </a>
+        
+        <a  class="前端 "
+           href="/2020/04/28/Ajax%E6%8F%90%E4%BA%A4%E8%A1%A8%E5%8D%95/"
+           data-tag="前端"
+           data-author="" >
+            <span class="post-title" title="Ajax提交form表单">Ajax提交form表单</span>
+            <span class="post-date" title="2020-04-28 19:24:31">2020/04/28</span>
+        </a>
+        
+        <a  class="前端 "
+           href="/2020/04/28/Thymeleaf%E9%9A%8F%E6%89%8B%E8%AE%B0/"
+           data-tag="前端,SpringBoot"
+           data-author="" >
+            <span class="post-title" title="Thymeleaf随手记">Thymeleaf随手记</span>
+            <span class="post-date" title="2020-04-28 19:24:31">2020/04/28</span>
+        </a>
+        
+        <a  class="SpringBoot "
+           href="/2020/04/28/SpringBoot%E4%B8%ADCookie%E7%9A%84%E4%BD%BF%E7%94%A8/"
+           data-tag="java,SpringBoot"
+           data-author="" >
+            <span class="post-title" title="SpringBoot中Cookie的使用">SpringBoot中Cookie的使用</span>
+            <span class="post-date" title="2020-04-28 01:52:20">2020/04/28</span>
+        </a>
+        
+        <a  class="SpringBoot "
+           href="/2020/04/26/Spring%20Boot%E9%85%8D%E7%BD%AE%E6%8B%A6%E6%88%AA%E5%99%A8%E5%AF%BC%E8%87%B4%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E6%97%A0%E6%B3%95%E8%AE%BF%E9%97%AE%E4%B9%8B%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88/"
+           data-tag="java,SpringBoot"
+           data-author="" >
+            <span class="post-title" title="Spring Boot静态资源无法访问之解决方案">Spring Boot静态资源无法访问之解决方案</span>
+            <span class="post-date" title="2020-04-26 01:16:39">2020/04/26</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/21/%E5%92%8C%E4%B8%BAs%E7%9A%84%E8%BF%9E%E7%BB%AD%E6%AD%A3%E6%95%B0%E5%BA%8F%E5%88%97/"
+           data-tag="算法,LeetCode,剑指Offer"
+           data-author="" >
+            <span class="post-title" title="和为s的连续正数序列">和为s的连续正数序列</span>
+            <span class="post-date" title="2020-04-21 12:53:58">2020/04/21</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/04/18/Netty%E6%A8%A1%E5%9E%8B/"
+           data-tag="Netty"
+           data-author="" >
+            <span class="post-title" title="Netty模型">Netty模型</span>
+            <span class="post-date" title="2020-04-18 18:01:43">2020/04/18</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/18/%E8%80%81%E9%BC%A0%E8%8D%AF/"
+           data-tag="算法"
+           data-author="" >
+            <span class="post-title" title="老鼠药">老鼠药</span>
+            <span class="post-date" title="2020-04-18 17:08:32">2020/04/18</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/04/18/Reactor%E6%A8%A1%E5%BC%8F/"
+           data-tag="Netty"
+           data-author="" >
+            <span class="post-title" title="Reactor模式">Reactor模式</span>
+            <span class="post-date" title="2020-04-18 13:44:12">2020/04/18</span>
+        </a>
+        
+        <a  class="Netty "
+           href="/2020/04/18/%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E5%9F%BA%E6%9C%AC%E4%BB%8B%E7%BB%8D/"
+           data-tag="Netty"
+           data-author="" >
+            <span class="post-title" title="线程模型基本介绍">线程模型基本介绍</span>
+            <span class="post-date" title="2020-04-18 13:09:51">2020/04/18</span>
+        </a>
+        
+        <a  class="Linux "
+           href="/2020/04/11/Linux%E7%BD%91%E7%BB%9CIO%E6%A8%A1%E5%9E%8B/"
+           data-tag="Linux,操作系统"
+           data-author="" >
+            <span class="post-title" title="Linux网络IO模型">Linux网络IO模型</span>
+            <span class="post-date" title="2020-04-11 04:45:19">2020/04/11</span>
+        </a>
+        
+        <a  class="Java "
+           href="/2020/04/11/Java-NIO%E5%85%A5%E9%97%A8/"
+           data-tag="Java,NIO"
+           data-author="" >
+            <span class="post-title" title="Java NIO入门">Java NIO入门</span>
+            <span class="post-date" title="2020-04-11 02:20:35">2020/04/11</span>
+        </a>
+        
+        <a  class="Java "
+           href="/2020/04/09/Java%E4%B8%8EC%E8%BF%9B%E8%A1%8CSocket%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9D%91/"
+           data-tag="Java,socket编程"
+           data-author="" >
+            <span class="post-title" title="Java与C进行Socket通信的坑">Java与C进行Socket通信的坑</span>
+            <span class="post-date" title="2020-04-09 04:22:15">2020/04/09</span>
+        </a>
+        
+        <a  class="算法 "
+           href="/2020/04/08/LRU%E7%AE%97%E6%B3%95/"
+           data-tag="算法,数据结构"
+           data-author="" >
+            <span class="post-title" title="LRU算法">LRU算法</span>
+            <span class="post-date" title="2020-04-08 22:14:01">2020/04/08</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/08/Spring%E6%89%A9%E5%B1%95%E5%8E%9F%E7%90%861-BeanFactoryPostProcessor/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring扩展原理1_BeanFactoryPostProcessor">Spring扩展原理1_BeanFactoryPostProcessor</span>
+            <span class="post-date" title="2020-04-08 13:34:44">2020/04/08</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/07/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%A3%B0%E6%98%8E%E4%BA%8B%E5%8A%A1%E5%8E%9F%E7%90%86/"
+           data-tag="java,spring,spring注解,spring-InstantiationAwareBeanPostProcessor"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_声明式事务原理">Spring注解学习_声明式事务原理</span>
+            <span class="post-date" title="2020-04-07 23:28:49">2020/04/07</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/07/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%A3%B0%E6%98%8E%E5%BC%8F%E4%BA%8B%E5%8A%A1/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_声明式事务">Spring注解学习_声明式事务</span>
+            <span class="post-date" title="2020-04-07 21:02:02">2020/04/07</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%865-SpringAOP%E5%8E%9F%E7%90%86%E6%80%BB%E7%BB%93/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理5_SpringAOP总结">Spring注解学习_AOP原理5_SpringAOP总结</span>
+            <span class="post-date" title="2020-04-06 22:32:08">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%864-AopProxyFactory/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理4_AopProxyFactory">Spring注解学习_AOP原理4_AopProxyFactory</span>
+            <span class="post-date" title="2020-04-06 22:31:40">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%863-AnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E4%BD%9C%E7%94%A8/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用">Spring注解学习_AOP原理3_AnnotationAwareAspectJAutoProxyCreator的作用</span>
+            <span class="post-date" title="2020-04-06 22:30:57">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/06/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%862-%E6%B3%A8%E5%86%8CAnnotationAwareAspectJAutoProxyCreator%E7%9A%84%E8%BF%87%E7%A8%8B/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程">Spring注解学习_AOP原理2_注册AnnotationAwareAspectJAutoProxyCreator的过程</span>
+            <span class="post-date" title="2020-04-06 22:30:25">2020/04/06</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/05/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP%E5%8E%9F%E7%90%861-EnableAspectJAutoProxy/"
+           data-tag="java,spring,spring注解,AOP,spring-InstantiationAwareBeanPostProcessor"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP原理1_@EnableAspectJAutoProxy">Spring注解学习_AOP原理1_@EnableAspectJAutoProxy</span>
+            <span class="post-date" title="2020-04-05 03:26:30">2020/04/05</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-AOP/"
+           data-tag="java,spring,spring注解,AOP"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_AOP的注解方式实现">Spring注解学习_AOP的注解方式实现</span>
+            <span class="post-date" title="2020-04-03 18:47:08">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D4-Profile/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配4_@Profile">Spring注解学习_自动装配4_@Profile</span>
+            <span class="post-date" title="2020-04-03 16:47:50">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D3-Aware%E6%B3%A8%E5%85%A5Spring%E5%BA%95%E5%B1%82%E7%BB%84%E4%BB%B6-%E5%8E%9F%E7%90%86/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理">Spring注解学习_自动装配3_Aware注入Spring底层组件&amp;原理</span>
+            <span class="post-date" title="2020-04-03 15:53:40">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D2-Resource-Inject/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配2_@Resource&amp;@Inject">Spring注解学习_自动装配2_@Resource&amp;@Inject</span>
+            <span class="post-date" title="2020-04-03 01:55:29">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/03/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E8%87%AA%E5%8A%A8%E8%A3%85%E9%85%8D1-Autowired-Qualifier-Primary/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary">Spring注解学习_自动装配1_@Autowired&amp;@Qualifier&amp;@Primary</span>
+            <span class="post-date" title="2020-04-03 00:06:03">2020/04/03</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/04/02/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E5%B1%9E%E6%80%A7%E8%B5%8B%E5%80%BC-Value-PropertySource/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_属性赋值_@Value&amp;@PropertySource">Spring注解学习_属性赋值_@Value&amp;@PropertySource</span>
+            <span class="post-date" title="2020-04-02 22:53:37">2020/04/02</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F2-BeanPostProcessor/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_生命周期2_BeanPostProcessor">Spring注解学习_生命周期2_BeanPostProcessor</span>
+            <span class="post-date" title="2020-03-30 01:51:10">2020/03/30</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/30/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F1-%E5%88%9D%E5%A7%8B%E5%8C%96%E5%92%8C%E9%94%80%E6%AF%81%E6%96%B9%E6%B3%95/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_生命周期1_初始化和销毁方法">Spring注解学习_生命周期1_初始化和销毁方法</span>
+            <span class="post-date" title="2020-03-30 00:23:45">2020/03/30</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-FactoryBean/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册5_FactoryBean">Spring注解学习_组件注册5_FactoryBean</span>
+            <span class="post-date" title="2020-03-29 17:17:41">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Import/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册4_@Import">Spring注解学习_组件注册4_@Import</span>
+            <span class="post-date" title="2020-03-29 15:33:06">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Condition/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册3_@Condition">Spring注解学习_组件注册3_@Condition</span>
+            <span class="post-date" title="2020-03-29 14:52:02">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-ComponentScan/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册2_@ComponentScan">Spring注解学习_组件注册2_@ComponentScan</span>
+            <span class="post-date" title="2020-03-29 13:22:00">2020/03/29</span>
+        </a>
+        
+        <a  class="spring "
+           href="/2020/03/29/Spring%E6%B3%A8%E8%A7%A3%E5%AD%A6%E4%B9%A0-%E7%BB%84%E4%BB%B6%E6%B3%A8%E5%86%8C-Configuration/"
+           data-tag="java,spring,spring注解"
+           data-author="" >
+            <span class="post-title" title="Spring注解学习_组件注册1_@Configuration与@Bean">Spring注解学习_组件注册1_@Configuration与@Bean</span>
+            <span class="post-date" title="2020-03-29 12:14:14">2020/03/29</span>
+        </a>
+        
+        <a  class="Linux "
+           href="/2020/03/28/CentOS%E5%AE%89%E8%A3%85Mysql/"
+           data-tag="Linux,MySQL"
+           data-author="" >
+            <span class="post-title" title="CentOS安装及配置Mysql">CentOS安装及配置Mysql</span>
+            <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
+        </a>
+        
+        <a  class="设计模式 "
+           href="/2020/03/28/%E5%B7%A5%E5%8E%82%E6%A8%A1%E5%BC%8F/"
+           data-tag="java,设计模式"
+           data-author="" >
+            <span class="post-title" title="工厂模式">工厂模式</span>
+            <span class="post-date" title="2020-03-28 14:21:29">2020/03/28</span>
+        </a>
+        
+        <a  class="SpringBoot "
+           href="/2020/03/28/SpringBoot-debug%E7%90%90%E8%AE%B0/"
+           data-tag="java,SpringBoot"
+           data-author="" >
+            <span class="post-title" title="SpringBoot-Debug持续记录">SpringBoot-Debug持续记录</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/28/%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E6%96%87%E7%AB%A0/"
+           data-tag="测试"
+           data-author="" >
+            <span class="post-title" title="尝试发布文章">尝试发布文章</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="数据库 "
+           href="/2020/03/28/mysql%E7%B4%A2%E5%BC%95%E5%AD%A6%E4%B9%A0/"
+           data-tag="MySQL"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记：MySQL">谷粒商城项目学习笔记：MySQL</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class="项目笔记 "
+           href="/2020/03/28/SpringBoot_%E5%B0%9A%E7%A1%85%E8%B0%B7%E8%B0%B7%E7%B2%92%E5%95%86%E5%9F%8E/"
+           data-tag="java,SpringBoot,分布式,后端"
+           data-author="" >
+            <span class="post-title" title="谷粒商城项目学习笔记">谷粒商城项目学习笔记</span>
+            <span class="post-date" title="2020-03-28 01:16:39">2020/03/28</span>
+        </a>
+        
+        <a  class=""
+           href="/2020/03/27/hello-world/"
+           data-tag=""
+           data-author="" >
+            <span class="post-title" title="Hello World">Hello World</span>
+            <span class="post-date" title="2020-03-27 22:09:17">2020/03/27</span>
+        </a>
+        
+    </nav>
+</div>
+    </div>
+    <div class="hide-list">
+        <div class="semicircle">
+            <div class="brackets first"><</div>
+            <div class="brackets">&gt;</div>
+        </div>
+    </div>
+</aside>
+<div class="post">
+    <div class="pjax">
+        <article id="post-计网查漏补缺-应用层协议" class="article article-type-post" itemscope itemprop="blogPost">
+    
+        <h1 class="article-title">计网查漏补缺-应用层协议</h1>
+    
+    <div class="article-meta">
+        
+        
+        
+        <span class="book">
+            
+                <a  data-rel="计算机网络">计算机网络</a>
+            
+        </span>
+        
+        
+        <span class="tag">
+            
+            <a class="color1">计算机网络</a>
+            
+        </span>
+        
+    </div>
+    <div class="article-meta">
+        
+        创建时间:<time class="date" title='更新时间: 2020-11-04 13:01:03'>2020-11-04 12:57</time>
+        
+    </div>
+    <div class="article-meta">
+        
+        <span>字数:3.2k</span>
+        
+        
+        <span id="busuanzi_container_page_pv">
+            阅读:<span id="busuanzi_value_page_pv">
+                <span class="count-comment">
+                    <span class="spinner">
+                      <div class="cube1"></div>
+                      <div class="cube2"></div>
+                    </span>
+                </span>
+            </span>
+        </span>
+        
+        
+    </div>
+    
+    <div class="toc-ref">
+    
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP状态码："><span class="toc-text">HTTP状态码：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重定向机制："><span class="toc-text">重定向机制：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#客户端实现重定向的一些其他机制"><span class="toc-text">客户端实现重定向的一些其他机制</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#keep-alive机制"><span class="toc-text">keep-alive机制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cookie和session的区别"><span class="toc-text">cookie和session的区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-存储位置不同"><span class="toc-text">1.存储位置不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-存储容量大小不同"><span class="toc-text">2.存储容量大小不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-存储有效期不同"><span class="toc-text">3.存储有效期不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-安全性不同"><span class="toc-text">4.安全性不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-域支持范围不同"><span class="toc-text">5.域支持范围不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-对服务器压力不同"><span class="toc-text">6.对服务器压力不同</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#7-存储的数据类型不同"><span class="toc-text">7.存储的数据类型不同</span></a></li></ol></li></ol>
+    
+<style>
+    .left-col .switch-btn,
+    .left-col .switch-area {
+        display: none;
+    }
+    .toc-level-3 i,
+    .toc-level-3 ol {
+        display: none !important;
+    }
+</style>
+</div>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="HTTP状态码："><a class="header-anchor" href="#HTTP状态码：">¶</a>HTTP状态码：</h2>
+<ul>
+<li><strong>1xxs - 信息性</strong>：服务器正在处理请求。</li>
+<li><strong>2xxs - 成功信息</strong>：请求已经完成，服务器向浏览器提供了预期的响应。</li>
+<li><strong>3xxs –重定向</strong>：你的请求被重定向到了其他地方。服务器收到了请求，但是有某种重定向。</li>
+<li><strong>4xxs – 客户端错误</strong>：客户端发生错误，导致服务器无法处理请求。</li>
+<li><strong>5xxs – 服务端错误</strong>：客户端发出了有效的请求，但是服务器未能正确处理请求。</li>
+</ul>
+<blockquote>
+<p>备注：3xxs类中的304是个奇葩，其不属于重定向信息提示，这个后面会讲到</p>
+</blockquote>
+<p><strong>1xxs状态码</strong></p>
+<ul>
+<li><strong>100 Continue</strong>：表明目前为止，所有的请求内容都是可行的，客户端应该继续请求，如果完成，则忽略它。</li>
+<li><strong>101 Switching Protocol</strong>：该状态码是响应客户端<code>Upgrade</code>标头发送的，并且指示服务器也正在切换协议。</li>
+<li><strong>103 Early Hints</strong>：主要用于与<code>Link</code>链接头一起使用，以允许用户代理在服务器仍在准备响应时开始预加载资源。</li>
+</ul>
+<blockquote>
+<p>备注：在web开发的工作中，我们都会使用封装好的库进行接口请求，而且浏览器的控制台网络中也不会出现这类状态码的提示（我没看到过😢），所以这一大类基本不会接触到，了解一下即可。</p>
+</blockquote>
+<p><strong>2xxs状态码</strong></p>
+<ul>
+<li>
+<p>200 OK</p>
+<p>：请求成功。成功的含义取决于HTTP方法：</p>
+<ul>
+<li><code>GET</code>：资源已被提取并在消息正文中传输。</li>
+<li><code>HEAD</code>：实体标头位于消息正文中。</li>
+<li><code>POST</code>：描述动作结果的资源在消息体中传输。</li>
+<li><code>TRACE</code>：消息正文包含服务器收到的请求信息。（方法不安全，一般不用）</li>
+</ul>
+</li>
+</ul>
+<p>说到了HTTP的方法，可以戳<a href="https://www.runoob.com/http/http-methods.html" target="_blank" rel="noopener">HTTP请求方法</a>这个解析教程来了解一下。</p>
+<ul>
+<li><strong>201 Created</strong>：请求已经成功，并因此创建了一个新的资源。这通常是在<code>PUT</code>或<code>POST</code>请求之后发送的响应。</li>
+<li><strong>202 Accepted</strong>：请求已经接收到，但是没有响应，没有结果。意味着不会有一个异步的响应去表明当前请求的结果，预期另外的进程和服务去处理请求，或者批处理。</li>
+<li><strong>204 No Content</strong>：服务器成功处理了请求，但不需要返回任何实体内容，并且希望返回更新了的元信息。遇到<code>复杂请求</code>时候，浏览器会发送一个<code>OPTION</code>方法进行预处理返回响应。</li>
+</ul>
+<p>关于复杂请求和简单请求，可以参考这篇文章<a href="https://mabiao8023.github.io/2018/03/30/CORS%E9%9D%9E%E7%AE%80%E5%8D%95%E8%AF%B7%E6%B1%82/" target="_blank" rel="noopener">CORS非简单请求</a>。</p>
+<ul>
+<li><strong>205 Reset Content</strong>：服务器已经成功处理了请求，但是没有返回任何内容。与204响应不同，返回此状态码的响应要求请求者重置文档视图。</li>
+</ul>
+<blockquote>
+<p>备注：使用的最多的2xxs状态码是200和204，在遇到204状态码的时候，要注意一下自己发的请求是不是复杂请求。如果是复杂请求，那么在得到204返回时，浏览器有没有接受了这个请求的返回，如果没有，要叫后端搞下相关配置了。</p>
+</blockquote>
+<p><strong>4xxs状态码</strong></p>
+<ul>
+<li><strong>401 Unauthorized</strong>：这意味着你的登录凭证无效。服务器不知道你是谁，这时，你需要尝试重新登录。</li>
+<li><strong>403 Forbidden</strong>：服务器已经理解请求，但是拒绝执行它。与401不同，403知道是你登录了，但是还是拒绝了你。</li>
+<li><strong>404 Not Found</strong>：请求失败，你请求所希望得到的资源未在服务器上发现。</li>
+<li><strong>410 Gone</strong>：被请求的资源在服务器上已经不再可用，而且没有任何已知的转发地址。</li>
+<li><strong>422 Unprocessable Entity</strong>：请求格式良好，但是由于语义错误而无妨遵循。这时候要检查下自己的传参格式语义有没有正确了。</li>
+<li><strong>429 Too Many Requests</strong>：用户在给定的时间内发送了太多请求（“限制请求速率”）。在DDOS攻击中就可以使用到了。</li>
+</ul>
+<blockquote>
+<p>备注：这里要注意的是422，别请求链接一出错，就屁颠屁颠的找后端，先看下后端给过来的API文档中，要传的字段是否都准确跟上了。😂</p>
+</blockquote>
+<p><strong>5xxs状态码</strong></p>
+<ul>
+<li>
+<p><strong>500 Internal Server Error</strong>：服务器内部错误，服务器遇到了不知道如何处理的情况。比如后端同学写错了model啥的～</p>
+</li>
+<li>
+<p><strong>503 Service Unavailable</strong>：服务器没有准备好处理请求。常见的原因是服务器因维护或重载而停机。</p>
+</li>
+<li>
+<p><strong>504 Gateway Timeout</strong>：网关超时，服务器未能快速的做出反应。请求接口返回pedding时间过长基本就是这个问题了，囧。</p>
+</li>
+</ul>
+<h2 id="重定向机制："><a class="header-anchor" href="#重定向机制：">¶</a>重定向机制：</h2>
+<p>在HTTP的诸多状态码中，由3开头的3XX这一类状态码表示的含义是一类重定向状态码，服务器会在需要指示浏览器进行重定向的时候返回这些状态码给浏览器，且大多数3XX状态码都会附上Location字段，其中的值则是服务器要求浏览器转向的URL的值。浏览器接受到重定向响应以后，会根据Location字段的值，自动的将请求转向其中的URL。</p>
+<p>这一类状态码的值即其具体的含义如下：</p>
+<p><strong>301 Moved Permanently</strong>：被请求的资源已<code>永久</code>移动到新位置，并且将来任何对此资源的引用都应该使用响应返回的若干个URI之一。</p>
+<p><strong>302 Found(Previously “Moved temporarily”)</strong>：请求的资源现在<code>临时</code>从不同的URI响应请求。由于这样的重定向是临时的，客户端应当继续向原有地址发送以后的请求。只有在<code>Cache-Control</code>或<code>Expires</code>中进行了指定的情况下，这个响应才是可缓存的。</p>
+<p><strong>303 See Other</strong>：对当前的请求的响应可以在另一个URI上被找到，而且客户端应该采用<code>GET</code>的方式访问那个链接。这个方法的存在主要是为了允许由脚本激活的POST请求输出重定向到一个新的资源。</p>
+<p><strong>304 Not Modified</strong>：如果客户端发送了一个带条件的 GET 请求且该请求已被允许，而文档的内容（自上次访问以来或者根据请求的条件）并没有改变，则服务器应当返回这个状态码。304 响应禁止包含消息体，因此始终以消息头后的第一个空行结尾。请求的时候一般结合<code>If-Modified-Since</code>头部使用。</p>
+<p><strong>307 Temporary Redirect</strong>：307的意义如上302。与历史上302不同的是<code>在重新发出原始请求时不允许更改请求方法</code>。比如，使用POST请求始终就该用POST请求。</p>
+<p>308 Permanent Redirect：含义同301，不过区别在于这个状态码不会改变请求的方法和实体数据。</p>
+<p>在上面的状态码介绍中提到了307和302， 308和301的区别，具体说来，301和302在大多数情况下不会改变请求的方法和实体，不过在某些旧的用户代理上，可能会发生意想不到的改变，除了GET和HEAD方法以外的请求方法在使用301和302进行重定向时可能会被改变成GET方法，并且请求的实体也会被清空。因此，如果需要在使用非GET方法的请求中进行重定向的话，那么307和308是要优于301和302的。</p>
+<h3 id="客户端实现重定向的一些其他机制"><a class="header-anchor" href="#客户端实现重定向的一些其他机制">¶</a>客户端实现重定向的一些其他机制</h3>
+<p>在HTML页面的头部，我们可以通过添加meta标签的方式，来实现重定向。例如：</p>
+<pre><code class="language-html">&lt;meta http-equiv=&quot;refresh&quot; content=&quot;0;https://www.baidu.com&quot;&gt;
+</code></pre>
+<p>我们也可以使用JS来实现重定向：</p>
+<pre><code class="language-javascript">window.location = &quot;https://www.baidu.com&quot;
+</code></pre>
+<h2 id="keep-alive机制"><a class="header-anchor" href="#keep-alive机制">¶</a>keep-alive机制</h2>
+<p>传统HTTP应用，一次TCP连接，一次request，这样效率非常低下：</p>
+<ul>
+<li>
+<p>服务端负载增加，每个请求过来都得占用端口</p>
+</li>
+<li>
+<p>客户端或服务端对客户端连接数的限制（chrome 限制是6个）<br>
+这种情况很多，比如网页加载对于这个case的处理就是使用将静态资源放置到不同Domain或者压缩打包减少数量来提高效率。</p>
+</li>
+</ul>
+<p>http1.1 协议里增加了 keepalive的支持， 并且默认开启。</p>
+<p>客户端和服务端在建立连接并完成request后并不会立即断开TCP连接，而是在下次request来临时复用这次TCP连接。但是这里也必须要有TCP连接的timeout时间限制。不然会造成服务端端口被长期占用释放不了。</p>
+<p>对于不适用keepalive的request来说，不管是客户端还是服务端都是通过TCP的链接的断开知道request的结束（TCP 挥手时会check 数据包的 seq， 保证数据完整性）。<br>
+支持keepalive后，如何知道request结束了呢？<br>
+在Http1.1的版本里， 解决方案是request 和reponse里使用contentLength来帮助确认是否收到全部数据。</p>
+<p>另一个问题就是在使用keepalive的情况，客户端依然有同时发送多个请求的情况，比如网页加载是需要同时load多个静态资源。比如 浏览器默认最大连接数是6，现在有十个资源同时加载，那么这十个里会有6个并行，4个与前6个串行。</p>
+<p>在keepalive里有个问题就是如果能知道每个repose与其对应的request的话，并发的请求可以只需要一次TCP连接，这也就是http2.0实现的多路复用。</p>
+  <img src="https://upload-images.jianshu.io/upload_images/1967392-8335feea68acc6a2.png?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp" alt="img" style="zoom:25%;" />
+<h2 id="cookie和session的区别"><a class="header-anchor" href="#cookie和session的区别">¶</a>cookie和session的区别</h2>
+<p><strong>Cookie是访问某些网站以后在本地存储的一些网站相关的信息，下次再访问的时候减少一些步骤</strong>。<br>
+Cookie中一般包括如下主要内容：</p>
+<ol>
+<li>key：设置的cookie的key。</li>
+<li>value：key对应的value。</li>
+<li>max_age/expire_time：设置cookie的过期时间。</li>
+<li>domain：该cookie在哪个域名中有效。一般设置子域名，<a href="http://xn--cms-eo8er22f.example.com" target="_blank" rel="noopener">比如cms.example.com</a>。</li>
+<li>path：该cookie在哪个路径下有效。</li>
+</ol>
+<p><strong>例如</strong>，我们登录某一个网站时需要输入用户名及密码，如果用户名和密码保存为cookie，则下次我们登录该网站的时候就不需要再输入用户密码了。</p>
+<p><strong>session是存在服务器的一种用来存放用户数据的类HashTable结构</strong>。<br>
+浏览器第一次发送请求时，服务器自动生成了一HashTable和一SessionID来唯一标识这个HashTable，并将其通过响应发送到浏览器。浏览器第二次发送请求会将前一次服务器响应中的SessionID放在请求中一并发送到服务器上，服务器从请求中提取出Session ID，并和保存的所有Session ID进行对比，找到这个用户对应的HashTable。</p>
+<p><strong>例如</strong>，我们浏览一个购物网站，用户将部分商品添加到购物车中，许久以前许多网站都是用服务端session存储购物车内容（现在基本都是用数据库了），就用到了session存储这部分信息。</p>
+<p><strong>区别：</strong></p>
+<h3 id="1-存储位置不同"><a class="header-anchor" href="#1-存储位置不同">¶</a>1.存储位置不同</h3>
+<p>cookie的数据信息存放在本地。<br>
+session的数据信息存放在服务器上。</p>
+<h3 id="2-存储容量大小不同"><a class="header-anchor" href="#2-存储容量大小不同">¶</a>2.存储容量大小不同</h3>
+<p>cookie存储的容量较小，一般&lt;=4KB。<br>
+session存储容量大小没有限制(但是为了服务器性能考虑，一般不能存放太多数据)。</p>
+<h3 id="3-存储有效期不同"><a class="header-anchor" href="#3-存储有效期不同">¶</a>3.存储有效期不同</h3>
+<p>cookie可以长期存储，只要不超过设置的过期时间，可以一直存储。<br>
+session在超过一定的操作时间(通常为30分钟)后会失效，但是当关闭浏览器时，为了保护用户信息，会自动调用session.invalidate()方法，该方法会清除掉session中的信息。</p>
+<h3 id="4-安全性不同"><a class="header-anchor" href="#4-安全性不同">¶</a>4.安全性不同</h3>
+<p>cookie存储在客户端，所以可以分析存放在本地的cookie并进行cookie欺骗，安全性较低。<br>
+session存储在服务器上，不存在敏感信息泄漏的风险，安全性较高。</p>
+<h3 id="5-域支持范围不同"><a class="header-anchor" href="#5-域支持范围不同">¶</a>5.域支持范围不同</h3>
+<p>cookie支持跨域名访问。例如，所有a.com的cookie在a.com下都能用。<br>
+session不支持跨域名访问。例如，<a href="http://www.a.com" target="_blank" rel="noopener">www.a.com</a> 的session在api.a.com下不能用。</p>
+<h3 id="6-对服务器压力不同"><a class="header-anchor" href="#6-对服务器压力不同">¶</a>6.对服务器压力不同</h3>
+<p>cookie保存在客户端，不占用服务器资源。<br>
+session是保存在服务器端，每个用户都会产生一个session，session过多的时候会消耗服务器资源，所以大型网站会有专门的session服务器。</p>
+<h3 id="7-存储的数据类型不同"><a class="header-anchor" href="#7-存储的数据类型不同">¶</a>7.存储的数据类型不同</h3>
+<p>cookie中只能保管ASCII字符串，并需要通过编码方式存储为Unicode字符或者二进制数据。<br>
+session中能够存储任何类型的数据，包括且不限于string，integer，list，map等。</p>
+
+      
+       <hr><span style="font-style: italic;color: gray;"> 转载请注明来源，欢迎对文章中的引用来源进行考证，欢迎指出任何有错误或不够清晰的表达。可以在下面评论区评论，也可以邮件至 708801794@qq.com </span>
+    </div>
+</article>
+
+
+<p>
+    <a  class="dashang" onclick="dashangToggle()">赏</a>
+</p>
+
+
+<div class="article_copyright">
+    <p><span class="copy-title">文章标题:</span>计网查漏补缺-应用层协议</p>
+    <p><span class="copy-title">文章字数:</span><span class="post-count">3.2k</span></p>
+    <p><span class="copy-title">本文作者:</span><a  title="梅罢葛">梅罢葛</a></p>
+    <p><span class="copy-title">发布时间:</span>2020-11-04, 12:57:32</p>
+    <p><span class="copy-title">最后更新:</span>2020-11-04, 13:01:03</p>
+    <span class="copy-title">原始链接:</span><a class="post-url" href="/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE/" title="计网查漏补缺-应用层协议">https://qiurungeng.github.io/2020/11/04/%E8%AE%A1%E7%BD%91%E6%9F%A5%E6%BC%8F%E8%A1%A5%E7%BC%BA-%E5%BA%94%E7%94%A8%E5%B1%82%E5%8D%8F%E8%AE%AE/</a>
+</div>
+
+
+
+
+
+    
+
+
+
+
+    </div>
+    <div class="copyright">
+        <p class="footer-entry">©2020 梅罢葛</p>
+<p class="footer-entry">Built with <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/yelog/hexo-theme-3-hexo" target="_blank">3-hexo</a> theme</p>
+
+    </div>
+    <div class="full-toc">
+        <button class="full"><span class="min "></span></button>
+<button class="post-toc-menu"><span class="post-toc-menu-icons"></span></button>
+<div class="post-toc"><span class="post-toc-title">目录</span>
+    <div class="post-toc-content">
+
+    </div>
+</div>
+<a class="" id="rocket" ></a>
+
+    </div>
+</div>
+<div class="acParent"></div>
+
+<div class="hide_box" onclick="dashangToggle()"></div>
+<div class="shang_box">
+    <a class="shang_close"  onclick="dashangToggle()">×</a>
+    <div class="shang_tit">
+        <p>喜欢就点赞,疼爱就打赏</p>
+    </div>
+    <div class="shang_payimg">
+        <div class="pay_img">
+            <img src="/img/alipay.jpg" class="alipay" title="扫码支持">
+            <img src="/img/weixin.jpg" class="weixin" title="扫码支持">
+        </div>
+    </div>
+    <div class="shang_payselect">
+        <span><label><input type="radio" name="pay" checked value="alipay">支付宝</label></span><span><label><input type="radio" name="pay" value="weixin">微信</label></span>
+    </div>
+</div>
+
+
+</body>
+<script src="/js/jquery.pjax.js?v=1.0.1" ></script>
+
+<script src="/js/script.js?v=1.0.1" ></script>
+<script>
+    var img_resize = 'default';
+    /*作者、标签的自动补全*/
+    $(function () {
+        $('.search').AutoComplete({
+            'data': ['#Linux','#MySQL','#前端','#java','#jvm','#算法','#数据结构','#Java','#socket编程','#Netty','#SpringBoot','#spring','#spring注解','#AOP','#spring-InstantiationAwareBeanPostProcessor','#动态规划','#LeetCode','#剑指Offer','#测试','#操作系统','#设计模式','#NIO','#分布式','#后端','#计算机网络',],
+            'itemHeight': 20,
+            'width': 418
+        }).AutoComplete('show');
+    })
+    function initArticle() {
+        /*渲染对应的表格样式*/
+        
+            $(".post .pjax table").addClass("green_title");
+        
+
+        /*渲染打赏样式*/
+        
+        $("input[name=pay]").on("click", function () {
+            if($("input[name=pay]:checked").val()=="weixin"){
+                $(".shang_box .shang_payimg .pay_img").addClass("weixin_img");
+            } else {
+                $(".shang_box .shang_payimg .pay_img").removeClass("weixin_img");
+            }
+        })
+        
+
+        /*高亮代码块行号*/
+        
+        $('pre code').each(function(){
+            var lines = $(this).text().trim().split('\n').length, widther='';
+            if (lines>99) {
+                widther = 'widther'
+            }
+            var $numbering = $('<ul/>').addClass('pre-numbering ' + widther).attr("unselectable","on");
+            $(this).addClass('has-numbering ' + widther)
+                    .parent()
+                    .append($numbering);
+            for(var i=1;i<=lines;i++){
+                $numbering.append($('<li/>').text(i));
+            }
+        });
+        
+
+        /*访问数量*/
+        
+        $.getScript("//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js");
+        
+
+        /*代码高亮，行号对齐*/
+        $('.pre-numbering').css('line-height',$('.has-numbering').css('line-height'));
+
+        
+        
+    }
+
+    /*打赏页面隐藏与展示*/
+    
+    function dashangToggle() {
+        $(".shang_box").fadeToggle();
+        $(".hide_box").fadeToggle();
+    }
+    
+
+</script>
+
+<!--加入行号的高亮代码块样式-->
+
+<style>
+    pre{
+        position: relative;
+        margin-bottom: 24px;
+        border-radius: 10px;
+        border: 1px solid #e2dede;
+        background: #FFF;
+        overflow: hidden;
+    }
+    code.has-numbering{
+        margin-left: 30px;
+    }
+    code.has-numbering.widther{
+        margin-left: 35px;
+    }
+    .pre-numbering{
+        margin: 0px;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 20px;
+        padding: 0.5em 3px 0.7em 5px;
+        border-right: 1px solid #C3CCD0;
+        text-align: right;
+        color: #AAA;
+        background-color: ;
+    }
+    .pre-numbering.widther {
+        width: 35px;
+    }
+</style>
+
+<!--自定义样式设置-->
+<style>
+    
+    
+    .nav {
+        width: 552px;
+    }
+    .nav.fullscreen {
+        margin-left: -552px;
+    }
+    .nav-left {
+        width: 130px;
+    }
+    
+    
+    @media screen and (max-width: 1468px) {
+        .nav {
+            width: 492px;
+        }
+        .nav.fullscreen {
+            margin-left: -492px;
+        }
+        .nav-left {
+            width: 100px;
+        }
+    }
+    
+    
+    @media screen and (max-width: 1024px) {
+        .nav {
+            width: 492px;
+            margin-left: -492px
+        }
+        .nav.fullscreen {
+            margin-left: 0;
+        }
+        .nav .hide-list.fullscreen {
+            left: 492px
+        }
+    }
+    
+    @media screen and (max-width: 426px) {
+        .nav {
+            width: 100%;
+        }
+        .nav-left {
+            width: 100%;
+        }
+    }
+    
+    
+    .nav-right .title-list nav a .post-title, .nav-right .title-list #local-search-result a .post-title {
+        color: #383636;
+    }
+    
+    
+    .nav-right .title-list nav a .post-date, .nav-right .title-list #local-search-result a .post-date {
+        color: #5e5e5f;
+    }
+    
+    
+    .nav-right nav a.hover, #local-search-result a.hover{
+        background-color: #e2e0e0;
+    }
+    
+    
+
+    /*列表样式*/
+    
+    .post .pjax article .article-entry>ol, .post .pjax article .article-entry>ul, .post .pjax article>ol, .post .pjax article>ul{
+        border: #e2dede solid 1px;
+        border-radius: 10px;
+        padding: 10px 32px 10px 56px;
+    }
+    .post .pjax article .article-entry li>ol, .post .pjax article .article-entry li>ul,.post .pjax article li>ol, .post .pjax article li>ul{
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    .post .pjax article .article-entry>ol>li, .post .pjax article .article-entry>ul>li,.post .pjax article>ol>li, .post .pjax article>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    .post .pjax article .article-entry li>ol>li, .post .pjax article .article-entry li>ul>li,.post .pjax article li>ol>li, .post .pjax article li>ul>li{
+        margin-bottom: auto;
+        margin-left: auto;
+    }
+    
+
+    /* 背景图样式 */
+    
+    .post {
+        background: url(https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/20200329232512.png);
+    }
+    
+    
+    .post.index {
+        background: url(https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/20200329232512.png);
+    }
+    
+
+
+    /*引用块样式*/
+    
+
+    /*文章列表背景图*/
+    
+    .nav-right:before {
+        content: ' ';
+        display: block;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0.4;
+        background: url("https://raw.githubusercontent.com/WinstonSmith1989/mymarkdownpics/master/img/%E5%A4%A7%E6%B4%AA%E6%B0%B4.jpg");
+        background-repeat: no-repeat;
+        background-position: 50% 0;
+        -ms-background-size: cover;
+        -o-background-size: cover;
+        -moz-background-size: cover;
+        -webkit-background-size: cover;
+        background-size: cover;
+    }
+    
+
+    
+</style>
+
+
+
+
+
+
+
+</html>
